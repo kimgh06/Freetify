@@ -8,7 +8,4 @@ export const PlayAtom = styled.div`
   border-top: 5px solid red;
   border-bottom: 5px solid red;
   padding: 5px 20px;
-  .playingtime{
-    border-right: 10px solid black;
-  }
 `

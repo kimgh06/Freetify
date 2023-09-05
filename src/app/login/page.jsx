@@ -14,7 +14,6 @@ export default function asdf() {
   }
   useEffect(e => {
     const SpotifyClientId = "267348cebe4641798a27705a51f66395";
-    const SpotyfyClientSecret = '267348cebe4641798a27705a51f66395';
     const redirectUrl = 'http://localhost:3003';
     const state = generateRandomString(16);
     const scope = '';

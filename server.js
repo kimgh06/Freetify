@@ -3,6 +3,10 @@ const app = express();
 const port = 3333;
 const cors = require('cors');
 
+const redirect_url = 'http://localhost:3003';
+const SpotifyClientId = "267348cebe4641798a27705a51f66395";
+const SpotyfyClientSecret = '5d2f5f729b3e4579b3f9e896a0ddb462';
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -12,12 +16,25 @@ app.get('/', (rq, rs) => {
   console.log(rs.connection.remoteAddress);
 });
 
-app.post('/getTokens', (rq, rs) => {
+app.post('/getOptions/getTokens', (rq, rs) => {
   const { code, state } = rq.body;
   if (code && state) {
-    rs.sendStatus(200);
+    const options = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        code: code,
+        redirect_uri: redirect_url,
+        grant_type: 'authorization_code'
+      },
+      headers: {
+        'Authorization': `Basic ${(new Buffer.from(SpotifyClientId + ":" + SpotyfyClientSecret).toString('base64'))}`,
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      json: true
+    };
+    rs.send(options);
   } else {
-    rs.sendStatus(502);
+    rs.sendStatus(400);
   }
 });
 

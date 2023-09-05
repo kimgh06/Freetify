@@ -8,11 +8,18 @@ const url = 'http://localhost:3333';
 export default function Home() {
   const getTokens = async e => {
     const queries = new URLSearchParams(location.search);
-    await axios.post(`${url}/getTokens`, {
+    await axios.post(`${url}/getOptions/getTokens`, {
       code: queries.get('code'),
       state: queries.get('state')
-    }).then(e => {
-      console.log(e);
+    }).then(async e => {
+      console.log(e.data);
+      const info = e.data;
+      await axios.post(info.url, { form: info.form }, { headers: info.headers })
+        .then(e => {
+          console.log(e);
+        }).catch(e => {
+          console.log(e);
+        })
     }).catch(e => {
       console.log(e);
     });
