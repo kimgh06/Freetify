@@ -12,14 +12,13 @@ export default function Home() {
       code: queries.get('code'),
       state: queries.get('state')
     }).then(e => {
-      console.log(e.data);
       const info = e.data;
       if (!info?.error) {
         localStorage.setItem('access', info.access_token);
         localStorage.setItem('refresh', info.refresh_token);
         localStorage.setItem('expire', new Date().getTime() + info.expires_in * 1000);
+        window.location.href = '/';
       }
-      window.location.href = '/';
     }).catch(e => {
       console.log(e);
     });
@@ -28,6 +27,11 @@ export default function Home() {
     await axios.patch(`${url}/refresh_token`,
       { refreshToken: localStorage.getItem('refresh') }).then(e => {
         console.log(e.data);
+        const info = e.data;
+        if (!info?.error) {
+          localStorage.setItem('access', info.access_token);
+          localStorage.setItem('expire', new Date().getTime() + info.expires_in * 1000);
+        }
       }).catch(e => {
         console.log(e);
       })
@@ -37,7 +41,7 @@ export default function Home() {
     if (queries.size !== 0) {
       getTokens();
     } else {
-      // console.log((localStorage.getItem('expire') - new Date().getTime()) / 60000); //시간 계산용
+      console.log((localStorage.getItem('expire') - new Date().getTime()) / 60000); //시간 계산용
       if (new Date().getTime() >= localStorage.getItem('expire')) {
         refresh_token();
       }
