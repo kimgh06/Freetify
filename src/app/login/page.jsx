@@ -1,43 +1,24 @@
 "use client";
-import Script from "next/script";
 import { useEffect } from "react";
 
 export default function asdf() {
-  let player;
+  const generateRandomString = (num) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < num; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  }
   useEffect(e => {
-    window.onSpotifyWebPlaybackSDKReady = e => {
-      const token = '267348cebe4641798a27705a51f66395';
-      player = new Spotify.Player({
-        name: 'Web Playback SDK Quick Start Player',
-        getOAuthToken: cb => { cb(token); },
-        volume: 0.5
-      });
-      player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
-      });
-
-      // Not Ready
-      player.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id);
-      });
-      player.addListener('initialization_error', ({ message }) => {
-        console.error(message);
-      });
-
-      player.addListener('authentication_error', ({ message }) => {
-        console.error(message);
-      });
-
-      player.addListener('account_error', ({ message }) => {
-        console.error(message);
-      });
-      player.connect();
-    };
+    const SpotifyClientId = "267348cebe4641798a27705a51f66395";
+    const SpotyfyClientSecret = '267348cebe4641798a27705a51f66395';
+    const redirectUrl = 'http://localhost:3003';
+    const state = generateRandomString(16);
+    const scope = '';
+    window.location.href = `https://accounts.spotify.com/authorize?response_type=code&client_id=${SpotifyClientId}&scope=${scope}&redirect_uri=${redirectUrl}&state=${state}`;
   }, []);
-  return <>
-    <Script src="https://sdk.scdn.co/spotify-player.js" />
-    <button id="togglePlay" onClick={e => {
-      player.togglePlay();
-    }}>Toggle Play</button>
-  </>;
+  return <></>;
 }
