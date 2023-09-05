@@ -6,8 +6,8 @@ import { useEffect } from "react";
 const url = 'http://localhost:3333';
 
 export default function Home() {
-  const queries = new URLSearchParams(location.search);
   const getTokens = async e => {
+    const queries = new URLSearchParams(location.search);
     await axios.post(`${url}/getTokens`, {
       code: queries.get('code'),
       state: queries.get('state')
@@ -18,6 +18,7 @@ export default function Home() {
     });
   }
   useEffect(e => {
+    const queries = new URLSearchParams(location.search);
     if (queries.size !== 0) {
       getTokens();
     }
