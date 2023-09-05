@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3333;
 const cors = require('cors');
+const request = require('request');
 
 const redirect_url = 'http://localhost:3003';
 const SpotifyClientId = "267348cebe4641798a27705a51f66395";
@@ -28,11 +29,17 @@ app.post('/getOptions/getTokens', (rq, rs) => {
       },
       headers: {
         'Authorization': `Basic ${(new Buffer.from(SpotifyClientId + ":" + SpotyfyClientSecret).toString('base64'))}`,
-        'Content-Type': 'application/x-www-form-urlencoded'
+
       },
       json: true
     };
-    rs.send(options);
+    request.post(options, (err, res, body) => {
+      if (!err) {
+        rs.send(body);
+      } else {
+        rs.send(err);
+      }
+    });
   } else {
     rs.sendStatus(400);
   }

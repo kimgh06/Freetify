@@ -14,12 +14,8 @@ export default function Home() {
     }).then(async e => {
       console.log(e.data);
       const info = e.data;
-      await axios.post(info.url, { form: info.form }, { headers: info.headers })
-        .then(e => {
-          console.log(e);
-        }).catch(e => {
-          console.log(e);
-        })
+      localStorage.setItem('tokens', JSON.stringify({ access: info.access_token, refresh: info.refresh_token }));
+      localStorage.setItem('expire', info.expires_in);
     }).catch(e => {
       console.log(e);
     });
