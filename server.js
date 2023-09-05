@@ -17,7 +17,7 @@ app.get('/', (rq, rs) => {
   console.log(rs.connection.remoteAddress);
 });
 
-app.post('/getOptions/getTokens', (rq, rs) => {
+app.post('/getTokens', (rq, rs) => {
   const { code, state } = rq.body;
   if (code && state) {
     const options = {
@@ -44,6 +44,8 @@ app.post('/getOptions/getTokens', (rq, rs) => {
     rs.sendStatus(400);
   }
 });
+
+app.patch('/get')
 
 app.listen(port, e => {
   console.log(`Server is running on port ${port}`);

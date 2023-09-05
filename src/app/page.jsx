@@ -8,14 +8,17 @@ const url = 'http://localhost:3333';
 export default function Home() {
   const getTokens = async e => {
     const queries = new URLSearchParams(location.search);
-    await axios.post(`${url}/getOptions/getTokens`, {
+    await axios.post(`${url}/getTokens`, {
       code: queries.get('code'),
       state: queries.get('state')
     }).then(e => {
+      console.log(e.data);
       const info = e.data;
-      localStorage.setItem('access', info.access_token);
-      localStorage.setItem('refresh', info.refresh_token);
-      localStorage.setItem('expire', new Date().getTime() + info.expires_in * 1000);
+      if (!info?.error) {
+        localStorage.setItem('access', info.access_token);
+        localStorage.setItem('refresh', info.refresh_token);
+        localStorage.setItem('expire', new Date().getTime() + info.expires_in * 1000);
+      }
     }).catch(e => {
       console.log(e);
     });
