@@ -11,11 +11,11 @@ export default function Home() {
     await axios.post(`${url}/getOptions/getTokens`, {
       code: queries.get('code'),
       state: queries.get('state')
-    }).then(async e => {
-      console.log(e.data);
+    }).then(e => {
       const info = e.data;
-      localStorage.setItem('tokens', JSON.stringify({ access: info.access_token, refresh: info.refresh_token }));
-      localStorage.setItem('expire', info.expires_in);
+      localStorage.setItem('access', info.access_token);
+      localStorage.setItem('refresh', info.refresh_token);
+      localStorage.setItem('expire', new Date().getTime() + info.expires_in * 1000);
     }).catch(e => {
       console.log(e);
     });
