@@ -3,10 +3,11 @@ const app = express();
 const port = 3333;
 const cors = require('cors');
 const request = require('request');
+require('dotenv').config();
 
-const redirect_url = 'http://localhost:3003';
-const SpotifyClientId = "267348cebe4641798a27705a51f66395";
-const SpotyfyClientSecret = '5d2f5f729b3e4579b3f9e896a0ddb462';
+const redirect_url = process.env.NEXT_PUBLIC_BACKEND_REDIRECT_URL;
+const SpotifyClientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENTID;
+const SpotyfyClientSecret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENTSECRET;
 
 app.use(cors());
 app.use(express.json());
@@ -19,6 +20,7 @@ app.get('/', (rq, rs) => {
 
 app.post('/getTokens', (rq, rs) => {
   const { code, state } = rq.body;
+  console.log(redirect_url, SpotifyClientId, SpotyfyClientSecret)
   if (code && state) {
     const options = {
       url: 'https://accounts.spotify.com/api/token',

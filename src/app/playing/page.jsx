@@ -6,7 +6,7 @@ export default function asdf() {
   let player;
   useEffect(e => {
     window.onSpotifyWebPlaybackSDKReady = e => {
-      const token = '267348cebe4641798a27705a51f66395';
+      const token = process.env.NEXT_PUBLIC_SPOTIFY_CLIENTID;
       player = new Spotify.Player({
         name: 'Web Playback SDK Quick Start Player',
         getOAuthToken: cb => { cb(token); },

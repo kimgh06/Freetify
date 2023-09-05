@@ -13,8 +13,8 @@ export default function asdf() {
     return result;
   }
   useEffect(e => {
-    const SpotifyClientId = "267348cebe4641798a27705a51f66395";
-    const redirectUrl = 'http://localhost:3003';
+    const SpotifyClientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENTID;
+    const redirectUrl = process.env.NEXT_PUBLIC_BACKEND_REDIRECT_URL;
     const state = generateRandomString(16);
     const scope = '';
     window.location.href = `https://accounts.spotify.com/authorize?response_type=code&client_id=${SpotifyClientId}&scope=${scope}&redirect_uri=${redirectUrl}&state=${state}`;

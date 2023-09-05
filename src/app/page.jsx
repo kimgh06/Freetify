@@ -3,7 +3,7 @@ import PlaylistAtom from "@/components/playlistAtom";
 import axios from "axios";
 import { useEffect } from "react";
 
-const url = 'http://localhost:3333';
+const url = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function Home() {
   const getTokens = async e => {
@@ -13,6 +13,7 @@ export default function Home() {
       state: queries.get('state')
     }).then(e => {
       const info = e.data;
+      console.log(e.data);
       if (!info?.error) {
         localStorage.setItem('access', info.access_token);
         localStorage.setItem('refresh', info.refresh_token);
