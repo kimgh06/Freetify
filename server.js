@@ -28,8 +28,7 @@ app.post('/getTokens', (rq, rs) => {
         grant_type: 'authorization_code'
       },
       headers: {
-        'Authorization': `Basic ${(new Buffer.from(SpotifyClientId + ":" + SpotyfyClientSecret).toString('base64'))}`,
-
+        'Authorization': `Basic ${(new Buffer.from(SpotifyClientId + ":" + SpotyfyClientSecret).toString('base64'))}`
       },
       json: true
     };
@@ -45,7 +44,32 @@ app.post('/getTokens', (rq, rs) => {
   }
 });
 
-app.patch('/get')
+app.patch('/refresh_token', (rq, rs) => {
+  const { refreshToken } = rq.body;
+  if (refreshToken) {
+    const options = {
+      url: 'https://accounts.spotify.com/api/token',
+      form: {
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken
+      },
+      headers: {
+        'Authorization': `Basic ${(new Buffer.from(SpotifyClientId + ":" + SpotyfyClientSecret).toString('base64'))}`
+      },
+      json: true
+    };
+    request.post(options, (err, res, body) => {
+      if (!err) {
+        rs.send(body);
+      } else {
+        rs.send(err);
+      }
+    });
+  }
+  else {
+    rs.sendStatus(400);
+  }
+});
 
 app.listen(port, e => {
   console.log(`Server is running on port ${port}`);
