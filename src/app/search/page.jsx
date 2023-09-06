@@ -9,12 +9,16 @@ const url = 'https://api.spotify.com/v1';
 
 export default function asdf() {
   const [q, setQ] = useState('');
-  const [results, setResults] = useState([]);
+  const [albums, setAlbums] = useState([]);
+  const [artist, setArtist] = useState([]);
+  const [tracks, setTracks] = useState([]);
   const searchItems = async e => {
-    await axios.get(`${url}/search?q=${q}&type=album&limit=10`, { headers: { Authorization: "Bearer " + localStorage.getItem('access') } }).then(e => {
-      const data = e.data.albums.items;
-      console.log(data);
-      setResults(data);
+    await axios.get(`${url}/search?q=${q}&type=album,track,artist&limit=10`, { headers: { Authorization: "Bearer " + localStorage.getItem('access') } }).then(e => {
+      const data = e.data;
+      console.log(data.albums.items, data.artists.items, data.tracks.items);
+      setAlbums(data.albums.items);
+      setArtist(data.artists.items);
+      setTracks(data.tracks.items);
     }).catch(e => {
       console.log(e);
     });
@@ -24,14 +28,14 @@ export default function asdf() {
     <S.Search>
       <form onSubmit={e => {
         e.preventDefault();
-        setResults(null);
+        setAlbums(null);
         searchItems();
       }}>
         <input onChange={e => setQ(e.target.value)} value={q} />
         <button>검색</button>
       </form>
-      {results?.length !== 0 && <>
-        {results?.map((i, n) => <PlaylistAtom key={n} img={i.images[2].url} title={i.name} artist={i?.artists[0].name} />)}
+      {albums?.length !== 0 && <>
+        {albums?.map((i, n) => <PlaylistAtom key={n} img={i.images[2].url} title={i.name} artist={i?.artists[0].name} />)}
       </>}
     </S.Search>
   </>;
