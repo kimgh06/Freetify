@@ -4,6 +4,7 @@ import * as S from './style';
 import PlaylistAtom from "@/components/playlistAtom";
 import axios from "axios";
 import { useState } from "react";
+import AritstProfile from "@/components/artistprofile";
 
 const url = 'https://api.spotify.com/v1';
 
@@ -15,9 +16,10 @@ export default function asdf() {
   const searchItems = async e => {
     await axios.get(`${url}/search?q=${q}&type=album,track,artist&limit=10`, { headers: { Authorization: "Bearer " + localStorage.getItem('access') } }).then(e => {
       const data = e.data;
-      console.log("album", data.albums.items, "artists", data.artists.items, "tracks", data.tracks.items);
+      let artists = data.artists.items.slice(0, 5);
+      console.log("album", data.albums.items, "artists", artists, "tracks", data.tracks.items);
       setAlbums(data.albums.items);
-      setArtist(data.artists.items);
+      setArtist(artists);
       setTracks(data.tracks.items);
     }).catch(e => {
       console.log(e);
@@ -48,6 +50,11 @@ export default function asdf() {
           </p>
           {albums?.length !== 0 && albums?.map((i, n) => <PlaylistAtom key={n} img={i.images[2].url} type={i?.type}
             id={i?.id} title={i.name} artist={i?.artists[0].name} artistId={i?.artists[0].id} />)}
+        </div>
+        <div className="result">
+          <p>artists</p>
+          {artist?.length !== 0 && artist?.map((i, n) => <AritstProfile key={n} followers={i?.followers.total}
+            id={i?.id} img={i?.images[2]?.url} name={i?.name} popularity={i?.popularity} />)}
         </div>
       </div>
 

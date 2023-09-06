@@ -8,6 +8,7 @@ export const Nav = styled.div`
     height: 100vh;
     width: 300px;
     padding-top: 60px;
+    z-index: 2;
     p{
       padding: 20px 0 0px 20px;
     }
@@ -18,7 +19,7 @@ export const Nav = styled.div`
     position: fixed;
     border-radius: 10px;
     text-align: center;
-    z-index: 2;
+    z-index: 3;
     font-size: 30px;
     width: 50px;
     height: 50px;
