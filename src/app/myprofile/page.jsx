@@ -1,4 +1,5 @@
 "use client";
+import Navi from "@/components/nav";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
@@ -18,14 +19,15 @@ export default function asdf() {
   useEffect(e => {
     getInfos();
   }, []);
-  return <>{
-    infos ? <>
-      <h1>이름 : {infos?.display_name}</h1>
-      <h2>지역 : {infos?.country}</h2>
-      <h2> USERiD : {infos?.id}</h2>
-      <h2> 요금제 : {infos?.product}</h2>
-      {infos?.images?.url !== undefined && <img src={infos?.images?.url} alt="profileimg" />}
-    </> : <h1>Loading...</h1>
-  }
+  return <>
+    <Navi />
+    {
+      infos ? <>
+        <h1>{infos?.display_name} ({infos?.country})</h1>
+        <h2 onClick={e => navigator.clipboard.writeText(infos?.id)}>{infos?.id}</h2>
+        <h2> 요금제 : {infos?.product}</h2>
+        {infos?.images?.url !== undefined && <img src={infos?.images?.url} alt="profileimg" />}
+      </> : <h1>Loading...</h1>
+    }
   </>;
 }

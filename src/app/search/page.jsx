@@ -1,4 +1,6 @@
 'use client';
+import Navi from "@/components/nav";
+import * as S from './style';
 import PlaylistAtom from "@/components/playlistAtom";
 import axios from "axios";
 import { useState } from "react";
@@ -18,16 +20,19 @@ export default function asdf() {
     });
   }
   return <>
-    <form onSubmit={e => {
-      e.preventDefault();
-      setResults(null);
-      searchItems();
-    }}>
-      <input onChange={e => setQ(e.target.value)} value={q} />
-      <button>검색</button>
-    </form>
-    {results?.length !== 0 && <>
-      {results?.map((i, n) => <PlaylistAtom key={n} img={i.images[2].url} title={i.name} artist={i?.artists[0].name} />)}
-    </>}
+    <Navi />
+    <S.Search>
+      <form onSubmit={e => {
+        e.preventDefault();
+        setResults(null);
+        searchItems();
+      }}>
+        <input onChange={e => setQ(e.target.value)} value={q} />
+        <button>검색</button>
+      </form>
+      {results?.length !== 0 && <>
+        {results?.map((i, n) => <PlaylistAtom key={n} img={i.images[2].url} title={i.name} artist={i?.artists[0].name} />)}
+      </>}
+    </S.Search>
   </>;
 }
