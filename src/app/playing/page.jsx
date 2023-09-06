@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import Script from "next/script";
 import { useEffect } from "react";
 
@@ -6,7 +7,7 @@ export default function asdf() {
   let player;
   useEffect(e => {
     window.onSpotifyWebPlaybackSDKReady = e => {
-      const token = process.env.NEXT_PUBLIC_SPOTIFY_CLIENTID;
+      const token = localStorage.getItem('access');
       player = new Spotify.Player({
         name: 'Web Playback SDK Quick Start Player',
         getOAuthToken: cb => { cb(token); },
@@ -38,6 +39,7 @@ export default function asdf() {
     <Script src="https://sdk.scdn.co/spotify-player.js" />
     <button id="togglePlay" onClick={e => {
       player.togglePlay();
+      console.log(player)
     }}>Toggle Play</button>
   </>;
 }

@@ -20,7 +20,6 @@ app.get('/', (rq, rs) => {
 
 app.post('/getTokens', (rq, rs) => {
   const { code, state } = rq.body;
-  console.log(redirect_url, SpotifyClientId, SpotyfyClientSecret)
   if (code && state) {
     const options = {
       url: 'https://accounts.spotify.com/api/token',
