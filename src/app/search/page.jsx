@@ -15,7 +15,7 @@ export default function asdf() {
   const searchItems = async e => {
     await axios.get(`${url}/search?q=${q}&type=album,track,artist&limit=10`, { headers: { Authorization: "Bearer " + localStorage.getItem('access') } }).then(e => {
       const data = e.data;
-      console.log(data.albums.items, data.artists.items, data.tracks.items);
+      console.log("album", data.albums.items, "artists", data.artists.items, "tracks", data.tracks.items);
       setAlbums(data.albums.items);
       setArtist(data.artists.items);
       setTracks(data.tracks.items);
@@ -34,9 +34,23 @@ export default function asdf() {
         <input onChange={e => setQ(e.target.value)} value={q} />
         <button>검색</button>
       </form>
-      {albums?.length !== 0 && <>
-        {albums?.map((i, n) => <PlaylistAtom key={n} img={i.images[2].url} title={i.name} artist={i?.artists[0].name} />)}
-      </>}
+      <div className="results">
+        <div className="result">
+          <p>
+            Tracks
+          </p>
+          {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom key={n} img={i.album.images[2].url} type={i?.type}
+            id={i?.id} title={i?.name} artist={i?.artists[0].name} artistId={i?.artists[0].id} />)}
+        </div>
+        <div className="result">
+          <p>
+            Albums
+          </p>
+          {albums?.length !== 0 && albums?.map((i, n) => <PlaylistAtom key={n} img={i.images[2].url} type={i?.type}
+            id={i?.id} title={i.name} artist={i?.artists[0].name} artistId={i?.artists[0].id} />)}
+        </div>
+      </div>
+
     </S.Search>
   </>;
 }
