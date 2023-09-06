@@ -1,4 +1,5 @@
 "use client"
+import Navi from "@/components/nav";
 import PlaylistAtom from "@/components/playlistAtom";
 import axios from "axios";
 import { useEffect } from "react";
@@ -49,6 +50,7 @@ export default function Home() {
     }
   }, [])
   return <>
+    <Navi />
     <PlaylistAtom artist={'신해철'} title={'그대에게'} playingtime={'0:30'} playtime={'4:30'} />
   </>;
 }
