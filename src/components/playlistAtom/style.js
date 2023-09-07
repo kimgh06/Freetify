@@ -7,7 +7,7 @@ export const PlayAtom = styled.div`
   background-color: white;
   color: black;
   width: 30vw;
-  min-width: 350px;
+  min-width: 360px;
   border-bottom: 8px solid lightgray;
   border-radius: 5px;
   padding: 5px 20px;
@@ -19,8 +19,8 @@ export const PlayAtom = styled.div`
   }
   .title{
     cursor: pointer;
-    max-width: 300px;
-    min-width: 200px;
+    width: 20vw;
+    min-width: 210px;
     &:hover{
       text-decoration-line: underline;
     }
