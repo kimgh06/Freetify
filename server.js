@@ -72,6 +72,25 @@ app.patch('/refresh_token', (rq, rs) => {
   }
 });
 
+app.get('/geturl', (rq, rs) => {
+  const { url, authorization } = rq.query;
+  const options = {
+    url: url,
+    headers: {
+      'Authorization': authorization,
+      'Content-Type': 'application/json'
+    }
+  }
+  request.get(options, (err, res, body) => {
+    if (!err) {
+      console.log(res);
+      rs.send(res);
+    } else {
+      rs.send(err);
+    }
+  })
+});
+
 app.listen(port, e => {
   console.log(`Server is running on port ${port}`);
 });

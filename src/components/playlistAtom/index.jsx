@@ -3,16 +3,22 @@ import axios from 'axios';
 import * as S from './style';
 import { useState } from 'react';
 
-const url = 'https://api.spotify.com/v1';
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+const url = 'https://open.spotify.com';
 
 export default function PlaylistAtom({ img, title, artist, id, type, playingtime, playtime, artistId, isInPlay }) {
   const [toggle, setToggle] = useState(isInPlay);
   const getMusicData = async e => {
-    await axios.get(`${url}/audio-analysis/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
+    await axios.get(`${backendUrl}/geturl?url=${url}/${type}/${id}&authorization=${`Bearer ${localStorage.getItem('access')}`}`).then(e => {
       console.log(e.data);
     }).catch(e => {
       console.log(e);
-    })
+    });
+    // await axios.get(`${url}/${type}/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
+    //   console.log(e.data);
+    // }).catch(e => {
+    //   console.log(e);
+    // })
   }
   const listcontrol = e => {
     if (type === 'track') {
