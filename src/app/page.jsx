@@ -2,6 +2,7 @@
 import Navi from "@/components/nav";
 import PlaylistAtom from "@/components/playlistAtom";
 import axios from "axios";
+import * as S from './style';
 import { useEffect, useState } from "react";
 
 const url = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -44,7 +45,6 @@ export default function Home() {
     ids = JSON.parse(localStorage.getItem('list')).join(',');
     console.log(ids);
     await axios.get(`https://api.spotify.com/v1/tracks?ids=${ids}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
-      console.log(e.data);
       setTracks(e.data.tracks);
     }).catch(e => {
       console.log(e);
@@ -62,7 +62,7 @@ export default function Home() {
       getTrackinfos();
     }
   }, [])
-  return <>
+  return <S.App>
     <Navi />
     <h1>My track</h1>
     {tracks.length !== 0 && tracks?.map((i, n) => <PlaylistAtom key={n} img={i.album.images[2].url} type={i?.type}
@@ -74,5 +74,5 @@ export default function Home() {
         }
         return list.find(a => a === i?.id)
       }} />)}
-  </>;
+  </S.App>;
 }

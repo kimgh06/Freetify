@@ -9,6 +9,7 @@ export const Search = styled.div`
     min-width: 350px;
     margin: auto;
     border-radius: 5px;
+    text-align: left;
   }
   form{
     position: fixed;
