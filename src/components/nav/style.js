@@ -3,6 +3,7 @@ import { styled } from "styled-components";
 export const Nav = styled.div`
   .nav{
     position: fixed;
+    top: 0;
     background-color: #00af00;
     color: white;
     height: 100vh;

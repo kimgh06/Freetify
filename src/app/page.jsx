@@ -16,7 +16,6 @@ export default function Home() {
       state: queries.get('state')
     }).then(e => {
       const info = e.data;
-      console.log(e.data);
       if (!info?.error) {
         localStorage.setItem('access', info.access_token);
         localStorage.setItem('refresh', info.refresh_token);
@@ -43,7 +42,6 @@ export default function Home() {
   const getTrackinfos = async e => {
     let ids = [];
     ids = JSON.parse(localStorage.getItem('list')).join(',');
-    console.log(ids);
     await axios.get(`https://api.spotify.com/v1/tracks?ids=${ids}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
       setTracks(e.data.tracks);
     }).catch(e => {
