@@ -16,5 +16,9 @@ export const Profile = styled.div`
     margin-left: 30px;
     display: flex;
     align-items: center;
+    cursor: pointer;
+    &:hover{
+      text-decoration-line: underline;
+    }
   }
 `
