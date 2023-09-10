@@ -3,11 +3,13 @@ import Navi from "@/components/nav";
 import * as S from './style';
 import axios from "axios";
 import { useEffect, useState } from "react";
+import AritstProfile from "@/components/artistprofile";
 
 const spotifyUrl = 'https://api.spotify.com/v1';
 
 export default function asdf() {
   const [infos, setinfos] = useState(null);
+  const [myFollowings, setMyFollowings] = useState([]);
   const getInfos = async e => {
     await axios.get(`${spotifyUrl}/me`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } })
       .then(e => {
@@ -21,7 +23,8 @@ export default function asdf() {
   const getMyFollowings = async e => {
     await axios.get(`${spotifyUrl}/me/following?type=artist&limit=5`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } })
       .then(e => {
-        console.log(e.data);
+        console.log(e.data.artists.items);
+        setMyFollowings(e.data.artists.items);
       }).catch(err => {
         console.log(err);
       })
@@ -40,7 +43,11 @@ export default function asdf() {
         }{infos?.display_name} ({infos?.country})</h1>
         <h2 onClick={e => navigator.clipboard.writeText(infos?.id)}>{infos?.id}</h2>
         <h2> 요금제 : {infos?.product}</h2>
-        {infos?.images?.url !== undefined && <img src={infos?.images?.url} alt="profileimg" />}
+        <div className="following">
+          <h2>My Followings</h2>
+          {myFollowings?.length !== 0 && myFollowings.map((i, n) => <AritstProfile
+            followers={i?.followers.total} popularity={i?.popularity}
+            id={i?.id} img={i?.images[2]?.url} name={i?.name} key={n} />)}</div>
       </div> : <h1>Loading...</h1>
     }
   </S.Profile>;
