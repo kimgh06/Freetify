@@ -68,7 +68,6 @@ export default function asdf() {
             id={i?.id} img={i?.images[2]} name={i?.name} popularity={i?.popularity} />)}
         </div>
       </div>
-
     </S.Search>
   </>;
 }

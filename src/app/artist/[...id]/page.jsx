@@ -2,7 +2,9 @@
 
 import AritstProfile from "@/components/artistprofile";
 import Navi from "@/components/nav";
+import Tag from "@/components/tag";
 import axios from "axios";
+import * as S from './style';
 import { useEffect, useState } from "react";
 
 export default function asdf({ params }) {
@@ -23,6 +25,11 @@ export default function asdf({ params }) {
   }, [])
   return <>
     <Navi />
-    {info && <AritstProfile id={info?.id} img={info?.images[1]} name={info?.name} popularity={info?.popularity} followers={info?.followers.total} />}
+    {info && <>
+      <AritstProfile id={info?.id} img={info?.images[1]} name={info?.name} popularity={info?.popularity} followers={info?.followers.total} />
+      <S.Genres>
+        {info?.genres?.map((i, n) => <Tag genre={i} key={n} />)}
+      </S.Genres>
+    </>}
   </>
 }
