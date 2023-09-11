@@ -11,6 +11,7 @@ export default function AritstProfile({ id, name, popularity, img, followers }) 
   }} style={{
     display: img?.height >= 300 ? 'block' : 'flex',
     margin: img?.height >= 300 ? 'auto' : '0',
+    width: img?.height
   }}>
     {img ? <img style={{ width: img?.height, height: img?.height }} src={img.url} alt="img" /> : <span>no image</span>}
     <div style={{

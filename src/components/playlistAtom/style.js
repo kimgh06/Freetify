@@ -19,8 +19,9 @@ export const PlayAtom = styled.div`
   }
   .title{
     cursor: pointer;
-    width: 20vw;
-    min-width: 210px;
+    /* max-width: 200px; */
+    width: 16vw;
+    min-width: 180px;
     &:hover{
       text-decoration-line: underline;
     }
@@ -30,6 +31,9 @@ export const PlayAtom = styled.div`
     &:hover{
       text-decoration-line: underline;
     }
+  }
+  .playingtime{
+    margin-right: 2vw;
   }
   .isInPlay{
     cursor: pointer;

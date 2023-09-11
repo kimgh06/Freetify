@@ -18,6 +18,7 @@ export default function asdf() {
       const data = e.data;
       let artists = data.artists.items.slice(0, 5);
       console.log("album", data.albums.items, "artists", artists, "tracks", data.tracks.items);
+      document.title = q;
       setAlbums(data.albums.items);
       setArtist(artists);
       setTracks(data.tracks.items);
@@ -32,7 +33,6 @@ export default function asdf() {
     <Navi />
     <S.Search>
       <form onSubmit={e => {
-        document.title = q;
         e.preventDefault();
         setAlbums(null);
         searchItems();

@@ -8,7 +8,7 @@ const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 const url = 'https://api.spotify.com/v1';
 const proxy = 'https://cors-proxy.fringe.zone';
 
-export default function PlaylistAtom({ img, title, artist, id, type, playingtime, playtime, artistId, isInPlay }) {
+export default function PlaylistAtom({ img, title, artist, id, type, playingtime, artistId, isInPlay }) {
   const [toggle, setToggle] = useState(isInPlay);
   const getMusicData = async e => {
     // await axios.get(`${backendUrl}/geturl?url=${url}/${type}/${id}&authorization=${`Bearer ${localStorage.getItem('access')}`}`).then(e => {
@@ -54,11 +54,10 @@ export default function PlaylistAtom({ img, title, artist, id, type, playingtime
         console.log(id, type);
       }}>{title}</div>&nbsp;
       <div className="artist" onClick={e => {
-        console.log(artistId)
+        console.log(artistId);
       }}>{artist}</div>
     </div>
     <div className="playingtime">{playingtime}</div>
-    <div className="playtime">{playtime}</div>
     {type === "track" && <div className='isInPlay' onClick={e => { listcontrol() }}>{toggle ? '-' : '+'}</div>}
   </S.PlayAtom>;
 }
