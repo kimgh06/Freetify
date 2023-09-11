@@ -2,6 +2,8 @@ import { styled } from "styled-components";
 
 export const Profile = styled.div`
   display: flex;
+  /* height: 160px; */
+  width: 300px;
   span{
     width: 160px;
   }
