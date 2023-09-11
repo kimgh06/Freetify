@@ -3,7 +3,7 @@ import Navi from "@/components/nav";
 import * as S from './style';
 import PlaylistAtom from "@/components/playlistAtom";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AritstProfile from "@/components/artistprofile";
 
 const url = 'https://api.spotify.com/v1';
@@ -25,10 +25,14 @@ export default function asdf() {
       console.log(e);
     });
   }
+  useEffect(e => {
+    document.title = "search";
+  }, []);
   return <>
     <Navi />
     <S.Search>
       <form onSubmit={e => {
+        document.title = q;
         e.preventDefault();
         setAlbums(null);
         searchItems();
@@ -61,7 +65,7 @@ export default function asdf() {
         <div className="result">
           <p>artists</p>
           {artist?.length !== 0 && artist?.map((i, n) => <AritstProfile key={n} followers={i?.followers.total}
-            id={i?.id} img={i?.images[2]?.url} name={i?.name} popularity={i?.popularity} />)}
+            id={i?.id} img={i?.images[2]} name={i?.name} popularity={i?.popularity} />)}
         </div>
       </div>
 
