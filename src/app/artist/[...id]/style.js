@@ -12,3 +12,14 @@ export const Genres = styled.div`
 export const PaddingBox = styled.div`
   padding: 20px;
 `
+
+export const TracksHeader = styled.div`
+  width: 30vw;
+  min-width: 360px;
+  margin: auto;
+  font-size: 24px;
+  font-weight: bold;
+  border-bottom: 8px solid lightgray;
+  border-radius: 5px;
+  padding: 10px 0;
+`
