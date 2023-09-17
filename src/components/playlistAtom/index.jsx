@@ -2,13 +2,14 @@
 import axios from 'axios';
 import * as S from './style';
 import { useState } from 'react';
+import Link from 'next/link';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 // const url = 'https://open.spotify.com';
 const url = 'https://api.spotify.com/v1';
 const proxy = 'https://cors-proxy.fringe.zone';
 
-export default function PlaylistAtom({ img, title, artist, id, type, playingtime, artistId, isInPlay }) {
+export default function PlaylistAtom({ img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
   const [toggle, setToggle] = useState(isInPlay);
   const getMusicData = async e => {
     // await axios.get(`${backendUrl}/geturl?url=${url}/${type}/${id}&authorization=${`Bearer ${localStorage.getItem('access')}`}`).then(e => {
@@ -51,8 +52,11 @@ export default function PlaylistAtom({ img, title, artist, id, type, playingtime
     }} />
     <div>
       <div className="title" onClick={e => {
-        console.log(id, type);
-      }}>{title}</div>&nbsp;
+        if (location.href.split('/')[3] === 'search') {
+          location.href = `/album/${album.id}`
+        }
+      }
+      }>{title}</div>&nbsp;
       <div className="artist" onClick={e => {
         console.log(artistId);
       }}>{artist}</div>

@@ -45,7 +45,7 @@ export default function asdf() {
           <p>
             Tracks
           </p>
-          {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom key={n} img={i.album.images[2].url} type={i?.type}
+          {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom key={n} album={i?.album} img={i.album.images[2].url} type={i?.type}
             id={i?.id} title={i?.name} artist={i?.artists[0].name} artistId={i?.artists[0].id} isInPlay={e => {
               let list = [];
               list = JSON.parse(localStorage.getItem('list'));
@@ -59,7 +59,7 @@ export default function asdf() {
           <p>
             Albums
           </p>
-          {albums?.length !== 0 && albums?.map((i, n) => <PlaylistAtom key={n} img={i.images[2].url} type={i?.type}
+          {albums?.length !== 0 && albums?.map((i, n) => <PlaylistAtom album={i} key={n} img={i.images[2].url} type={i?.type}
             id={i?.id} title={i.name} artist={i?.artists[0].name} artistId={i?.artists[0].id} />)}
         </div>
         <div className="result">
