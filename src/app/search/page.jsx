@@ -20,8 +20,8 @@ export default function asdf() {
       console.log("album", data.albums.items, "artists", artists, "tracks", data.tracks.items);
       document.title = q;
       setAlbums(data.albums.items);
-      setArtist(artists);
       setTracks(data.tracks.items);
+      setArtist(artists);
     }).catch(e => {
       console.log(e);
     });

@@ -11,7 +11,7 @@ const proxy = 'https://cors-proxy.fringe.zone';
 
 export default function PlaylistAtom({ preview, img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
   const [toggle, setToggle] = useState(isInPlay);
-  const [audio, setAudio] = useState(new Audio(preview));
+  const [audio, setAudio] = useState(new Audio());
   const [play, setPlay] = useState(false);
   const getMusicData = async e => {
     // await axios.get(`${backendUrl}/geturl?url=${url}/${type}/${id}&authorization=${`Bearer ${localStorage.getItem('access')}`}`).then(e => {
@@ -55,6 +55,9 @@ export default function PlaylistAtom({ preview, img, title, artist, id, type, pl
       setToggle(a => !a);
     }
   }
+  useEffect(e => {
+    setAudio(new Audio(preview));
+  }, [preview]);
   useEffect(e => {
     if (play) {
       audio.play();
