@@ -49,8 +49,18 @@ export const PlayAtom = styled.div`
     }
     transition: ease 0.2s all;
   }
-  audio{
-    background-color: black;
-    width: 50px;
+  .audio{
+    position: absolute;
+    margin-left: 150px;
+    margin-top: 30px;
+    button{
+      cursor: pointer;
+    }
+    .bar{
+      border: 3px solid blue;
+      width: 0;
+      height: 0;
+      border-radius: 20px;
+    }
   }
 `

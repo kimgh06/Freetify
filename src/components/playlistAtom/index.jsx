@@ -12,6 +12,8 @@ const proxy = 'https://cors-proxy.fringe.zone';
 export default function PlaylistAtom({ preview, img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
   const [toggle, setToggle] = useState(isInPlay);
   const [audio, setAudio] = useState(new Audio());
+  const [currentT, setCurrentT] = useState(0);
+  const [durationT, setDurationT] = useState(29);
   const [play, setPlay] = useState(false);
   const getMusicData = async e => {
     // await axios.get(`${backendUrl}/geturl?url=${url}/${type}/${id}&authorization=${`Bearer ${localStorage.getItem('access')}`}`).then(e => {
@@ -30,14 +32,6 @@ export default function PlaylistAtom({ preview, img, title, artist, id, type, pl
       console.log(e);
     });
   }
-  // const getPreview = async e => {
-  //   await axios.get(preview).then(e => {
-  //     const source = e.data;
-  //     console.log(blob)
-  //   }).catch(e => {
-  //     console.log(e);
-  //   });
-  // }
   const listcontrol = e => {
     if (type === 'track') {
       let list = [];
@@ -56,9 +50,21 @@ export default function PlaylistAtom({ preview, img, title, artist, id, type, pl
     }
   }
   useEffect(e => {
+    audio.pause();
+    setPlay(false);
+    setCurrentT(0);
     setAudio(new Audio(preview));
   }, [preview]);
   useEffect(e => {
+    audio.addEventListener('timeupdate', e => {
+      const { currentTime, duration } = audio;
+      setCurrentT(Math.floor(currentTime));
+      setDurationT(Math.floor(duration));
+      if (duration - currentTime === 0) {
+        setPlay(false);
+      }
+    });
+    audio.volume = 0.5;
     if (play) {
       audio.play();
     } else {
@@ -85,7 +91,9 @@ export default function PlaylistAtom({ preview, img, title, artist, id, type, pl
     {playingtime && <div className="playingtime">{`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}</div>}
     {type === "track" && <div className='isInPlay' onClick={listcontrol}>{toggle ? '-' : '+'}</div>}
     {preview && <div className='audio'>
+      <div className='bar' style={{ width: `${currentT / durationT * 15}vw` }} />
       <button onClick={e => setPlay(a => !a)}>{play ? '⏸' : '▶'}</button>
+      {currentT}/{durationT}
     </div>}
   </S.PlayAtom>;
 }
