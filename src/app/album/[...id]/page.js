@@ -1,5 +1,6 @@
 "use client"
-
+import Navi from '@/components/nav';
+import * as S from './style';
 import axios from "axios";
 import { useEffect, useState } from "react"
 
@@ -12,6 +13,7 @@ export default function asdf({ params }) {
       .then(e => {
         console.log(e.data);
         setAlbumInfo(e.data);
+        document.title = e.data.name
       }).catch(e => {
         console.log(e);
       });
@@ -21,7 +23,16 @@ export default function asdf({ params }) {
     getAlbumInfos();
   }, []);
   return <>
-    {albumInfo ? albumInfo?.name :
+    <Navi />
+    {albumInfo ? <S.AlbumInfos>
+      <div className='header'>
+        <img src={albumInfo?.images[1].url} alt='img' />
+        <div className='description'>
+          <h1>{albumInfo?.name}</h1>
+          <h3>{albumInfo?.tracks.items.length}곡</h3>
+        </div>
+      </div>
+    </S.AlbumInfos> :
       <h1>Loading...</h1>}
   </>;
 }
