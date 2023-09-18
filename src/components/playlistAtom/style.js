@@ -20,6 +20,7 @@ export const PlayAtom = styled.div`
   .title{
     cursor: pointer;
     /* max-width: 200px; */
+    display: block;
     width: 16vw;
     min-width: 180px;
     &:hover{
@@ -27,6 +28,7 @@ export const PlayAtom = styled.div`
     }
   }
   .artist{
+    display: block;
     cursor: pointer;
     &:hover{
       text-decoration-line: underline;
@@ -51,7 +53,7 @@ export const PlayAtom = styled.div`
   }
   .audio{
     position: absolute;
-    margin-left: 150px;
+    margin-left: 250px;
     margin-top: 30px;
     button{
       cursor: pointer;

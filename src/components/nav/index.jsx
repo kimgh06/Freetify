@@ -32,7 +32,6 @@ export default function Navi() {
       <p><Link href={'/myprofile'}>프로필</Link></p>
       <p><Link href={'/search'}>검색</Link></p>
       <p><Link href={'/'}>home</Link></p>
-    </div>
-    }
+    </div>}
   </S.Nav>;
 }

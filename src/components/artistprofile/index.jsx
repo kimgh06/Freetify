@@ -1,8 +1,25 @@
 import * as S from './style';
 
 export default function AritstProfile({ id, name, popularity, img, followers }) {
+  function addcommas() {
+    let f = followers.toString();
+    let string = [];
+    let s = '';
+    for (let i = 1; i <= f.length; i++) {
+      if ((i - 1) % 3 == 0 && i > 1) { //3의 배수 일때만
+        string.splice(0, 0, f[f.length - i] + ',')
+      } else {
+        string.splice(0, 0, f[f.length - i])
+      }
+    }
+    for (let i = 0; i < f.length; i++) {
+      s += string[i];
+    }
+    return s;
+  }
   return <S.Profile onClick={e => {
-    console.log(id, popularity, followers)
+    // console.log(id, popularity);
+    console.log(addcommas());
     if (img?.height > 300) {
 
     } else {
@@ -20,6 +37,6 @@ export default function AritstProfile({ id, name, popularity, img, followers }) 
     }}>
       {name}
     </div>
-    {img?.height > 300 && <p>{followers} followers</p>}
-  </S.Profile>;
+    {img?.height > 300 && <p>{addcommas()} followers</p>}
+  </S.Profile >;
 }

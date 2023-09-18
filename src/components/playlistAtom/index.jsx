@@ -5,9 +5,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
-// const url = 'https://open.spotify.com';
 const url = 'https://api.spotify.com/v1';
-const proxy = 'https://cors-proxy.fringe.zone';
 
 export default function PlaylistAtom({ preview, img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
   const [toggle, setToggle] = useState(isInPlay);
@@ -77,21 +75,13 @@ export default function PlaylistAtom({ preview, img, title, artist, id, type, pl
       getMusicData();
     }} />
     <div>
-      <div className="title" onClick={e => {
-        if (location.href.split('/')[3] === 'search') {
-          location.href = `/album/${album.id}`
-        }
-      }
-      }>{title}</div>&nbsp;
-      <div className="artist" onClick={e => {
-        console.log(artistId);
-        location.href = `/artist/${artistId}`;
-      }}>{artist}</div>
+      <Link className="title" href={album ? `/album/${album?.id}` : '#'} >{title}</Link>&nbsp;
+      <Link className="artist" href={`/artist/${artistId}`}>{artist}</Link>
     </div>
     {playingtime && <div className="playingtime">{`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}</div>}
     {type === "track" && <div className='isInPlay' onClick={listcontrol}>{toggle ? '-' : '+'}</div>}
     {preview && <div className='audio'>
-      <div className='bar' style={{ width: `${currentT / durationT * 15}vw` }} />
+      <div className='bar' style={{ width: `${currentT / durationT * 12}vw` }} />
       <button onClick={e => setPlay(a => !a)}>{play ? '⏸' : '▶'}</button>
       {currentT}/{durationT}
     </div>}
