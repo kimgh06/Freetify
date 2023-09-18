@@ -13,7 +13,7 @@ export default function asdf({ params }) {
       .then(e => {
         console.log(e.data);
         setAlbumInfo(e.data);
-        document.title = e.data.name
+        document.title = e.data.name;
       }).catch(e => {
         console.log(e);
       });
@@ -29,7 +29,10 @@ export default function asdf({ params }) {
         <img src={albumInfo?.images[1].url} alt='img' />
         <div className='description'>
           <h1>{albumInfo?.name}</h1>
-          <h3>{albumInfo?.tracks.items.length}곡</h3>
+          <div className='information'>
+            {albumInfo?.artists.map((i, n) => <a key={n} href={`/artist/${i?.id}`}>{i.name}</a>)}
+            <span>{albumInfo?.tracks.items.length}곡</span>
+          </div>
         </div>
       </div>
     </S.AlbumInfos> :

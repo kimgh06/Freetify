@@ -47,7 +47,7 @@ export default function asdf({ params }) {
       </S.Genres>
       <S.TracksHeader>Top Tracks</S.TracksHeader>
       {topTracks !== 0 && <>
-        {topTracks?.map((i, n) => <PlaylistAtom key={n} artist={info?.name} artistId={id} title={i?.name} id={i?.id}
+        {topTracks?.map((i, n) => <PlaylistAtom preview={i?.preview_url} key={n} artist={info?.name} artistId={id} title={i?.name} id={i?.id}
           img={i?.album?.images[2]?.url} type={i?.type} isInPlay={e => {
             let list = [];
             list = JSON.parse(localStorage.getItem('list'));
@@ -55,7 +55,7 @@ export default function asdf({ params }) {
               list = [];
             }
             return list.find(a => a === i?.id)
-          }} playingtime={`${(i?.duration_ms - i?.duration_ms % 60000) / 60000}:${((i?.duration_ms % 60000 - (i?.duration_ms % 60000) % 1000) / 1000).toString().padStart(2, '0')}`} />)}
+          }} playingtime={i?.duration_ms} />)}
       </>}
     </>}
   </>

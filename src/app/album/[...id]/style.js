@@ -9,6 +9,18 @@ export const AlbumInfos = styled.div`
       h1{
         margin-right: 20px;
       }
+      .information{
+        display: flex;
+        font-weight: bold;
+        a{
+          cursor: pointer;
+          font-size: 20px;
+          padding-right: 20px;
+          &:hover{
+            text-decoration-line: underline;
+          }
+        }
+      }
     }
   }
 `
