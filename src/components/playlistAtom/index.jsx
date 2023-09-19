@@ -70,7 +70,7 @@ export default function PlaylistAtom({ preview, img, title, artist, id, type, pl
     }
   }, [play]);
   return <S.PlayAtom>
-    <img src={img} alt="alt" onClick={e => {
+    <img src={img} alt="" onClick={e => {
       // console.log(id, type);
       getMusicData();
     }} />

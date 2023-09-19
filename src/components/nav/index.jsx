@@ -1,6 +1,6 @@
 'use client'
-import Link from 'next/link';
 import * as S from './style';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 

@@ -18,11 +18,7 @@ export default function AritstProfile({ id, name, popularity, img, followers }) 
     return s;
   }
   return <S.Profile onClick={e => {
-    // console.log(id, popularity);
-    console.log(addcommas());
-    if (img?.height > 300) {
-
-    } else {
+    if (img?.height < 300) {
       window.location.href = `/artist/${id}`;
     }
   }} style={{
