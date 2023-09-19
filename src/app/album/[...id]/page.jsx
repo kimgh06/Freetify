@@ -40,7 +40,7 @@ export default function asdf({ params }) {
         </div>
       </div>
       <div className='tracks'>
-        {tracks?.map((i, n) => <PlaylistAtom preview={i?.preview_url} playingtime={i?.duration_ms} key={n} album={i?.album} img={i?.album?.images[2].url} type={i?.type}
+        {tracks?.map((i, n) => <PlaylistAtom fullAudio={`https://api.spotifydown.com/download/${i?.id}`} preview={i?.preview_url} playingtime={i?.duration_ms} key={n} album={i?.album} img={i?.album?.images[2].url} type={i?.type}
           id={i?.id} title={i?.name} artist={i?.artists[0].name} artistId={i?.artists[0]?.id} isInPlay={e => {
             let list = [];
             list = JSON.parse(localStorage.getItem('list'));

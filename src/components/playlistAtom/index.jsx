@@ -7,11 +7,12 @@ import Link from 'next/link';
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 const url = 'https://api.spotify.com/v1';
 
-export default function PlaylistAtom({ preview, img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
+export default function PlaylistAtom({ fullAudio, preview, img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
   const [toggle, setToggle] = useState(isInPlay);
   const [audio, setAudio] = useState(new Audio());
   const [currentT, setCurrentT] = useState(0);
   const [durationT, setDurationT] = useState(29);
+  const [full, setFull] = useState(preview);
   const [play, setPlay] = useState(false);
   const getMusicData = async e => {
     // await axios.get(`${backendUrl}/geturl?url=${url}/${type}/${id}&authorization=${`Bearer ${localStorage.getItem('access')}`}`).then(e => {
@@ -29,6 +30,13 @@ export default function PlaylistAtom({ preview, img, title, artist, id, type, pl
     }).catch(e => {
       console.log(e);
     });
+  }
+  const getMusicUrl = async e => {
+    await axios.get(e).then(e => {
+      setFull(`https://cors.spotifydown.com/${e.data.link}`);
+    }).catch(e => {
+      console.log(e);
+    })
   }
   const listcontrol = e => {
     if (type === 'track') {
@@ -48,11 +56,18 @@ export default function PlaylistAtom({ preview, img, title, artist, id, type, pl
     }
   }
   useEffect(e => {
-    audio.pause();
-    setPlay(false);
-    setCurrentT(0);
-    setAudio(new Audio(preview));
-  }, [preview]);
+    if (full) {
+      audio.pause();
+      setPlay(false);
+      setCurrentT(0);
+      setAudio(new Audio(full));
+    }
+  }, [full]);
+  useEffect(e => {
+    if (fullAudio) {
+      getMusicUrl(fullAudio);
+    }
+  }, []);
   useEffect(e => {
     audio.addEventListener('timeupdate', e => {
       const { currentTime, duration } = audio;
@@ -80,7 +95,7 @@ export default function PlaylistAtom({ preview, img, title, artist, id, type, pl
     </div>
     {playingtime && <div className="playingtime">{`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}</div>}
     {type === "track" && <div className='isInPlay' onClick={listcontrol}>{toggle ? '-' : '+'}</div>}
-    {preview && <div className='audio'>
+    {full && <div className='audio'>
       <div className='bar' style={{ width: `${currentT / durationT * 12}vw` }} />
       <button onClick={e => setPlay(a => !a)}>{play ? '⏸' : '▶'}</button>
       {currentT}/{durationT}
