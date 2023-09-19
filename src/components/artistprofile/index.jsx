@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import * as S from './style';
 
 export default function AritstProfile({ id, name, popularity, img, followers }) {
@@ -17,22 +18,18 @@ export default function AritstProfile({ id, name, popularity, img, followers }) 
     }
     return s;
   }
-  return <S.Profile onClick={e => {
-    if (img?.height < 300) {
-      window.location.href = `/artist/${id}`;
-    }
-  }} style={{
+  return <S.Profile style={{
     display: img?.height >= 300 ? 'block' : 'flex',
     margin: img?.height >= 300 ? 'auto' : '0',
     width: img?.height
   }}>
     {img ? <img style={{ width: img?.height, height: img?.height }} src={img.url} alt="img" /> : <span>no image</span>}
-    <div style={{
+    <Link href={img?.height < 300 ? `/artist/${id}` : '#'} style={{
       fontSize: img?.height > 300 ? '40px' : '16px',
       fontWeight: img?.height > 300 ? 'bold' : 'normal'
     }}>
       {name}
-    </div>
+    </Link>
     {img?.height > 300 && <p>{addcommas()} followers</p>}
   </S.Profile >;
 }
