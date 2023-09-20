@@ -3,6 +3,7 @@ import * as S from './style';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Player from '../player';
 
 const url = process.env.NEXT_PUBLIC_BACKEND_URL;
 
@@ -16,7 +17,7 @@ export default function Navi() {
           localStorage.setItem('access', info.access_token);
           localStorage.setItem('expire', new Date().getTime() + info.expires_in * 1000);
         }
-        window.location.href = '#';
+        window.location.reload();
       }).catch(e => {
         console.log(e);
       })
@@ -26,13 +27,16 @@ export default function Navi() {
       refresh_token();
     }
   }, [])
-  return <S.Nav>
-    <div className={'menu ' + activating} onClick={e => setActivating(a => !a)}>三</div>
-    {activating && <div className='nav'>
-      <p><Link href={'/login'}>Spotify 로그인</Link></p>
-      <p><Link href={'/myprofile'}>프로필</Link></p>
-      <p><Link href={'/search'}>검색</Link></p>
-      <p><Link href={'/'}>home</Link></p>
-    </div>}
-  </S.Nav>;
+  return <>
+    <S.Nav>
+      <div className={'menu ' + activating} onClick={e => setActivating(a => !a)}>三</div>
+      {activating && <div className='nav'>
+        <p><Link href={'/login'}>Spotify 로그인</Link></p>
+        <p><Link href={'/myprofile'}>프로필</Link></p>
+        <p><Link href={'/search'}>검색</Link></p>
+        <p><Link href={'/'}>home</Link></p>
+      </div>}
+    </S.Nav>
+    <Player />
+  </>;
 }

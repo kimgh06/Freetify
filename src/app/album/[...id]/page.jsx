@@ -17,6 +17,11 @@ export default function asdf({ params }) {
         console.log(e.data);
         setAlbumInfo(e.data);
         setTracks(e.data.tracks.items);
+        let TrackList = [];
+        e.data.tracks.items.forEach(items => {
+          TrackList.push(items.id);
+        });
+        localStorage.setItem('TrackList', TrackList);
         document.title = e.data.name;
       }).catch(e => {
         console.log(e);
@@ -40,7 +45,7 @@ export default function asdf({ params }) {
         </div>
       </div>
       <div className='tracks'>
-        {tracks?.map((i, n) => <PlaylistAtom preview={i?.preview_url} playingtime={i?.duration_ms} key={n} album={i?.album} img={i?.album?.images[2].url} type={i?.type}
+        {tracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} playingtime={i?.duration_ms} key={n} album={i?.album} img={i?.album?.images[2].url} type={i?.type}
           id={i?.id} title={i?.name} artist={i?.artists[0].name} artistId={i?.artists[0]?.id} isInPlay={e => {
             let list = [];
             list = JSON.parse(localStorage.getItem('list'));

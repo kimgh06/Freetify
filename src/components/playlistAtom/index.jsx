@@ -7,7 +7,7 @@ import Link from 'next/link';
 const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 const url = 'https://api.spotify.com/v1';
 
-export default function PlaylistAtom({ img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
+export default function PlaylistAtom({ index, img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
   const [toggle, setToggle] = useState(isInPlay);
   const [audio, setAudio] = useState(new Audio());
   const [currentT, setCurrentT] = useState(0);
@@ -86,6 +86,9 @@ export default function PlaylistAtom({ img, title, artist, id, type, playingtime
   useEffect(e => {
     audio.volume = 0.5;
     if (play) {
+      console.log(index);
+      localStorage.setItem('now_index_in_tracks', index);
+      localStorage.setItem('now_playing_id', id)
       audio.play();
     } else {
       audio.pause();

@@ -47,7 +47,7 @@ export default function asdf({ params }) {
       </S.Genres>
       <S.TracksHeader>Top Tracks</S.TracksHeader>
       {topTracks !== 0 && <>
-        {topTracks?.map((i, n) => <PlaylistAtom preview={i?.preview_url} key={n} artist={info?.name} artistId={id} title={i?.name} id={i?.id}
+        {topTracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} key={n} artist={info?.name} artistId={id} title={i?.name} id={i?.id}
           img={i?.album?.images[2]?.url} type={i?.type} isInPlay={e => {
             let list = [];
             list = JSON.parse(localStorage.getItem('list'));

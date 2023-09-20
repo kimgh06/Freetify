@@ -66,7 +66,7 @@ export default function Home() {
   return <S.App>
     <Navi />
     <h1>My track</h1>
-    {tracks.length !== 0 && tracks?.map((i, n) => <PlaylistAtom preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i.album.images[2].url} type={i?.type}
+    {tracks.length !== 0 && tracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i.album.images[2].url} type={i?.type}
       id={i?.id} title={i?.name} artist={i?.artists[0].name} artistId={i?.artists[0].id} isInPlay={e => {
         let list = [];
         list = JSON.parse(localStorage.getItem('list'));
