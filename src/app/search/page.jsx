@@ -14,7 +14,7 @@ export default function asdf() {
   const [artist, setArtist] = useState([]);
   const [tracks, setTracks] = useState([]);
   const searchItems = async e => {
-    await axios.get(`${url}/search?q=${q}&type=album,track,artist&limit=10`, { headers: { Authorization: "Bearer " + localStorage.getItem('access') } }).then(e => {
+    await axios.get(`${url}/search?q=${q}&type=album,track,artist&limit=5`, { headers: { Authorization: "Bearer " + localStorage.getItem('access') } }).then(e => {
       const data = e.data;
       let artists = data.artists.items.slice(0, 5);
       console.log("album", data.albums.items, "artists", artists, "tracks", data.tracks.items);
@@ -59,7 +59,7 @@ export default function asdf() {
           <p>
             Albums
           </p>
-          {albums?.length !== 0 && albums?.map((i, n) => <PlaylistAtom album={i} key={n} img={i.images[2].url} type={i?.type}
+          {albums?.length !== 0 && albums?.map((i, n) => <PlaylistAtom album={i} key={n} img={i?.images[2]?.url} type={i?.type}
             id={i?.id} title={i.name} artist={i?.artists[0].name} artistId={i?.artists[0].id} />)}
         </div>
         <div className="result">

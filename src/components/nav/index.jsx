@@ -16,6 +16,7 @@ export default function Navi() {
           localStorage.setItem('access', info.access_token);
           localStorage.setItem('expire', new Date().getTime() + info.expires_in * 1000);
         }
+        window.location.href = '#';
       }).catch(e => {
         console.log(e);
       })

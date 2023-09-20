@@ -14,7 +14,7 @@ export default function PlaylistAtom({ img, title, artist, id, type, playingtime
   const [durationT, setDurationT] = useState(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
   const [full, setFull] = useState(null);
   const [play, setPlay] = useState(false);
-  const getMusicData = async e => {
+  const getMusicAnalsisData = async e => {
     // await axios.get(`${backendUrl}/geturl?url=${url}/${type}/${id}&authorization=${`Bearer ${localStorage.getItem('access')}`}`).then(e => {
     //   console.log(e.data);
     // }).catch(e => {
@@ -57,6 +57,9 @@ export default function PlaylistAtom({ img, title, artist, id, type, playingtime
   }
   useEffect(e => {
     if (id && type === 'track') {
+      setCurrentT(0);
+      setFull(null);
+      setDurationT(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
       getMusicUrl();
     }
   }, [id]);
@@ -74,7 +77,10 @@ export default function PlaylistAtom({ img, title, artist, id, type, playingtime
     setCurrentT(`${(currentTime - currentTime % 60) / 60}:${((currentTime % 60 - (currentTime % 60) % 1) / 1).toString().padStart(2, '0')}`);
     setDurationT(`${(duration - duration % 60) / 60}:${((duration % 60 - (duration % 60) % 1) / 1).toString().padStart(2, '0')}`);
     if (duration - currentTime === 0) {
+      audio.currentTime = 0;
+      setCurrentT('0:00');
       setPlay(false);
+
     }
   });
   useEffect(e => {
@@ -88,18 +94,22 @@ export default function PlaylistAtom({ img, title, artist, id, type, playingtime
   return <S.PlayAtom>
     <img src={img} alt="" onClick={e => {
       // console.log(id, type);
-      getMusicData();
+      getMusicAnalsisData();
     }} />
     <div>
-      <Link className="title" href={album ? `/album/${album?.id}` : '#'} >{title}</Link>&nbsp;
-      <Link className="artist" href={`/artist/${artistId}`}>{artist}</Link>
+      <div className='hea'>
+        <Link className="title" href={album ? `/album/${album?.id}` : '#'} >{title}</Link>&nbsp;
+        {type === "track" && <div className='isInPlay' onClick={listcontrol}>{toggle ? '-' : '+'}</div>}
+      </div>
+      <div className='foo'>
+        <Link className="artist" href={`/artist/${artistId}`}>{artist}</Link>
+        {full ? <div className='audio'>
+          <div className='bar' style={{ width: `${audio.currentTime / audio.duration * 13}vw` }} />
+          <button onClick={e => setPlay(a => !a)}>{play ? '⏸' : '▶'}</button>
+          {currentT}/{durationT}
+        </div> : type === 'track' && <div className='audio'>...</div>}
+      </div>
     </div>
-    {playingtime && <div className="playingtime">{durationT}</div>}
-    {type === "track" && <div className='isInPlay' onClick={listcontrol}>{toggle ? '-' : '+'}</div>}
-    {full ? <div className='audio'>
-      <div className='bar' style={{ width: `${audio.currentTime / audio.duration * 12}vw` }} />
-      <button onClick={e => setPlay(a => !a)}>{play ? '⏸' : '▶'}</button>
-      {currentT}/{durationT}
-    </div> : type === 'track' && "..."}
+    {/* {playingtime && <div className="playingtime">{durationT}</div>} */}
   </S.PlayAtom>;
 }

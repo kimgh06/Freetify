@@ -25,4 +25,9 @@ export const AlbumInfos = styled.div`
       }
     }
   }
+  .end{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `

@@ -16,53 +16,64 @@ export const PlayAtom = styled.div`
     object-fit: scale-down;
     width: 64px;
     margin-right: 10px;
-  }
-  .title{
-    cursor: pointer;
-    /* max-width: 200px; */
-    display: block;
-    width: 16vw;
-    min-width: 180px;
-    &:hover{
-      text-decoration-line: underline;
-    }
-  }
-  .artist{
-    display: block;
-    cursor: pointer;
-    &:hover{
-      text-decoration-line: underline;
-    }
+    /* border: none; */
   }
   .playingtime{
     margin-right: 2vw;
   }
-  .isInPlay{
-    cursor: pointer;
-    font-size: 20px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50px;
+  .hea{
     display: flex;
-    align-items: center;
-    justify-content: center;
-    &:hover{
-      background-color: lightgray;
-    }
-    transition: ease 0.2s all;
-  }
-  .audio{
-    position: absolute;
-    margin-left: 250px;
-    margin-top: 30px;
-    button{
+    width: 120%;
+    justify-content: space-between;
+    .isInPlay{
       cursor: pointer;
+      font-size: 20px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover{
+        background-color: lightgray;
+      }
+      transition: ease 0.2s all;
     }
-    .bar{
-      border: 3px solid blue;
-      width: 0;
-      height: 0;
-      border-radius: 20px;
+    .title{
+      cursor: pointer;
+      /* max-width: 200px; */
+      display: block;
+      width: 16vw;
+      min-width: 180px;
+      /* margin-right: 75px; */
+      &:hover{
+        text-decoration-line: underline;
+      }
+    }
+  }
+  .foo{
+    display: flex;
+    margin-top: 8px;
+    .artist{
+      display: block;
+      cursor: pointer;
+      &:hover{
+        text-decoration-line: underline;
+      }
+    }
+    .audio{
+      /* position: absolute; */
+      margin-left: 20px;
+      margin-top: -5px; 
+      button{
+        cursor: pointer;
+      }
+      .bar{
+        border: 3px solid blue;
+        width: 0;
+        height: 0;
+        border-radius: 20px;
+      }
     }
   }
 `
