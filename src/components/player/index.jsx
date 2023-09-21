@@ -52,7 +52,7 @@ export default function Player() {
     setCurrentT(`${(currentTime - currentTime % 60) / 60}:${((currentTime % 60 - (currentTime % 60) % 1) / 1).toString().padStart(2, '0')}`);
     setDurationT(`${(duration - duration % 60) / 60}:${((duration % 60 - (duration % 60) % 1) / 1).toString().padStart(2, '0')}`);
     if (duration - currentTime === 0) {
-      audio.currentTime = 0;
+      setPlay(false);
       setCurrentT('0:00');
 
     }
@@ -67,8 +67,8 @@ export default function Player() {
   }, [play]);
   return <S.Player>
     <div className='audio'>
-      <button onClick={e => setPlay(a => !a)}>{play ? '⏸' : '▶'}</button>
-      <div className='bar' style={{ width: `${audio.currentTime / audio.duration * 28}vw` }} />
+      <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+      <div className='bar' style={{ width: `${audio.currentTime / audio.duration * (window.innerWidth >= 1000 ? 28 : 95)}vw` }} />
       {`${currentT} / ${durationT}`}
     </div>
   </S.Player>;

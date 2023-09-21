@@ -29,5 +29,8 @@ export const AlbumInfos = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    @media screen and (max-width: 1000px) {  
+      margin-bottom: 100px;
+    }
   }
 `
