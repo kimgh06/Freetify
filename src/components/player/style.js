@@ -16,4 +16,15 @@ export const Player = styled.div`
   }
   //변하지 않는 것
   background-color: gray;
+  .audio{
+    button{
+      cursor: pointer;
+    }
+    .bar{
+      border: 3px solid blue;
+      width: 0;
+      height: 0;
+      border-radius: 20px;
+    }
+  }
 `

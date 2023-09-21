@@ -23,7 +23,7 @@ export const PlayAtom = styled.div`
   }
   .hea{
     display: flex;
-    width: 120%;
+    width: 100%;
     justify-content: space-between;
     .isInPlay{
       cursor: pointer;
@@ -59,20 +59,6 @@ export const PlayAtom = styled.div`
       cursor: pointer;
       &:hover{
         text-decoration-line: underline;
-      }
-    }
-    .audio{
-      /* position: absolute; */
-      margin-left: 20px;
-      margin-top: -5px; 
-      button{
-        cursor: pointer;
-      }
-      .bar{
-        border: 3px solid blue;
-        width: 0;
-        height: 0;
-        border-radius: 20px;
       }
     }
   }

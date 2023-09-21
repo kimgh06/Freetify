@@ -2,35 +2,61 @@
 import { useEffect, useState } from 'react';
 import * as S from './style';
 import axios from 'axios';
+import { useRecoilState } from 'recoil';
+import { NowPlayingId } from '@/app/recoilStates';
 
 export default function Player() {
   const [audio, setAudio] = useState(new Audio());
   const [id, setId] = useState(localStorage.getItem('now_playing_id'));
-  const [playingtime, setPlayingtime] = useState(1000000);
   const [play, setPlay] = useState(false);
+  const [now_playing_id, setNow_playing_id] = useRecoilState(NowPlayingId);
   const [currentT, setCurrentT] = useState(0);
-  const [durationT, setDurationT] = useState(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
+  const [durationT, setDurationT] = useState(`0:00`);
+  const [first, setFirst] = useState(false);
 
   const getMusicUrl = async id => {
     await axios.get(`https://api.spotifydown.com/download/${id}`).then(e => {
-      console.log(e.data)
       setAudio(new Audio(`https://cors.spotifydown.com/${e.data.link}`));
     }).catch(e => {
       console.log(e);
     })
   }
-  useEffect(e => {
-    getMusicUrl(id);
-  }, []);
+  audio.onloadeddata = e => {
+    if (first) {
+      setPlay(true);
+    } else {
+      setFirst(true);
+    }
+  }
   useEffect(e => {
     if (id) {
       audio.pause();
       setPlay(false);
-      setCurrentT(0);
-      setDurationT(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
-      getMusicUrl(id);
     }
+    getMusicUrl(id);
   }, [id]);
+  useEffect(e => {
+    if (now_playing_id === '') {
+      setNow_playing_id(localStorage.getItem('now_playing_id'));
+      setId(localStorage.getItem('now_playing_id'));
+    } else {
+      audio.pause();
+      setPlay(false);
+      setId(now_playing_id);
+      localStorage.setItem('now_playing_id', now_playing_id);
+    }
+    console.log("now playing id:", now_playing_id);
+  }, [now_playing_id]);
+  audio.addEventListener('timeupdate', e => {
+    const { currentTime, duration } = audio;
+    setCurrentT(`${(currentTime - currentTime % 60) / 60}:${((currentTime % 60 - (currentTime % 60) % 1) / 1).toString().padStart(2, '0')}`);
+    setDurationT(`${(duration - duration % 60) / 60}:${((duration % 60 - (duration % 60) % 1) / 1).toString().padStart(2, '0')}`);
+    if (duration - currentTime === 0) {
+      audio.currentTime = 0;
+      setCurrentT('0:00');
+
+    }
+  });
   useEffect(e => {
     audio.volume = 0.5;
     if (play) {
@@ -40,6 +66,11 @@ export default function Player() {
     }
   }, [play]);
   return <S.Player>
-    <button onClick={e => setPlay(a => !a)}>{play ? '⏸' : '▶'}</button>
+    <div className='audio'>
+      <button onClick={e => setPlay(a => !a)}>{play ? '⏸' : '▶'}</button>
+      <div className='bar' style={{ width: `${audio.currentTime / audio.duration * 28}vw` }} />
+      {`${currentT} / ${durationT}`}
+    </div>
   </S.Player>;
 }
+

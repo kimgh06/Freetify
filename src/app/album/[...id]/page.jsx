@@ -5,6 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import Link from 'next/link';
 import PlaylistAtom from '@/components/playlistAtom';
+import { RecoilRoot } from 'recoil';
 
 export default function asdf({ params }) {
   const id = params.id[0];
@@ -31,7 +32,7 @@ export default function asdf({ params }) {
     console.log(id);
     getAlbumInfos();
   }, []);
-  return <>
+  return <RecoilRoot>
     <Navi />
     {albumInfo ? <S.AlbumInfos>
       <div className='header'>
@@ -60,5 +61,5 @@ export default function asdf({ params }) {
       </div>
     </S.AlbumInfos> :
       <h1>Loading...</h1>}
-  </>;
+  </RecoilRoot>;
 }
