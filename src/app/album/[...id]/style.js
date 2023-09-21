@@ -6,6 +6,9 @@ export const AlbumInfos = styled.div`
     justify-content: center;
     align-items: end;
     margin-bottom: 30px;
+    img{
+      border-radius: 8px;
+    }
     .description{
       margin-left: 20px;
       h1{
@@ -30,7 +33,7 @@ export const AlbumInfos = styled.div`
     align-items: center;
     justify-content: center;
     @media screen and (max-width: 1000px) {  
-      margin-bottom: 100px;
+      margin-bottom: 130px;
     }
   }
 `

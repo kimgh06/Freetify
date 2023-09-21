@@ -2,13 +2,15 @@ import { styled } from "styled-components";
 
 export const Player = styled.div`
   position: fixed;
-  padding: 2vw 3vw;
+  padding: 8px 10px;
   //모바일용
   left: 1vw;
   bottom: 8px;
   width: 98vw;
   border-radius: 10px;
   @media screen and (min-width: 1000px) {  
+    display: flex;
+    justify-content: center;
     top: 8px;
     right: 0;
     left: auto;
@@ -20,10 +22,16 @@ export const Player = styled.div`
   background-color: gray;
   .audio{
     .head{
+      img{
+        border-radius: 8px;
+      }
       @media screen and (max-width: 1000px) {  
         display: flex;
         align-items: center;
         justify-content: space-between;
+        img{
+          border-radius: 0;
+        }
       }
       a{
         cursor: pointer;
@@ -31,7 +39,11 @@ export const Player = styled.div`
           text-decoration: underline;
         }
       }
+      .playbutton{
+        text-align: center;
+      }
       button{
+        text-align: center;
         width: 70px;
         height: 70px;
         border-radius: 100px;
@@ -47,6 +59,21 @@ export const Player = styled.div`
       width: 0;
       height: 0;
       border-radius: 20px;
+    }
+    .volume{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span{
+        text-align: center;
+        width: 10vw;
+      }
+      button{
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+      }
     }
   }
 `

@@ -3,11 +3,11 @@ import { useEffect, useState } from 'react';
 import * as S from './style';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import { NowPlayingId } from '@/app/recoilStates';
+import { NowPlayingId, PlayingAudio } from '@/app/recoilStates';
 import Link from 'next/link';
 
 export default function Player() {
-  const [audio, setAudio] = useState(new Audio());
+  const [audio, setAudio] = useRecoilState(PlayingAudio);
   const [now_playing_id, setNow_playing_id] = useRecoilState(NowPlayingId);
   const [id, setId] = useState(localStorage.getItem('now_playing_id'));
   const [info, setInfo] = useState({});
@@ -15,7 +15,7 @@ export default function Player() {
   const [currentT, setCurrentT] = useState(0);
   const [durationT, setDurationT] = useState(`0:00`);
   const [first, setFirst] = useState(false);
-  const [volume, setVolume] = useState(0.5);
+  const [volume, setVolume] = useState(0.7);
 
   const getMusicUrl = async id => {
     await axios.get(`https://api.spotifydown.com/download/${id}`).then(e => {
@@ -85,24 +85,31 @@ export default function Player() {
           <>
             <img src={info?.album?.images[1]?.url} />
             <div>
-              <Link href={`/album/${info?.album?.id}`}>{info?.name}</Link>
-              <div>{info?.artists && info?.artists[0]?.name}</div>
+              <Link href={`/album/${info?.album?.id}`}>{info?.name}</Link><br />
+              <Link href={`/album/${info?.artists && info?.artists[0]?.id}`}>{info?.artists && info?.artists[0]?.name}</Link>
             </div>
-            <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+            <div className='playbutton'>
+              <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+            </div>
           </>
           : <>
             <img src={info?.album?.images[2]?.url} />
             <div>
-              <div>{info?.name}</div>
-              <div>{info?.artists && info?.artists[0]?.name}</div>
+              <Link href={`/album/${info?.album?.id}`}>{info?.name}</Link><br />
+              <Link href={`/album/${info?.artists[0]?.id}`}>{info?.artists && info?.artists[0]?.name}</Link>
             </div>
             <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           </>
         }
       </div>
-      <div className='bar' style={{ width: `${audio.currentTime / audio.duration * (window.innerWidth >= 1000 ? 28 : 95)}vw` }} />
+      <div className='bar' style={{ width: window.innerWidth >= 1000 ? `${audio.currentTime / audio.duration * 300}px` : `${audio.currentTime / audio.duration * 95}vw` }} />
       {`${currentT} / ${durationT}`}
+      {window.innerWidth >= 1000 && <div className='volume'>
+        <button onClick={e => setVolume(a => (a * 100 - 10) / 100 < 0.1 ? a : (a * 100 - 10) / 100)}>-</button>
+        <span>{volume * 100}%</span>
+        <button onClick={e => setVolume(a => (a * 100 + 10) / 100 > 1 ? a : (a * 100 + 10) / 100)}>+</button>
+      </div>}
     </div>
-  </S.Player>;
+  </S.Player >;
 }
 

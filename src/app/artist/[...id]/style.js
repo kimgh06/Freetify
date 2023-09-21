@@ -23,3 +23,12 @@ export const TracksHeader = styled.div`
   border-radius: 5px;
   padding: 10px 0;
 `
+
+export const End = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @media screen and (max-width: 1000px) {  
+    margin-bottom: 130px;
+  }
+`

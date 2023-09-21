@@ -29,7 +29,6 @@ export default function asdf({ params }) {
       });
   }
   useEffect(e => {
-    console.log(id);
     getAlbumInfos();
   }, []);
   return <RecoilRoot>
@@ -41,6 +40,7 @@ export default function asdf({ params }) {
           <h1>{albumInfo?.name}</h1>
           <div className='information'>
             {albumInfo?.artists.map((i, n) => <Link key={n} href={`/artist/${i?.id}`}>{i.name}</Link>)}
+            <span>{albumInfo?.release_date.substr(0, 4)}년</span>&nbsp;
             <span>{albumInfo?.tracks.items.length}곡</span>
           </div>
         </div>
