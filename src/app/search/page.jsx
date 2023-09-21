@@ -5,6 +5,7 @@ import PlaylistAtom from "@/components/playlistAtom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import AritstProfile from "@/components/artistprofile";
+import { RecoilRoot } from "recoil";
 
 const url = 'https://api.spotify.com/v1';
 
@@ -29,7 +30,7 @@ export default function asdf() {
   useEffect(e => {
     document.title = "search";
   }, []);
-  return <>
+  return <RecoilRoot>
     <Navi />
     <S.Search>
       <form onSubmit={e => {
@@ -69,5 +70,5 @@ export default function asdf() {
         </div>
       </div>
     </S.Search>
-  </>;
+  </RecoilRoot>;
 }

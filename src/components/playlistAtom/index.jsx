@@ -62,6 +62,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
         {type === 'track' && <div className='audio'>
           <button onClick={e => {
             setNow_playing_id(id);
+            localStorage.setItem('now_index_in_tracks', index);
           }}>{now_playing_id === id ? '⏸' : '▶'}</button>
         </div>}
       </div>

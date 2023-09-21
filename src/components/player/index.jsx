@@ -4,6 +4,7 @@ import * as S from './style';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { NowPlayingId } from '@/app/recoilStates';
+import Link from 'next/link';
 
 export default function Player() {
   const [audio, setAudio] = useState(new Audio());
@@ -83,13 +84,19 @@ export default function Player() {
         {window.innerWidth >= 1000 ?
           <>
             <img src={info?.album?.images[1]?.url} />
-            <div>{info?.name}</div>
+            <div>
+              <Link href={`/album/${info?.album?.id}`}>{info?.name}</Link>
+              <div>{info?.artists && info?.artists[0]?.name}</div>
+            </div>
             <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           </>
           : <>
-            <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
-            <span>{info?.name}</span>
             <img src={info?.album?.images[2]?.url} />
+            <div>
+              <div>{info?.name}</div>
+              <div>{info?.artists && info?.artists[0]?.name}</div>
+            </div>
+            <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           </>
         }
       </div>

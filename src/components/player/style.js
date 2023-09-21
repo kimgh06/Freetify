@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 
 export const Player = styled.div`
   position: fixed;
-  padding: 1vw;
+  padding: 2vw 3vw;
   //모바일용
   left: 1vw;
   bottom: 8px;
@@ -13,6 +13,7 @@ export const Player = styled.div`
     right: 0;
     left: auto;
     border-radius: 10px 0 0 10px;
+    padding: 1vw;
     width: 30vw;
   }
   //변하지 않는 것
@@ -22,6 +23,13 @@ export const Player = styled.div`
       @media screen and (max-width: 1000px) {  
         display: flex;
         align-items: center;
+        justify-content: space-between;
+      }
+      a{
+        cursor: pointer;
+        &:hover{
+          text-decoration: underline;
+        }
       }
       button{
         width: 70px;
