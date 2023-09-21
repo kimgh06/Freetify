@@ -18,15 +18,21 @@ export const Player = styled.div`
   //변하지 않는 것
   background-color: gray;
   .audio{
-    button{
-      width: 70px;
-      height: 70px;
-      border-radius: 100px;
-			transition: all ease 0.3s;
-      cursor: pointer;
-      border:none;
-      font-size: 30px;
-      text-align: center;
+    .head{
+      @media screen and (max-width: 1000px) {  
+        display: flex;
+        align-items: center;
+      }
+      button{
+        width: 70px;
+        height: 70px;
+        border-radius: 100px;
+        transition: all ease 0.3s;
+        cursor: pointer;
+        border:none;
+        font-size: 30px;
+        text-align: center;
+      }
     }
     .bar{
       border: 3px solid blue;

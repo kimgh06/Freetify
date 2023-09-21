@@ -7,6 +7,7 @@ import axios from "axios";
 import * as S from './style';
 import { useEffect, useState } from "react";
 import PlaylistAtom from "@/components/playlistAtom";
+import { RecoilRoot } from "recoil";
 
 const url = 'https://api.spotify.com/v1';
 
@@ -37,7 +38,7 @@ export default function asdf({ params }) {
   useEffect(e => {
     getArtistInfo();
   }, [])
-  return <>
+  return <RecoilRoot>
     <S.PaddingBox />
     <Navi />
     {info && <>
@@ -58,5 +59,5 @@ export default function asdf({ params }) {
           }} playingtime={i?.duration_ms} />)}
       </>}
     </>}
-  </>
+  </RecoilRoot>;
 }
