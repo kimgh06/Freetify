@@ -31,26 +31,6 @@ export default function Player() {
       setFirst(true);
     }
   }
-  useEffect(e => {
-    if (id) {
-      audio.pause();
-      setPlay(false);
-    }
-    getMusicUrl(id);
-    getTrackinfos();
-  }, [id]);
-  useEffect(e => {
-    if (now_playing_id === '') {
-      setNow_playing_id(localStorage.getItem('now_playing_id'));
-      setId(localStorage.getItem('now_playing_id'));
-    } else {
-      audio.pause();
-      setPlay(false);
-      setId(now_playing_id);
-      localStorage.setItem('now_playing_id', now_playing_id);
-    }
-    console.log("now playing id:", now_playing_id);
-  }, [now_playing_id]);
   audio.addEventListener('timeupdate', e => {
     audio.volume = volume;
     const { currentTime, duration } = audio;
@@ -63,15 +43,38 @@ export default function Player() {
     }
   });
   useEffect(e => {
+    if (id) {
+      audio.pause();
+      setPlay(false);
+    }
+    getMusicUrl(id);
+    getTrackinfos(id);
+    let list = localStorage.getItem("TrackList");
+    const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+    list = list.split(',');
+    console.log('next', list[index + 1]);
+  }, [id]);
+  useEffect(e => {
+    if (now_playing_id === '') {
+      setNow_playing_id(localStorage.getItem('now_playing_id'));
+      setId(localStorage.getItem('now_playing_id'));
+    } else {
+      audio.pause();
+      setPlay(false);
+      setId(now_playing_id);
+      localStorage.setItem('now_playing_id', now_playing_id);
+    }
+    console.log("now:", now_playing_id);
+  }, [now_playing_id]);
+  useEffect(e => {
     if (play) {
       audio.play();
     } else {
       audio.pause();
     }
   }, [play]);
-  const getTrackinfos = async e => {
+  const getTrackinfos = async id => {
     await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
-      // setTrack(e.data.tracks);
       console.log(e.data);
       setInfo(e.data);
     }).catch(e => {
@@ -88,7 +91,7 @@ export default function Player() {
               <Link href={`/album/${info?.album?.id}`}>
                 <h2>{info?.name}</h2>
               </Link>
-              <Link href={`/album/${info?.artists && info?.artists[0]?.id}`}>{info?.artists && info?.artists[0]?.name}</Link>
+              <Link href={`/artist/${info?.artists && info?.artists[0]?.id}`}>{info?.artists && info?.artists[0]?.name}</Link>
             </div>
             <div className='playbutton'>
               <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
@@ -98,7 +101,7 @@ export default function Player() {
             <img src={info?.album?.images[2]?.url} />
             <div>
               <div href={`/album/${info?.album?.id}`}>{info?.name}</div><br />
-              <div href={`/album/${info?.artists && info?.artists[0]?.id}`}>{info?.artists && info?.artists[0]?.name}</div>
+              <div href={`/artist/${info?.artists && info?.artists[0]?.id}`}>{info?.artists && info?.artists[0]?.name}</div>
             </div>
             <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           </>

@@ -22,7 +22,7 @@ export default function asdf({ params }) {
         e.data.tracks.items.forEach(items => {
           TrackList.push(items.id);
         });
-        localStorage.setItem('TrackList', TrackList);
+        localStorage.setItem('TrackList', `${TrackList}`);
         document.title = e.data.name;
       }).catch(e => {
         console.log(e);
