@@ -25,10 +25,12 @@ export const Player = styled.div`
       img{
         border-radius: 8px;
       }
+      width: 300px;
       @media screen and (max-width: 1000px) {  
         display: flex;
         align-items: center;
         justify-content: space-between;
+        width: auto;
         img{
           border-radius: 0;
         }
@@ -47,11 +49,14 @@ export const Player = styled.div`
         width: 70px;
         height: 70px;
         border-radius: 100px;
-        transition: all ease 0.3s;
+        transition: all ease 0.1s;
         cursor: pointer;
         border:none;
         font-size: 30px;
         text-align: center;
+        &:hover{
+          background-color: #868686;
+        }
       }
     }
     .bar{
@@ -59,6 +64,7 @@ export const Player = styled.div`
       width: 0;
       height: 0;
       border-radius: 20px;
+      margin-top: 3px;
     }
     .volume{
       display: flex;
@@ -72,6 +78,7 @@ export const Player = styled.div`
         font-size: 20px;
         width: 30px;
         height: 30px;
+        transition: all ease 0.1s;
         cursor: pointer;
       }
     }

@@ -85,7 +85,9 @@ export default function Player() {
           <>
             <img src={info?.album?.images[1]?.url} />
             <div>
-              <Link href={`/album/${info?.album?.id}`}>{info?.name}</Link><br />
+              <Link href={`/album/${info?.album?.id}`}>
+                <h2>{info?.name}</h2>
+              </Link>
               <Link href={`/album/${info?.artists && info?.artists[0]?.id}`}>{info?.artists && info?.artists[0]?.name}</Link>
             </div>
             <div className='playbutton'>
@@ -95,8 +97,8 @@ export default function Player() {
           : <>
             <img src={info?.album?.images[2]?.url} />
             <div>
-              <Link href={`/album/${info?.album?.id}`}>{info?.name}</Link><br />
-              <Link href={`/album/${info?.artists[0]?.id}`}>{info?.artists && info?.artists[0]?.name}</Link>
+              <div href={`/album/${info?.album?.id}`}>{info?.name}</div><br />
+              <div href={`/album/${info?.artists && info?.artists[0]?.id}`}>{info?.artists && info?.artists[0]?.name}</div>
             </div>
             <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           </>
