@@ -42,9 +42,23 @@ export const Player = styled.div`
         }
       }
       .playbutton{
-        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .left , .right{
+          margin: 0 2vw;
+          cursor: pointer;
+          font-size: 20px;
+          width: 30px;
+          height: 30px;
+          text-align: center;
+          border: none;
+          &:hover{
+            background-color: #868686;
+          }
+        }
       }
-      button{
+      .play{
         text-align: center;
         width: 70px;
         height: 70px;
