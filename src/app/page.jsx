@@ -48,6 +48,11 @@ export default function Home() {
     await axios.get(`https://api.spotify.com/v1/tracks?ids=${ids}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
       setTracks(e.data.tracks);
       console.log(e.data)
+      let TrackList = [];
+      e.data.tracks.forEach(items => {
+        TrackList.push(items.id);
+      });
+      localStorage.setItem('TrackList', `${TrackList}`);
     }).catch(e => {
       console.log(e);
     });
