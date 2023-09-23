@@ -8,71 +8,41 @@ import Link from 'next/link';
 
 export default function Player() {
   const [audio, setAudio] = useRecoilState(PlayingAudio);
-  const [now_playing_id, setNow_playing_id] = useRecoilState(NowPlayingId);
-  const [id, setId] = useState(localStorage.getItem('now_playing_id'));
+  const [id, setId] = useRecoilState(NowPlayingId);
   const [info, setInfo] = useState({});
   const [play, setPlay] = useState(false);
   const [currentT, setCurrentT] = useState(0);
   const [durationT, setDurationT] = useState(`0:00`);
-  const [first, setFirst] = useState(false);
   const [volume, setVolume] = useState(0.7);
 
   const getMusicUrl = async id => {
     await axios.get(`https://api.spotifydown.com/download/${id}`).then(e => {
-      setAudio(new Audio(`https://cors.spotifydown.com/${e.data.link}`));
+      const newAudio = new Audio(`https://cors.spotifydown.com/${e.data.link}`);
+      setAudio(newAudio);
+      newAudio.onload = e => {
+        setPlay(true);
+      }
     }).catch(e => {
       console.log(e);
     })
-  }
-  audio.onloadeddata = e => {
-    if (first) {
-      setPlay(true);
-    } else {
-      setFirst(true);
-    }
   }
   audio.addEventListener('timeupdate', e => {
     audio.volume = volume;
     const { currentTime, duration } = audio;
     setCurrentT(`${(currentTime - currentTime % 60) / 60}:${((currentTime % 60 - (currentTime % 60) % 1) / 1).toString().padStart(2, '0')}`);
     setDurationT(`${(duration - duration % 60) / 60}:${((duration % 60 - (duration % 60) % 1) / 1).toString().padStart(2, '0')}`);
-    if (duration - currentTime === 0) {
-      setPlay(false);
+    if (duration - currentTime <= 0) {
+      audio.currentTime = 0
       setCurrentT('0:00');
-
+      const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+      let list = localStorage.getItem("TrackList");
+      list = list.split(',');
+      if (list[index + 1]) {
+        setId(list[index + 1]);
+        localStorage.setItem('now_index_in_tracks', index + 1);
+      }
     }
   });
-  useEffect(e => {
-    if (id) {
-      audio.pause();
-      setPlay(false);
-    }
-    getMusicUrl(id);
-    getTrackinfos(id);
-    let list = localStorage.getItem("TrackList");
-    const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-    list = list.split(',');
-    console.log('next', list[index + 1]);
-  }, [id]);
-  useEffect(e => {
-    if (now_playing_id === '') {
-      setNow_playing_id(localStorage.getItem('now_playing_id'));
-      setId(localStorage.getItem('now_playing_id'));
-    } else {
-      audio.pause();
-      setPlay(false);
-      setId(now_playing_id);
-      localStorage.setItem('now_playing_id', now_playing_id);
-    }
-    console.log("now:", now_playing_id);
-  }, [now_playing_id]);
-  useEffect(e => {
-    if (play) {
-      audio.play();
-    } else {
-      audio.pause();
-    }
-  }, [play]);
   const getTrackinfos = async id => {
     await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
       console.log(e.data);
@@ -81,6 +51,34 @@ export default function Player() {
       console.log(e);
     });
   }
+  audio.onloadeddata = e => {
+    setPlay(true);
+  }
+  useEffect(e => {
+    setPlay(false);
+    if (id) {
+      getMusicUrl(id);
+      getTrackinfos(id);
+      let list = localStorage.getItem("TrackList");
+      console.log("now:", id);
+      const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+      list = list.split(',');
+      if (list[index + 1]) {
+        console.log('next', list[index + 1]);
+      }
+      localStorage.setItem('now_playing_id', id);
+    } else {
+      setId(localStorage.getItem('now_playing_id'));
+    }
+  }, [id]);
+  useEffect(e => {
+    if (play) {
+      let promise = audio.play();
+      promise.catch(err => setPlay(false));
+    } else {
+      audio.pause();
+    }
+  }, [play]);
   return <S.Player>
     <div className='audio'>
       <div className='head'>
