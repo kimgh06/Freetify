@@ -29,10 +29,11 @@ export default function Player() {
   audio.addEventListener('timeupdate', e => {
     audio.volume = volume;
     const { currentTime, duration } = audio;
-    setCurrentT(`${(currentTime - currentTime % 60) / 60}:${((currentTime % 60 - (currentTime % 60) % 1) / 1).toString().padStart(2, '0')}`);
+    setCurrentT(currentTime * 1000);
+    console.log(currentT / durationT)
     if (duration - currentTime <= 0) {
       audio.currentTime = 0
-      setCurrentT('0:00');
+      setCurrentT(0);
       const index = parseInt(localStorage.getItem('now_index_in_tracks'));
       let list = localStorage.getItem("TrackList");
       list = list.split(',');
@@ -47,7 +48,7 @@ export default function Player() {
       console.log(e.data);
       setInfo(e.data);
       const d = e.data.duration_ms
-      setDurationT(`${(d - d % 60000) / 60000}:${((d % 60000 - (d % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
+      setDurationT(d);
     }).catch(e => {
       console.log(e);
     });
@@ -57,7 +58,7 @@ export default function Player() {
   }
   useEffect(e => {
     audio.currentTime = 0
-    setCurrentT('0:00');
+    setCurrentT(0);
     setPlay(false);
     if (id) {
       getMusicUrl(id);
@@ -65,7 +66,7 @@ export default function Player() {
       let list = localStorage.getItem("TrackList");
       const index = parseInt(localStorage.getItem('now_index_in_tracks'));
       list = list.split(',');
-      console.log(`${list[index - 1] && `past: ${list[index + 1]}`}\nnow: ${id}\n${list[index + 1] && `next: ${list[index + 1]}`}`);
+      console.log(`${list[index - 1] ? `past: ${list[index + 1]}\n` : ''}now: ${id}${list[index + 1] ? `\nxnext: ${list[index + 1]}` : ''} `);
       localStorage.setItem('now_playing_id', id);
     } else {
       setId(localStorage.getItem('now_playing_id'));
@@ -86,33 +87,35 @@ export default function Player() {
           <>
             <img src={info?.album?.images[1]?.url} />
             <div>
-              <Link href={`/album/${info?.album?.id}`}>
+              <Link href={`/ album / ${info?.album?.id} `}>
                 <h2>{info?.name}</h2>
               </Link>
-              <Link href={`/artist/${info?.artists && info?.artists[0]?.id}`}>{info?.artists && info?.artists[0]?.name}</Link>
+              <Link href={`/ artist / ${info?.artists && info?.artists[0]?.id} `}>{info?.artists && info?.artists[0]?.name}</Link>
             </div>
             <div className='playbutton'>
-              <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+              <button style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
             </div>
           </>
           : <>
             <img src={info?.album?.images[2]?.url} />
             <div>
-              <div href={`/album/${info?.album?.id}`}>{info?.name}</div><br />
-              <div href={`/artist/${info?.artists && info?.artists[0]?.id}`}>{info?.artists && info?.artists[0]?.name}</div>
+              <div href={`/ album / ${info?.album?.id} `}>{info?.name}</div><br />
+              <div href={`/ artist / ${info?.artists && info?.artists[0]?.id} `}>{info?.artists && info?.artists[0]?.name}</div>
             </div>
-            <button style={{ transform: `rotate(${play ? -270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+            <button style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           </>
         }
       </div>
-      <div className='bar' style={{ width: window.innerWidth >= 1000 ? `${audio.currentTime / audio.duration * 300}px` : `${audio.currentTime / audio.duration * 95}vw` }} />
-      {`${currentT} / ${durationT}`}
-      {window.innerWidth >= 1000 && <div className='volume'>
-        <button onClick={e => setVolume(a => (a * 100 - 10) / 100 < 0.1 ? a : (a * 100 - 10) / 100)}>-</button>
-        <span>{volume * 100}%</span>
-        <button onClick={e => setVolume(a => (a * 100 + 10) / 100 > 1 ? a : (a * 100 + 10) / 100)}>+</button>
-      </div>}
-    </div>
+      <div className='bar' style={{ width: window.innerWidth >= 1000 ? `${currentT / durationT * 300}px` : `${currentT / durationT * 95}vw` }} />
+      {`${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
+      {
+        window.innerWidth >= 1000 && <div className='volume'>
+          <button onClick={e => setVolume(a => (a * 100 - 10) / 100 < 0.1 ? a : (a * 100 - 10) / 100)}>-</button>
+          <span>{volume * 100}%</span>
+          <button onClick={e => setVolume(a => (a * 100 + 10) / 100 > 1 ? a : (a * 100 + 10) / 100)}>+</button>
+        </div>
+      }
+    </div >
   </S.Player >;
 }
 
