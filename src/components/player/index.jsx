@@ -30,7 +30,6 @@ export default function Player() {
     audio.volume = volume;
     const { currentTime, duration } = audio;
     setCurrentT(`${(currentTime - currentTime % 60) / 60}:${((currentTime % 60 - (currentTime % 60) % 1) / 1).toString().padStart(2, '0')}`);
-    setDurationT(`${(duration - duration % 60) / 60}:${((duration % 60 - (duration % 60) % 1) / 1).toString().padStart(2, '0')}`);
     if (duration - currentTime <= 0) {
       audio.currentTime = 0
       setCurrentT('0:00');
@@ -47,6 +46,8 @@ export default function Player() {
     await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
       console.log(e.data);
       setInfo(e.data);
+      const d = e.data.duration_ms
+      setDurationT(`${(d - d % 60000) / 60000}:${((d % 60000 - (d % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
     }).catch(e => {
       console.log(e);
     });
@@ -55,17 +56,16 @@ export default function Player() {
     setPlay(true);
   }
   useEffect(e => {
+    audio.currentTime = 0
+    setCurrentT('0:00');
     setPlay(false);
     if (id) {
       getMusicUrl(id);
       getTrackinfos(id);
       let list = localStorage.getItem("TrackList");
-      console.log("now:", id);
       const index = parseInt(localStorage.getItem('now_index_in_tracks'));
       list = list.split(',');
-      if (list[index + 1]) {
-        console.log('next', list[index + 1]);
-      }
+      console.log(`${list[index - 1] && `past: ${list[index + 1]}`}\nnow: ${id}\n${list[index + 1] && `next: ${list[index + 1]}`}`);
       localStorage.setItem('now_playing_id', id);
     } else {
       setId(localStorage.getItem('now_playing_id'));
