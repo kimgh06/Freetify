@@ -14,24 +14,26 @@ export default function Player() {
   const [currentT, setCurrentT] = useState(0);
   const [durationT, setDurationT] = useState(`0:00`);
   const [volume, setVolume] = useState(0.7);
-  const [isFirst, setIsFirst] = useState(true);
 
   const getMusicUrl = async the_id => {
     await axios.get(`https://api.spotifydown.com/download/${the_id}`).then(e => {
-      setAudio(new Audio(`https://cors.spotifydown.com/${e.data.link}`));
+      const newAudio = new Audio(`https://cors.spotifydown.com/${e.data.link}`);
+      localStorage.setItem('audio_src', `https://cors.spotifydown.com/${e.data.link}`);
+      setAudio(newAudio);
     }).catch(e => {
       console.log(e);
     })
   }
-  audio.onloadeddata = e => {
-    setPlay(true);
-  }
   audio.addEventListener('timeupdate', e => {
+    if (audio.src !== localStorage.getItem('audio_src')) {
+      audio.pause();
+      setPlay(false);
+      console.log('incorrect');
+    }
     audio.volume = volume;
     const { currentTime, duration } = audio;
     setCurrentT(currentTime * 1000);
     if (duration - currentTime <= 0) {
-      audio.src = '';
       setPlay(false);
       const index = parseInt(localStorage.getItem('now_index_in_tracks'));
       let list = localStorage.getItem("TrackList");
@@ -53,15 +55,12 @@ export default function Player() {
     });
   }
   useEffect(e => {
-    console.log(id === localStorage.getItem('now_playing_id'), !isFirst)
-    if (!isFirst && id === localStorage.getItem('now_playing_id')) {
-      console.log('same');
-      return;
-    }
-    setIsFirst(false);
-    audio.src = '';
-    setPlay(false);
+    setPlay(true);
+  }, [audio]);
+  useEffect(e => {
     if (id) {
+      audio.src = '';
+      setPlay(false)
       localStorage.setItem('now_playing_id', id);
       let list = localStorage.getItem("TrackList").split(',');
       const index = parseInt(localStorage.getItem('now_index_in_tracks'));
