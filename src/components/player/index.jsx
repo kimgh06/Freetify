@@ -25,7 +25,7 @@ export default function Player() {
     })
   }
   audio.addEventListener('timeupdate', e => {
-    if (audio.src !== localStorage.getItem('audio_src')) {
+    if (play && audio.src !== localStorage.getItem('audio_src')) {
       audio.pause();
       setPlay(false);
       console.log('incorrect');

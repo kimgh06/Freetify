@@ -7,7 +7,6 @@ export const NowPlayingId = atom({
 export const PlayingAudio = atom({
   key: 'PlayingAudio',
   default: new Audio(),
-  // effects_UNSTABLE: [persistAtom],
 })
 
 function string2tag(str) {
