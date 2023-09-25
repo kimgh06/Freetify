@@ -8,7 +8,7 @@ import Link from 'next/link';
 
 export default function Player() {
   // const [audio, setAudio] = useRecoilState(PlayingAudio);
-  const audio = useRef(new Audio());
+  const audio = useRef(null);
   const [id, setId] = useRecoilState(NowPlayingId);
   const [src, setSrc] = useRecoilState(AudioSrc);
   const [info, setInfo] = useState({});
@@ -18,6 +18,7 @@ export default function Player() {
   const [volume, setVolume] = useState(0.7);
 
   const [extensionMode, setExtenstionMode] = useState(false);
+  const [innerWidth, setInnerWidth] = useState(null);
 
   const getMusicUrl = async the_id => {
     await axios.get(`https://api.spotifydown.com/download/${the_id}`).then(e => {
@@ -25,14 +26,14 @@ export default function Player() {
       audio.current.src = `https://cors.spotifydown.com/${e.data.link}`;
       localStorage.setItem('audio_src', `https://cors.spotifydown.com/${e.data.link}`);
       setSrc(`https://cors.spotifydown.com/${e.data.link}`);
+      audio.current.onloadeddata = e => {
+        setPlay(true);
+      }
     }).catch(e => {
       console.log(e);
     })
   }
-  audio.current.onloadeddata = e => {
-    setPlay(true);
-  }
-  audio.current.src && audio.current.addEventListener('timeupdate', e => {
+  audio.current?.src && audio.current.addEventListener('timeupdate', e => {
     audio.current.volume = volume;
     const { currentTime, duration } = audio.current;
     setCurrentT(currentTime * 1000);
@@ -82,13 +83,19 @@ export default function Player() {
       }
     } else {
       audio.current.src = src;
-      audio.current.controls = true;
     }
   }, [play]);
+  useEffect(e => {
+    if (typeof window !== undefined) {
+      window.addEventListener('resize', e => {
+        setInnerWidth(window.innerWidth);
+      })
+    }
+  }, []);
   return <S.Player>
     <div className='audio'>
       <div className='head'>
-        {window.innerWidth >= 1000 ? <>
+        {innerWidth >= 1000 ? <>
           <img src={info?.album?.images[1]?.url} />
           <div>
             <Link href={`/album/${info?.album?.id} `}>
@@ -171,15 +178,16 @@ export default function Player() {
         }
       </div>
       <div className='bar_div'>
-        <div className='bar' style={{ width: window.innerWidth >= 1000 ? `${currentT / durationT * 300}px` : `${currentT / durationT * 92}vw` }} />
+        <div className='bar' style={{ width: innerWidth >= 1000 ? `${currentT / durationT * 300}px` : `${currentT / durationT * 92}vw` }} />
       </div>
       {`${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
-      {window.innerWidth >= 1000 && <div className='volume'>
+      {innerWidth >= 1000 && <div className='volume'>
         <button onClick={e => setVolume(a => (a * 100 - 10) / 100 < 0.1 ? a : (a * 100 - 10) / 100)}>-</button>
         <span>{volume * 100}%</span>
         <button onClick={e => setVolume(a => (a * 100 + 10) / 100 > 1 ? a : (a * 100 + 10) / 100)}>+</button>
       </div>}
     </div>
+    <audio ref={audio} />
   </S.Player >;
 }
 

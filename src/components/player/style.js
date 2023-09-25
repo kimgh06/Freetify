@@ -9,7 +9,6 @@ export const Player = styled.div`
   bottom: 8px;
   width: 98vw;
   border-radius: 10px;
-  transition: all ease 0.1s;
   @media screen and (min-width: 1000px) {  
     display: flex;
     justify-content: center;
