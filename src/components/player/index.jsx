@@ -130,15 +130,14 @@ export default function Player() {
         }
       </div>
       <div className='bar_div'>
-        <div className='bar' style={{ width: window.innerWidth >= 1000 ? `${currentT / durationT * 300}px` : `${currentT / durationT * 95}vw` }} />
-        {window.innerWidth >= 1000 && <div className='bar_cursor'
+        <div className='bar' style={{ width: window.innerWidth >= 1000 ? `${currentT / durationT * 300}px` : `${currentT / durationT * 92}vw` }} />
+        {/* {window.innerWidth >= 1000 && <div className='bar_cursor'
           onMouseDown={e => setModifying(e.clientX)} onMouseUp={e => setModifying(false)} onMouseMove={e => {
             if (modifying) {
               const px = (e.clientX - modifying) / 300 * (durationT / 1000);
-              const asdf = document.querySelectorAll('audio');
-              console.log(px + audio.current.currentTime, px, audio.current.currentTime, asdf);
+              console.log(audio)
             }
-          }} />}
+          }} />} */}
       </div>
       {`${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
       {window.innerWidth >= 1000 && <div className='volume'>
