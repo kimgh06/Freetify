@@ -151,13 +151,19 @@ export const ExtensionMode = styled.div`
     }
   }
   .contents{
+    width: 100%;
     display: block;
     text-align: center;
-    a{
-      cursor: pointer;
+    .links{
+      width: 300px;
+      margin: auto;
       text-align: left;
-      &:hover{
-        text-decoration: underline;
+      a{
+        cursor: pointer;
+        width: 300px;
+        &:hover{
+          text-decoration: underline;
+        }
       }
     }
     .playbutton{

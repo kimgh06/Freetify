@@ -140,7 +140,7 @@ export default function Player() {
             </div>
             <div className='contents'>
               <img src={info?.album?.images[1]?.url} />
-              <div>
+              <div className='links'>
                 <Link href={`/album/${info?.album?.id} `}>
                   <h2>{info?.name}</h2>
                 </Link>
