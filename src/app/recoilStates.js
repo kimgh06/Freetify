@@ -3,10 +3,9 @@ export const NowPlayingId = atom({
   key: 'NowPlayingId',
   default: ''
 });
-
-export const PlayingAudio = atom({
-  key: 'PlayingAudio',
-  default: new Audio(),
+export const AudioSrc = atom({
+  key: 'AudioSrc',
+  default: ''
 })
 
 function string2tag(str) {

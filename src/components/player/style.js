@@ -73,12 +73,27 @@ export const Player = styled.div`
         }
       }
     }
-    .bar{
-      border: 3px solid blue;
-      width: 0;
-      height: 0;
-      border-radius: 20px;
-      margin-top: 3px;
+    .bar_div{
+      background-color: lightgray;
+      border-radius: 30px;
+      height: 5px;
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      .bar{
+        border: 3px solid blue;
+        width: 0;
+        height: 0;
+        border-radius: 20px;
+      }
+      .bar_cursor{
+        cursor: pointer;
+        width: 10px;
+        height: 10px;
+        background-color: white;
+        border-radius: 30px;
+        margin-left: -4px;
+      }
     }
     .volume{
       display: flex;
