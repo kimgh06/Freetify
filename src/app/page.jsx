@@ -44,7 +44,7 @@ export default function Home() {
   }
   const getTrackinfos = async e => {
     let ids = [];
-    ids = JSON.parse(localStorage.getItem('list')).join(',');
+    ids = JSON.parse(localStorage.getItem('list')).join(',') || undefined;
     await axios.get(`https://api.spotify.com/v1/tracks?ids=${ids}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
       setTracks(e.data.tracks);
       console.log(e.data)

@@ -7,7 +7,12 @@ export const AlbumInfos = styled.div`
     align-items: end;
     margin-bottom: 30px;
     img{
+      margin-top:30px;
       border-radius: 8px;
+    }
+    @media screen and (max-width: 1000px) {  
+      display: block;
+      text-align: center;
     }
     .description{
       margin-left: 20px;
@@ -17,6 +22,9 @@ export const AlbumInfos = styled.div`
       .information{
         display: flex;
         font-weight: bold;
+        @media screen and (max-width: 1000px) {  
+          justify-content: center;
+        }
         a{
           cursor: pointer;
           font-size: 20px;
@@ -33,7 +41,7 @@ export const AlbumInfos = styled.div`
     align-items: center;
     justify-content: center;
     @media screen and (max-width: 1000px) {  
-      margin-bottom: 130px;
+      margin-bottom: 150px;
     }
   }
 `

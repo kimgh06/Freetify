@@ -12,11 +12,18 @@ export const Nav = styled.div`
     z-index: 2;
     p{
       padding: 20px 0 0px 20px;
+      @media screen and (max-width: 1000px) {  
+        padding-left: 150px;
+      }
     }
   }
   .menu{
     top: 20px;
     left: 20px;
+    @media screen and (max-width: 1000px) {  
+      left: auto;
+      right: 20px;
+    }
     position: fixed;
     border-radius: 10px;
     text-align: center;

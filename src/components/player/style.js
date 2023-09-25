@@ -3,11 +3,13 @@ import { styled } from "styled-components";
 export const Player = styled.div`
   position: fixed;
   padding: 8px 10px;
+  z-index: 2;
   //모바일용
   left: 1vw;
   bottom: 8px;
   width: 98vw;
   border-radius: 10px;
+  transition: all ease 0.1s;
   @media screen and (min-width: 1000px) {  
     display: flex;
     justify-content: center;
@@ -27,12 +29,32 @@ export const Player = styled.div`
       }
       width: 300px;
       @media screen and (max-width: 1000px) {  
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
         width: auto;
-        img{
-          border-radius: 0;
+        .extenstion{
+          .___{
+            border: 1px solid black;
+            border-radius: 100px;
+            margin: auto;
+            margin-bottom: 3px;
+            width: 50px;
+          }
+        }
+        .content{
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          .between{
+            width: calc(92vw - 136px);
+            .title{
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+            }
+          }
+          img{
+            border-radius: 0;
+          }
         }
       }
       a{
@@ -112,6 +134,61 @@ export const Player = styled.div`
         height: 30px;
         transition: all ease 0.1s;
         cursor: pointer;
+      }
+    }
+  }
+`
+
+export const ExtensionMode = styled.div`
+  width: auto;
+  .extenstion{
+    .___{
+      border: 1px solid black;
+      border-radius: 100px;
+      margin: auto;
+      margin-bottom: 3px;
+      width: 50px;
+    }
+  }
+  .contents{
+    display: block;
+    text-align: center;
+    a{
+      cursor: pointer;
+      text-align: left;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+    .playbutton{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .left , .right{
+        margin: 0 2vw;
+        cursor: pointer;
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        border: none;
+        &:hover{
+          background-color: #868686;
+        }
+      }
+    }
+    .play{
+      text-align: center;
+      width: 70px;
+      height: 70px;
+      border-radius: 100px;
+      transition: all ease 0.1s;
+      cursor: pointer;
+      border:none;
+      font-size: 30px;
+      text-align: center;
+      &:hover{
+        background-color: #868686;
       }
     }
   }
