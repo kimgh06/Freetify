@@ -3,6 +3,7 @@ const app = express();
 const port = 3333;
 const cors = require('cors');
 const request = require('request');
+let ip = require('ip');
 require('dotenv').config();
 
 const redirect_url = process.env.NEXT_PUBLIC_BACKEND_REDIRECT_URL;
@@ -74,4 +75,12 @@ app.patch('/refresh_token', (rq, rs) => {
 
 app.listen(port, e => {
   console.log(`Server is running on port ${port}`);
+  request.get({ url: 'https://api.ipify.org?format=json' }, (err, res, body) => {
+    if (!err) {
+      const { ip } = JSON.parse(body);
+      console.log(ip);
+    } else {
+      console.log(err);
+    }
+  })
 });

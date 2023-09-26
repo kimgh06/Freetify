@@ -178,10 +178,10 @@ export default function Player() {
         }
       </div>
       <div className='bar_div'>
-        <div className='bar' style={{ width: innerWidth >= 1000 ? `${currentT / durationT * 300}px` : `${currentT / durationT * 92}vw` }} />
+        <div className='bar' style={{ width: innerWidth >= 1000 ? `${currentT / durationT * 300}px` : `${currentT / durationT * 93}vw` }} />
       </div>
       {`${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
-      {innerWidth >= 1000 && <div className='volume'>
+      {innerWidth >= 1000 || extensionMode && <div className='volume'>
         <button onClick={e => setVolume(a => (a * 100 - 10) / 100 < 0.1 ? a : (a * 100 - 10) / 100)}>-</button>
         <span>{volume * 100}%</span>
         <button onClick={e => setVolume(a => (a * 100 + 10) / 100 > 1 ? a : (a * 100 + 10) / 100)}>+</button>
