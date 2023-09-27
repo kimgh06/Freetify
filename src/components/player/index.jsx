@@ -42,10 +42,12 @@ export default function Player() {
       audio.current.src = null;
       const index = parseInt(localStorage.getItem('now_index_in_tracks'));
       let list = localStorage.getItem("TrackList");
-      list = list.split(',');
-      if (list[index + 1]) {
-        setId(list[index + 1]);
-        localStorage.setItem('now_index_in_tracks', index + 1);
+      if (list) {
+        list = list.split(',');
+        if (list[index + 1]) {
+          setId(list[index + 1]);
+          localStorage.setItem('now_index_in_tracks', index + 1);
+        }
       }
     }
   }, false);
@@ -64,9 +66,11 @@ export default function Player() {
       getMusicUrl(id);
       setPlay(false)
       localStorage.setItem('now_playing_id', id);
-      let list = localStorage.getItem("TrackList").split(',');
-      const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-      console.log(`${list[index - 1] ? `past: ${list[index + 1]}\n` : ''}now: ${id}${list[index + 1] ? `\nxnext: ${list[index + 1]}` : ''} `);
+      let list = localStorage.getItem("TrackList")?.split(',');
+      if (list) {
+        const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+        console.log(`${list[index - 1] ? `past: ${list[index + 1]}\n` : ''}now: ${id}${list[index + 1] ? `\nxnext: ${list[index + 1]}` : ''} `);
+      }
       getTrackinfos(id);
     } else {
       setId(localStorage.getItem('now_playing_id'));
@@ -87,6 +91,7 @@ export default function Player() {
   }, [play]);
   useEffect(e => {
     if (typeof window !== undefined) {
+      setInnerWidth(window.innerWidth);
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
@@ -139,7 +144,7 @@ export default function Player() {
               </div>
               <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
             </div>
-          </> : <S.ExtensionMode>
+          </> : <S.ExtensionMode_mobile>
             <div className='extenstion' onClick={e => setExtenstionMode(false)}>
               <div className='___' />
               <div className='___' />
@@ -147,34 +152,37 @@ export default function Player() {
             </div>
             <div className='contents'>
               <img src={info?.album?.images[1]?.url} />
-              <div className='links'>
-                <Link href={`/album/${info?.album?.id} `}>
-                  <h2>{info?.name}</h2>
-                </Link>
-                <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>{info?.artists && info?.artists[0]?.name}</Link>
+              <div className='texts'>
+                <div className='links'>
+                  <Link href={`/album/${info?.album?.id} `}>
+                    <h2>{info?.name}</h2>
+                  </Link>
+                  <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>{info?.artists && info?.artists[0]?.name}</Link>
+                </div>
+                <div className='playbutton'>
+                  <button className='left' onClick={e => {
+                    let list = localStorage.getItem("TrackList");
+                    const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+                    list = list.split(',');
+                    if (list[index - 1]) {
+                      setId(list[index - 1]);
+                      localStorage.setItem('now_index_in_tracks', index - 1);
+                    }
+                  }}>{'<'}</button>
+                  <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+                  <button className='right' onClick={e => {
+                    let list = localStorage.getItem("TrackList");
+                    const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+                    list = list.split(',');
+                    if (list[index + 1]) {
+                      setId(list[index + 1]);
+                      localStorage.setItem('now_index_in_tracks', index + 1);
+                    }
+                  }}>{'>'}</button>
+                </div>
               </div>
-              <div className='playbutton'>
-                <button className='left' onClick={e => {
-                  let list = localStorage.getItem("TrackList");
-                  const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-                  list = list.split(',');
-                  if (list[index - 1]) {
-                    setId(list[index - 1]);
-                    localStorage.setItem('now_index_in_tracks', index - 1);
-                  }
-                }}>{'<'}</button>
-                <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
-                <button className='right' onClick={e => {
-                  let list = localStorage.getItem("TrackList");
-                  const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-                  list = list.split(',');
-                  if (list[index + 1]) {
-                    setId(list[index + 1]);
-                    localStorage.setItem('now_index_in_tracks', index + 1);
-                  }
-                }}>{'>'}</button>
-              </div></div>
-          </S.ExtensionMode>)
+            </div>
+          </S.ExtensionMode_mobile>)
         }
       </div>
       <div className='bar_div'>

@@ -30,9 +30,12 @@ export const Player = styled.div`
       @media screen and (max-width: 1000px) {  
         width: auto;
         .extenstion{
+          cursor: pointer;
           .___{
             border: 1px solid black;
             border-radius: 100px;
+            height: 3px;
+            background-color: black;
             margin: auto;
             margin-bottom: 3px;
             width: 50px;
@@ -97,7 +100,7 @@ export const Player = styled.div`
     .bar_div{
       background-color: lightgray;
       border-radius: 30px;
-      height: 5px;
+      height: 4.8px;
       display: flex;
       align-items: center;
       margin-top: 10px;
@@ -138,47 +141,54 @@ export const Player = styled.div`
   }
 `
 
-export const ExtensionMode = styled.div`
+export const ExtensionMode_mobile = styled.div`
   width: auto;
   .extenstion{
+    cursor: pointer;
     .___{
       border: 1px solid black;
       border-radius: 100px;
       margin: auto;
       margin-bottom: 3px;
       width: 50px;
+      height: 3px;
+      background-color: black;
     }
   }
   .contents{
     width: 100%;
-    display: block;
-    text-align: center;
-    .links{
-      width: 300px;
-      margin: auto;
-      text-align: left;
-      a{
-        cursor: pointer;
-        width: 300px;
-        &:hover{
-          text-decoration: underline;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: end;
+    .texts{
+      .links{
+        width: 280px;
+        margin: auto;
+        text-align: left;
+        a{
+          cursor: pointer;
+          width: 300px;
+          &:hover{
+            text-decoration: underline;
+          }
         }
       }
-    }
-    .playbutton{
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      .left , .right{
-        margin: 0 2vw;
-        cursor: pointer;
-        font-size: 20px;
-        width: 30px;
-        height: 30px;
-        text-align: center;
-        border: none;
-        &:hover{
-          background-color: #868686;
+      .playbutton{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .left , .right{
+          margin: 0 2vw;
+          cursor: pointer;
+          font-size: 20px;
+          width: 30px;
+          height: 30px;
+          text-align: center;
+          border: none;
+          &:hover{
+            background-color: #868686;
+          }
         }
       }
     }

@@ -29,6 +29,9 @@ export default function Navi() {
     if (new Date().getTime() >= localStorage.getItem('expire')) {
       refresh_token();
     }
+    if (!id) {
+      setId(localStorage.getItem('now_playing_id'));
+    }
   }, [])
   return <>
     <S.Nav>
