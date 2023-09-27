@@ -4,11 +4,14 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Player from '../player';
+import { useRecoilState } from 'recoil';
+import { NowPlayingId } from '@/app/recoilStates';
 
 const url = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function Navi() {
   const [activating, setActivating] = useState(false);
+  const [id, setId] = useRecoilState(NowPlayingId);
   const refresh_token = async e => {
     await axios.patch(`${url}/refresh_token`,
       { refreshToken: localStorage.getItem('refresh') }).then(e => {
@@ -37,6 +40,6 @@ export default function Navi() {
         <p><Link href={'/'}>home</Link></p>
       </div>}
     </S.Nav>
-    <Player />
+    {id && <Player />}
   </>;
 }

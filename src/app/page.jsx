@@ -40,25 +40,29 @@ export default function Home() {
         }
       }).catch(e => {
         console.log(e);
+        window.location.href = '/login'; s
       })
   }
   const getTrackinfos = async e => {
     let ids = [];
-    ids = JSON.parse(localStorage.getItem('list')).join(',') || undefined;
-    await axios.get(`https://api.spotify.com/v1/tracks?ids=${ids}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
-      setTracks(e.data.tracks);
-      console.log(e.data)
-      let TrackList = [];
-      e.data.tracks.forEach(items => {
-        TrackList.push(items.id);
+    ids = JSON.parse(localStorage.getItem('list'))?.join(',') || undefined;
+    if (ids) {
+      await axios.get(`https://api.spotify.com/v1/tracks?ids=${ids}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
+        setTracks(e.data.tracks);
+        console.log(e.data)
+        let TrackList = [];
+        e.data.tracks.forEach(items => {
+          TrackList.push(items.id);
+        });
+        localStorage.setItem('TrackList', `${TrackList}`);
+      }).catch(e => {
+        console.log(e);
       });
-      localStorage.setItem('TrackList', `${TrackList}`);
-    }).catch(e => {
-      console.log(e);
-    });
+    }
   }
   useEffect(e => {
     const queries = new URLSearchParams(location.search);
+    document.title = 'My Tracks'
     if (queries.size !== 0) {
       getTokens();
     } else {
