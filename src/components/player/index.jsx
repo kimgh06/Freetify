@@ -94,20 +94,21 @@ export default function Player() {
   useEffect(e => {
     if (typeof window !== undefined) {
       setInnerWidth(window.innerWidth);
+      setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
     }
   }, []);
-  return <S.Player>
+  return <S.Player style={{ width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' : innerWidth < 1200 ? '98vw' : '30vw'}` }}>
     <div className='audio'>
-      {innerWidth >= 1200 && <div className='extention' onClick={e => setExtenstionMode(a => !a)}>
+      {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }} onClick={e => setExtenstionMode(a => !a)}>
         <div className='___' />
         <div className='___' />
         <div className='___' />
       </div>}
       <div className='head'>
-        {innerWidth >= 1200 ? (!extensionMode ? <>
+        {innerWidth >= 1200 ? (extensionMode ? <>
           <div className='main_original'>
             <img src={info?.album?.images[1]?.url} />
             <div>
@@ -138,9 +139,26 @@ export default function Player() {
               }}>{'>'}</button>
             </div>
           </div>
-        </> : <>
-
-        </>)
+        </> : <S.Main_smaller>
+          <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+          <button className='left' onClick={e => {
+            let list = localStorage.getItem("TrackList");
+            const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+            list = list.split(',');
+            if (list[index - 1]) {
+              setId(list[index - 1]);
+              localStorage.setItem('now_index_in_tracks', index - 1);
+            }
+          }}>{'<'}</button>
+          <button className='right' onClick={e => {
+            let list = localStorage.getItem("TrackList");
+            const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+            list = list.split(',');
+            if (list[index + 1]) {
+              setId(list[index + 1]);
+              localStorage.setItem('now_index_in_tracks', index + 1);
+            }
+          }}>{'>'}</button></S.Main_smaller>)
           : (!extensionMode ? <>
             <div className='extenstion' onClick={e => setExtenstionMode(true)}>
               <div className='___' />
@@ -197,14 +215,19 @@ export default function Player() {
         }
       </div>
       <div className='bar_div'>
-        <div className='bar' style={{ width: innerWidth >= 1200 ? `${currentT / durationT * 300}px` : `${currentT / durationT * 93}vw` }} />
+        <div className='bar' style={{ width: innerWidth >= 1200 ? `${currentT / durationT * 100}%` : `${currentT / durationT * 93}vw` }} />
       </div>
-      {`${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
-      {(innerWidth >= 1200 || extensionMode) && <div className='volume'>
+      {!(innerWidth >= 1200 && !extensionMode) && `${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
+      {!(innerWidth >= 1200 && !extensionMode) ? <div className='volume'>
         <button onClick={e => setVolume(a => (a * 100 - 10) / 100 < 0.1 ? a : (a * 100 - 10) / 100)}>-</button>
         <span>{volume * 100}%</span>
         <button onClick={e => setVolume(a => (a * 100 + 10) / 100 > 1 ? a : (a * 100 + 10) / 100)}>+</button>
-      </div>}
+      </div> : <S.Main_smaller>
+        <button onClick={e => setVolume(a => (a * 100 + 10) / 100 > 1 ? a : (a * 100 + 10) / 100)}>+</button>
+        <span>{volume * 100}%</span>
+        <button onClick={e => setVolume(a => (a * 100 - 10) / 100 < 0.1 ? a : (a * 100 - 10) / 100)}>-</button>
+        <div className='title'>{info?.name}</div>
+      </S.Main_smaller>}
     </div>
     <audio ref={audio} />
   </S.Player >;

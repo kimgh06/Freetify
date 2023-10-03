@@ -26,8 +26,7 @@ export const Player = styled.div`
       display: flex;
       position: absolute;
       align-items: end;
-      margin-left: calc(50px - 7vw);
-      height: 50vh;
+      height: 55vh;
       cursor: pointer;
       .___{
         height: 100px;
@@ -222,5 +221,43 @@ export const ExtensionMode_mobile = styled.div`
         background-color: #868686;
       }
     }
+  }
+`
+
+export const Main_smaller = styled.div`
+  text-align: center;
+  .play{
+    text-align: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 100px;
+    transition: all ease 0.1s;
+    cursor: pointer;
+    border:none;
+    font-size: 30px;
+    text-align: center;
+    &:hover{
+      background-color: #868686;
+    }
+  }
+  button{
+    margin: 2vh 0;
+    cursor: pointer;
+    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    &:hover{
+      background-color: #868686;
+    }
+  }
+  .title{
+    position: absolute;
+    transform: rotate(90deg);
+    width: 30vh;
+    margin-left: -80px;
+    margin-top: 12vh;
   }
 `
