@@ -34,15 +34,17 @@ export default function Player() {
     })
   }
   audio.current?.src && audio.current.addEventListener('timeupdate', e => {
-    audio.current.volume = volume;
+    if (audio.current.volume) {
+      audio.current.volume = volume;
+    }
     const { currentTime, duration } = audio.current;
     setCurrentT(currentTime * 1000);
     if (duration - currentTime <= 0) {
       setPlay(false);
-      audio.current.src = null;
       const index = parseInt(localStorage.getItem('now_index_in_tracks'));
       let list = localStorage.getItem("TrackList");
       if (list) {
+        audio.current.src = null;
         list = list.split(',');
         if (list[index + 1]) {
           setId(list[index + 1]);
@@ -189,7 +191,7 @@ export default function Player() {
         <div className='bar' style={{ width: innerWidth >= 1000 ? `${currentT / durationT * 300}px` : `${currentT / durationT * 93}vw` }} />
       </div>
       {`${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
-      {innerWidth >= 1000 || extensionMode && <div className='volume'>
+      {(innerWidth >= 1000 || extensionMode) && <div className='volume'>
         <button onClick={e => setVolume(a => (a * 100 - 10) / 100 < 0.1 ? a : (a * 100 - 10) / 100)}>-</button>
         <span>{volume * 100}%</span>
         <button onClick={e => setVolume(a => (a * 100 + 10) / 100 > 1 ? a : (a * 100 + 10) / 100)}>+</button>
