@@ -9,7 +9,7 @@ export const Player = styled.div`
   bottom: 8px;
   width: 98vw;
   border-radius: 10px;
-  @media screen and (min-width: 1000px) {  
+  @media screen and (min-width: 1200px) {  
     display: flex;
     justify-content: center;
     top: 8px;
@@ -22,12 +22,28 @@ export const Player = styled.div`
   //변하지 않는 것
   background-color: gray;
   .audio{
-    .head{
-      img{
-        border-radius: 8px;
+    .extention{
+      display: flex;
+      position: absolute;
+      align-items: end;
+      margin-left: calc(50px - 7vw);
+      height: 50vh;
+      cursor: pointer;
+      .___{
+        height: 100px;
+        border: 1px solid black;
+        margin-right: 5px;
       }
-      width: 300px;
-      @media screen and (max-width: 1000px) {  
+    }
+    .head{
+      .main_original{
+        img{
+          border-radius: 8px;
+        }
+        width: 300px;
+      }
+      @media screen and (max-width: 1199px) {  
+        display: block;
         width: auto;
         .extenstion{
           cursor: pointer;
@@ -104,7 +120,7 @@ export const Player = styled.div`
       display: flex;
       align-items: center;
       margin-top: 10px;
-      @media screen and (max-width: 1000px) {  
+      @media screen and (max-width: 1199px) {  
         width: 93vw;
       }
       .bar{

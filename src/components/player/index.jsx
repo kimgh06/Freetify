@@ -101,37 +101,46 @@ export default function Player() {
   }, []);
   return <S.Player>
     <div className='audio'>
+      {innerWidth >= 1200 && <div className='extention' onClick={e => setExtenstionMode(a => !a)}>
+        <div className='___' />
+        <div className='___' />
+        <div className='___' />
+      </div>}
       <div className='head'>
-        {innerWidth >= 1000 ? <>
-          <img src={info?.album?.images[1]?.url} />
-          <div>
-            <Link href={`/album/${info?.album?.id} `}>
-              <h2>{info?.name}</h2>
-            </Link>
-            <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>{info?.artists && info?.artists[0]?.name}</Link>
+        {innerWidth >= 1200 ? (!extensionMode ? <>
+          <div className='main_original'>
+            <img src={info?.album?.images[1]?.url} />
+            <div>
+              <Link href={`/album/${info?.album?.id} `}>
+                <h2>{info?.name}</h2>
+              </Link>
+              <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>{info?.artists && info?.artists[0]?.name}</Link>
+            </div>
+            <div className='playbutton'>
+              <button className='left' onClick={e => {
+                let list = localStorage.getItem("TrackList");
+                const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+                list = list.split(',');
+                if (list[index - 1]) {
+                  setId(list[index - 1]);
+                  localStorage.setItem('now_index_in_tracks', index - 1);
+                }
+              }}>{'<'}</button>
+              <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+              <button className='right' onClick={e => {
+                let list = localStorage.getItem("TrackList");
+                const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+                list = list.split(',');
+                if (list[index + 1]) {
+                  setId(list[index + 1]);
+                  localStorage.setItem('now_index_in_tracks', index + 1);
+                }
+              }}>{'>'}</button>
+            </div>
           </div>
-          <div className='playbutton'>
-            <button className='left' onClick={e => {
-              let list = localStorage.getItem("TrackList");
-              const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-              list = list.split(',');
-              if (list[index - 1]) {
-                setId(list[index - 1]);
-                localStorage.setItem('now_index_in_tracks', index - 1);
-              }
-            }}>{'<'}</button>
-            <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
-            <button className='right' onClick={e => {
-              let list = localStorage.getItem("TrackList");
-              const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-              list = list.split(',');
-              if (list[index + 1]) {
-                setId(list[index + 1]);
-                localStorage.setItem('now_index_in_tracks', index + 1);
-              }
-            }}>{'>'}</button>
-          </div>
-        </>
+        </> : <>
+
+        </>)
           : (!extensionMode ? <>
             <div className='extenstion' onClick={e => setExtenstionMode(true)}>
               <div className='___' />
@@ -188,10 +197,10 @@ export default function Player() {
         }
       </div>
       <div className='bar_div'>
-        <div className='bar' style={{ width: innerWidth >= 1000 ? `${currentT / durationT * 300}px` : `${currentT / durationT * 93}vw` }} />
+        <div className='bar' style={{ width: innerWidth >= 1200 ? `${currentT / durationT * 300}px` : `${currentT / durationT * 93}vw` }} />
       </div>
       {`${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
-      {(innerWidth >= 1000 || extensionMode) && <div className='volume'>
+      {(innerWidth >= 1200 || extensionMode) && <div className='volume'>
         <button onClick={e => setVolume(a => (a * 100 - 10) / 100 < 0.1 ? a : (a * 100 - 10) / 100)}>-</button>
         <span>{volume * 100}%</span>
         <button onClick={e => setVolume(a => (a * 100 + 10) / 100 > 1 ? a : (a * 100 + 10) / 100)}>+</button>
