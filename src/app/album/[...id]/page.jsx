@@ -33,7 +33,7 @@ export default function asdf({ params }) {
   }, []);
   return <RecoilRoot>
     <Navi />
-    {albumInfo ? <S.AlbumInfos>
+    <S.AlbumInfos>
       <div className='header'>
         <img src={albumInfo?.images[1].url} alt='img' />
         <div className='description'>
@@ -59,7 +59,6 @@ export default function asdf({ params }) {
       <div className='end'>
         <h3>End</h3>
       </div>
-    </S.AlbumInfos> :
-      <h1>Loading...</h1>}
+    </S.AlbumInfos>
   </RecoilRoot>;
 }

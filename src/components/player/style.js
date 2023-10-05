@@ -41,7 +41,7 @@ export const Player = styled.div`
         }
         width: 300px;
       }
-      @media screen and (max-width: 1199px) {  
+      @media screen and (max-width: 1200px) {  
         display: block;
         width: auto;
         .extenstion{
@@ -258,6 +258,6 @@ export const Main_smaller = styled.div`
     transform: rotate(90deg);
     width: 30vh;
     margin-left: -80px;
-    margin-top: 12vh;
+    margin-top: 14.5vh;
   }
 `

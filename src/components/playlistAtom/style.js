@@ -6,10 +6,9 @@ export const PlayAtom = styled.div`
   display: flex;
   background-color: white;
   color: black;
-  width: 30vw;
+  width: 40vw;
   min-width: 360px;
   border-bottom: 8px solid lightgray;
-  border-radius: 5px;
   padding: 5px 20px;
   img{
     cursor: pointer;
@@ -29,7 +28,7 @@ export const PlayAtom = styled.div`
       cursor: pointer;
       font-size: 20px;
       width: 30px;
-      height: 30px;
+      height: 35px;
       border-radius: 50px;
       display: flex;
       align-items: center;
@@ -41,11 +40,11 @@ export const PlayAtom = styled.div`
     }
     .title{
       cursor: pointer;
-      /* max-width: 200px; */
-      display: block;
-      width: 16vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 21vw;
       min-width: 180px;
-      /* margin-right: 75px; */
       &:hover{
         text-decoration-line: underline;
       }

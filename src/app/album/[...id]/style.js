@@ -6,6 +6,9 @@ export const AlbumInfos = styled.div`
     justify-content: center;
     align-items: end;
     margin-bottom: 30px;
+    background-color: darkgray;
+    padding-bottom: 50px;
+    border-bottom: 8px solid gray;
     img{
       margin-top:30px;
       border-radius: 8px;
@@ -40,7 +43,7 @@ export const AlbumInfos = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    @media screen and (max-width: 1000px) {  
+    @media screen and (max-width: 1200px) {  
       margin-bottom: 150px;
     }
   }
