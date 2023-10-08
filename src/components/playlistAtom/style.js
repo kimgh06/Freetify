@@ -4,18 +4,17 @@ export const PlayAtom = styled.div`
   margin: auto;
   text-align: left;
   display: flex;
-  background-color: white;
   color: black;
   width: 40vw;
   min-width: 360px;
   border-bottom: 8px solid lightgray;
   padding: 5px 20px;
+  color: #b8b8b8;
   img{
     cursor: pointer;
     object-fit: scale-down;
     width: 64px;
     margin-right: 10px;
-    /* border: none; */
   }
   .playingtime{
     margin-right: 2vw;

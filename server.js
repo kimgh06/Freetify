@@ -75,12 +75,4 @@ app.patch('/refresh_token', (rq, rs) => {
 
 app.listen(port, e => {
   console.log(`Server is running on port ${port}`);
-  // request.get({ url: 'https://api.ipify.org?format=json' }, (err, res, body) => {
-  //   if (!err) {
-  //     const { ip } = JSON.parse(body);
-  //     console.log(ip);
-  //   } else {
-  //     console.log(err);
-  //   }
-  // })
 });

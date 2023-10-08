@@ -40,8 +40,6 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
   }
   useEffect(e => {
     if (id && type === 'track') {
-      setCurrentT(0);
-
       setDurationT(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
 
     }

@@ -12,7 +12,7 @@ export default function Home() {
   const [tracks, setTracks] = useState([]);
   const getTokens = async e => {
     const queries = new URLSearchParams(location.search);
-    await axios.post(`${url}/getTokens`, {
+    await axios.post(`/api/getTokens`, {
       code: queries.get('code'),
       state: queries.get('state')
     }).then(e => {
