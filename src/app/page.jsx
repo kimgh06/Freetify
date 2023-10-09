@@ -31,7 +31,7 @@ export default function Home() {
     });
   }
   const refresh_token = async e => {
-    await axios.patch(`${url}/refresh_token`,
+    await axios.patch(`/refresh_token`,
       { refreshToken: localStorage.getItem('refresh') }).then(e => {
         const info = e.data;
         if (!info?.error) {
@@ -40,7 +40,7 @@ export default function Home() {
         }
       }).catch(e => {
         console.log(e);
-        window.location.href = '/login'; s
+        window.location.href = '/login';
       })
   }
   const getTrackinfos = async e => {

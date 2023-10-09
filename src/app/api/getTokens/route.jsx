@@ -9,18 +9,6 @@ export async function POST(req) {
   const body = await req.json();
   const { code, state } = body;
   if (code && state) {
-    // const options = {
-    //   url: 'https://accounts.spotify.com/api/token',
-    //   form: {
-    //     code: code,
-    //     redirect_uri: redirect_url,
-    //     grant_type: 'authorization_code'
-    //   },
-    //   headers: {
-    //     'Authorization': `Basic ${(new Buffer.from(SpotifyClientId + ":" + SpotifyClientSecret).toString('base64'))}`
-    //   },
-    //   json: true
-    // };
     try {
       const response = await axios.post('https://accounts.spotify.com/api/token', {
         code: code,

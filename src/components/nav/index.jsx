@@ -13,7 +13,7 @@ export default function Navi() {
   const [activating, setActivating] = useState(false);
   const [id, setId] = useRecoilState(NowPlayingId);
   const refresh_token = async e => {
-    await axios.patch(`${url}/refresh_token`,
+    await axios.patch(`/api/refresh_token`,
       { refreshToken: localStorage.getItem('refresh') }).then(e => {
         const info = e.data;
         if (!info?.error) {
