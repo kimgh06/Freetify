@@ -12,7 +12,7 @@ export const Nav = styled.div`
     z-index: 2;
     p{
       padding: 20px 0 0px 20px;
-      @media screen and (max-width: 1000px) {  
+      @media screen and (max-width: 500px) {  
         padding-left: 150px;
       }
     }
@@ -20,7 +20,7 @@ export const Nav = styled.div`
   .menu{
     top: 20px;
     left: 20px;
-    @media screen and (max-width: 1000px) {  
+    @media screen and (max-width: 500px) {  
       left: auto;
       right: 20px;
     }
