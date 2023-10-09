@@ -6,7 +6,7 @@ import * as S from './style';
 import { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
 
-const url = process.env.NEXT_PUBLIC_BACKEND_URL;
+// const url = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export default function Home() {
   const [tracks, setTracks] = useState([]);
