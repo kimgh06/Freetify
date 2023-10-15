@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { AudioSrc, NowPlayingId, PlayingAudio } from '@/app/recoilStates';
 import Link from 'next/link';
+import { Audiowide } from 'next/font/google';
 
 export default function Player() {
   // const [audio, setAudio] = useRecoilState(PlayingAudio);
@@ -21,17 +22,23 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
 
   const getMusicUrl = async the_id => {
-    await axios.get(`https://api.spotifydown.com/download/${the_id}`).then(e => {
-      // const newAudio = new Audio(`https://cors.spotifydown.com/${e.data.link}`);
-      audio.current.src = `https://cors.spotifydown.com/${e.data.link}`;
-      localStorage.setItem('audio_src', `https://cors.spotifydown.com/${e.data.link}`);
-      setSrc(`https://cors.spotifydown.com/${e.data.link}`);
-      audio.current.onloadeddata = e => {
-        setPlay(true);
-      }
-    }).catch(e => {
-      console.log(e);
-    })
+    audio.current.src = 'https://audio-ak-spotify-com.akamaized.net/audio/d5b2acff5a0cde541204f0c062c924300caed77a?__token__=exp=1697447056~hmac=b4acee0b45f4f0cbc5ab48aa2ae850d9d3954b36a42c6607978cb3c09dc1373d';
+    audio.current.onloadeddata = e => {
+      setPlay(true);
+      console.log(audio.current)
+    }
+
+    // await axios.get(`https://api.spotifydown.com/download/${the_id}`).then(e => {
+    //   // const newAudio = new Audio(`https://cors.spotifydown.com/${e.data.link}`);
+    //   audio.current.src = `https://cors.spotifydown.com/${e.data.link}`;
+    //   localStorage.setItem('audio_src', `https://cors.spotifydown.com/${e.data.link}`);
+    //   setSrc(`https://cors.spotifydown.com/${e.data.link}`);
+    //   audio.current.onloadeddata = e => {
+    //     setPlay(true);
+    //   }
+    // }).catch(e => {
+    //   console.log(e);
+    // })
   }
   audio.current?.src && audio.current.addEventListener('timeupdate', e => {
     if (audio.current.volume) {
