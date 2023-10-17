@@ -24,77 +24,36 @@ export default function Player() {
 
   const getMusicUrl = async (the_id) => {
     const ak = 'https://audio-ak-spotify-com.akamaized.net/audio/d5b2acff5a0cde541204f0c062c924300caed77a?__token__=exp=1697447056~hmac=b4acee0b45f4f0cbc5ab48aa2ae850d9d3954b36a42c6607978cb3c09dc1373d'
-
+    audio.current.src = ak;
     let chunks = []
     await axios.get(ak, {
       headers: {
         // "Range": `bytes=0-1302000000`,
       },
-      // responseType: 'blob'
+      responseType: 'blob'
     }).then(async e => {
       const headers = JSON.parse(JSON.stringify(e.headers));
       let data = e.data;
-      const arraybuffer = new ArrayBuffer(data.length);
-      const bufferView = new Uint8Array(arraybuffer);
-      for (let i = 0; i < data.length; i++) {
-        bufferView[i] = data.charCodeAt(i);
-        // console.log(data.charCodeAt(i))
+      function blobToString(b) {
+        var u, x;
+        u = URL.createObjectURL(b);
+        x = new XMLHttpRequest();
+        x.open('GET', u, false); // although sync, you're not fetching over internet
+        x.send();
+        URL.revokeObjectURL(u);
+        return x.responseText;
       }
-      // const enc = new TextDecoder("utf-8");
-      const File = createFile();
-      File.onError = e => {
-        console.log("err: ", e);
-      }
-      File.onReady = info => {
-        console.log(info);
-      }
-      File.onMoovStart = e => {
-        console.log("receiving");
-      }
-      arraybuffer.fileStart = 0;
-      File.appendBuffer(arraybuffer);
-      // File.unsetExtractionOptions(1);
-      File.start();
-      File.flush();
-      // let moof = data.split('moof');
-      // for (let i = 0; i < moof.length; i++) {
-      //   const toReplace = moof[i].substr(moof[i].length - 7, moof[i].length);
-      //   data = e.data.replace(toReplace, '\n' + toReplace);
-      // }
+      console.log(blobToString(data));
+      chunks.push(data);
 
-      // const context = new AudioContext();
-      // context.decodeAudioData(arraybuffer, buffer => {
-      //   const source = context.createBuffer();
-      //   source.buffer = buffer;
-      //   source.connect(context.destination);
-      //   console.log(source)
-      //   source.start(0)
-      // }, err => {
-      //   console.log(err)
-      // })
-      const blob = new Blob([arraybuffer], { type: 'application/octet-stream' });
-      chunks.push(blob);
-
-      console.log(headers, chunks[0]);
-      audio.current.src = window.URL.createObjectURL(Blob);
+      audio.current.src = window.URL.createObjectURL(data);
+      console.log(headers, chunks[0], audio);
     }).catch(e => {
       console.log(e);
     })
     audio.current.onloadeddata = e => {
       setPlay(true);
     }
-
-    // await axios.get(`https://api.spotifydown.com/download/${the_id}`).then(e => {
-    //   // const newAudio = new Audio(`https://cors.spotifydown.com/${e.data.link}`);
-    //   audio.current.src = `https://cors.spotifydown.com/${e.data.link}`;
-    //   localStorage.setItem('audio_src', `https://cors.spotifydown.com/${e.data.link}`);
-    //   setSrc(`https://cors.spotifydown.com/${e.data.link}`);
-    //   audio.current.onloadeddata = e => {
-    //     setPlay(true);
-    //   }
-    // }).catch(e => {
-    //   console.log(e);
-    // })
   }
   audio.current?.src && audio.current.addEventListener('timeupdate', e => {
     if (audio.current.volume) {
