@@ -6,7 +6,6 @@ import { useRecoilState } from 'recoil';
 import { AudioSrc, NowPlayingId, PlayingAudio } from '@/app/recoilStates';
 import Link from 'next/link';
 import qs from 'qs';
-import { crossOrigin } from '../../../next.config';
 
 export default function Player() {
   // const [audio, setAudio] = useRecoilState(PlayingAudio);
@@ -27,9 +26,8 @@ export default function Player() {
     let ak, fa;
     const spclient_url = `https://gae2-spclient.spotify.com/storage-resolve/v2/files/audio/interactive/10/${undefinedId}?version=10000000&product=9&platform=39&alt=json`
     const seektable_url = `https://seektables.scdn.co/seektable/${undefinedId}.json`;
-    const Bearer = `BQBiR8IEUilH15MA5oQ5uw0A2XHw6CZqfmn55EjXqai9d0f2eM6tjLGMb8UcAnckif1zcCFWAsmaQ5vongVT-3aiD7P2DBF0ifCogr4rIxjuh5AvlEwkMqAVpnzeonnWJ8vrXeyy8mrDgJTvXqTdqRfkaVfwATZDQMYFnqqsGQgf927Zt5LwPtIqB96N5_4oVA3VKhoODdHYMnC1dogXTeDtjmGYTqPvC-rmUoSnAbGmUrPO92bshe3rfE4XCFkssVgqH7iTmC6cdYWjyMJ7lM6axbngbGhvvFyxJoERNeYJIeK13EQ1ot6pJecDfvdVyehjvtbRtRBtiOVDd442KKEUrn2Y`;
+    const Bearer = `BQDTWWvn-nWDpswxYS_mvrAooDYKV17QcrOEKnSsZRH4dur1hhCQfbSnxQY09aS60Sr0JljBFmzrAMtFKYtxJPhj4x21lmg4o-pH7yBQb87tk6G5grmzmH8NsxmyRfroRpX_QAH9ioiWU4rmQ6tx_OZBXcCnngBpT32usyK1V4XZakB2J7mr5sQX9UdXBgSeek1HwKt5T0GT4GlqtESZbL00h9iG_EdsH6RZl4DBlinKIDigvctrOa9ihZBX9UPldYjviVQARPjmpfYKfvJj5qlEoE3L_qj_ameKyZDUswRpnHpqcLprTEIV0hO9dX8O5HYvwfRRiKZwOZp83bC7MzUx5iiX`;
 
-    // audio.current.src = ak;
     let blobs = [];
     let data_sets = [];
     let seektable, spclient;
@@ -51,19 +49,21 @@ export default function Player() {
       ak = spclient.cdnurl[0]; fa = spclient.cdnurl[1];
       console.log(spclient, data_sets);
       for (let i = 0; i < data_sets.length; i++) {
-        await axios.get(ak, { headers: { "Range": `bytes=${data_sets[i][0]}-${data_sets[i][1]}` }, responseType: 'blob' }).then(e => {
-          blobs.push(e.data);
-        }).catch(e => {
-          console.log(e)
-        })
+        try {
+          await axios.get(ak).then(e => {
+            blobs.push(new Blob([e.data], { type: 'ogg/vorbis' }))
+          })
+        } catch (e) {
+          console.log(e);
+        }
       }
     }).catch(e => {
       console.log(e)
     })
     console.log(blobs)
-    audio.current.src = URL.createObjectURL(blobs[0]);
+    audio.current.src = blobs[2];
     audio.current.onloadeddata = e => {
-      console.log(e.target)
+      console.log(audio)
       setPlay(true);
     }
   }
