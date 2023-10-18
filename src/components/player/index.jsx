@@ -5,8 +5,8 @@ import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { AudioSrc, NowPlayingId, PlayingAudio } from '@/app/recoilStates';
 import Link from 'next/link';
-import { Audiowide } from 'next/font/google';
-import { createFile } from 'mp4box';
+import qs from 'qs';
+import { crossOrigin } from '../../../next.config';
 
 export default function Player() {
   // const [audio, setAudio] = useRecoilState(PlayingAudio);
@@ -23,35 +23,47 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
 
   const getMusicUrl = async (the_id) => {
-    const ak = 'https://audio-ak-spotify-com.akamaized.net/audio/d5b2acff5a0cde541204f0c062c924300caed77a?__token__=exp=1697447056~hmac=b4acee0b45f4f0cbc5ab48aa2ae850d9d3954b36a42c6607978cb3c09dc1373d'
-    audio.current.src = ak;
-    let chunks = []
-    await axios.get(ak, {
-      headers: {
-        // "Range": `bytes=0-1302000000`,
-      },
-      responseType: 'blob'
-    }).then(async e => {
-      const headers = JSON.parse(JSON.stringify(e.headers));
-      let data = e.data;
-      function blobToString(b) {
-        var u, x;
-        u = URL.createObjectURL(b);
-        x = new XMLHttpRequest();
-        x.open('GET', u, false); // although sync, you're not fetching over internet
-        x.send();
-        URL.revokeObjectURL(u);
-        return x.responseText;
-      }
-      console.log(blobToString(data));
-      chunks.push(data);
+    const undefinedId = 'd5b2acff5a0cde541204f0c062c924300caed77a'
+    let ak, fa;
+    const spclient_url = `https://gae2-spclient.spotify.com/storage-resolve/v2/files/audio/interactive/10/${undefinedId}?version=10000000&product=9&platform=39&alt=json`
+    const seektable_url = `https://seektables.scdn.co/seektable/${undefinedId}.json`;
+    const Bearer = `BQBiR8IEUilH15MA5oQ5uw0A2XHw6CZqfmn55EjXqai9d0f2eM6tjLGMb8UcAnckif1zcCFWAsmaQ5vongVT-3aiD7P2DBF0ifCogr4rIxjuh5AvlEwkMqAVpnzeonnWJ8vrXeyy8mrDgJTvXqTdqRfkaVfwATZDQMYFnqqsGQgf927Zt5LwPtIqB96N5_4oVA3VKhoODdHYMnC1dogXTeDtjmGYTqPvC-rmUoSnAbGmUrPO92bshe3rfE4XCFkssVgqH7iTmC6cdYWjyMJ7lM6axbngbGhvvFyxJoERNeYJIeK13EQ1ot6pJecDfvdVyehjvtbRtRBtiOVDd442KKEUrn2Y`;
 
-      audio.current.src = window.URL.createObjectURL(data);
-      console.log(headers, chunks[0], audio);
+    // audio.current.src = ak;
+    let blobs = [];
+    let data_sets = [];
+    let seektable, spclient;
+    await axios.get(seektable_url).then(e => {
+      seektable = e.data;
+      console.log(seektable);
+      console.log(atob(seektable.pssh))
+      let sum = seektable.offset - 1;
+      data_sets.push([0, sum]);
+      for (let i = 0; i < seektable.segments.length; i++) {
+        data_sets.push([sum + 1, sum + seektable.segments[i][0]]);
+        sum += seektable.segments[i][0];
+      }
     }).catch(e => {
-      console.log(e);
+      console.log(e)
     })
+    await axios.get(spclient_url, { headers: { 'Authorization': `Bearer ${Bearer}` } }).then(async e => {
+      spclient = e.data;
+      ak = spclient.cdnurl[0]; fa = spclient.cdnurl[1];
+      console.log(spclient, data_sets);
+      for (let i = 0; i < data_sets.length; i++) {
+        await axios.get(ak, { headers: { "Range": `bytes=${data_sets[i][0]}-${data_sets[i][1]}` }, responseType: 'blob' }).then(e => {
+          blobs.push(e.data);
+        }).catch(e => {
+          console.log(e)
+        })
+      }
+    }).catch(e => {
+      console.log(e)
+    })
+    console.log(blobs)
+    audio.current.src = URL.createObjectURL(blobs[0]);
     audio.current.onloadeddata = e => {
+      console.log(e.target)
       setPlay(true);
     }
   }
