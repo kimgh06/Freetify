@@ -26,7 +26,7 @@ export default function Player() {
     let ak, fa;
     const spclient_url = `https://gae2-spclient.spotify.com/storage-resolve/v2/files/audio/interactive/10/${undefinedId}?version=10000000&product=9&platform=39&alt=json`
     const seektable_url = `https://seektables.scdn.co/seektable/${undefinedId}.json`;
-    const Bearer = `BQDTWWvn-nWDpswxYS_mvrAooDYKV17QcrOEKnSsZRH4dur1hhCQfbSnxQY09aS60Sr0JljBFmzrAMtFKYtxJPhj4x21lmg4o-pH7yBQb87tk6G5grmzmH8NsxmyRfroRpX_QAH9ioiWU4rmQ6tx_OZBXcCnngBpT32usyK1V4XZakB2J7mr5sQX9UdXBgSeek1HwKt5T0GT4GlqtESZbL00h9iG_EdsH6RZl4DBlinKIDigvctrOa9ihZBX9UPldYjviVQARPjmpfYKfvJj5qlEoE3L_qj_ameKyZDUswRpnHpqcLprTEIV0hO9dX8O5HYvwfRRiKZwOZp83bC7MzUx5iiX`;
+    const Bearer = `BQAgStpjcpKjry0JJLonfOQ6zVszHuGXGcU6Ts7CbaZ91JBNqvGwUbq1tRB_IF5FQ5M5oDyBNQ0oyT6-oVAFb4zwn90th3eHG8_ZzAGa4VED14u6YtHI33CyDojLSmbOWW47Iq7IObl5MHMe7_0V3WE_sH8sfKOT54Rd5ZWh_Zr6qHJ-0eMgsvtalnpirjWvDM4nj9q7XRn0obOFfipJsa31RBsmn4TcS9l19QEuN_tnf5QeeSuEsaVqU04C2Hav9KTYgw4NFlP3RrphSUNHm5etO6Cl1O317ppge7c5dErSbI2XUAjoWEj73L_GZNhvUpguNFPgPibLqgPlPU3b52CM4iLa`;
 
     let blobs = [];
     let data_sets = [];
@@ -34,7 +34,6 @@ export default function Player() {
     await axios.get(seektable_url).then(e => {
       seektable = e.data;
       console.log(seektable);
-      console.log(atob(seektable.pssh))
       let sum = seektable.offset - 1;
       data_sets.push([0, sum]);
       for (let i = 0; i < seektable.segments.length; i++) {
@@ -48,20 +47,22 @@ export default function Player() {
       spclient = e.data;
       ak = spclient.cdnurl[0]; fa = spclient.cdnurl[1];
       console.log(spclient, data_sets);
-      for (let i = 0; i < data_sets.length; i++) {
-        try {
-          await axios.get(ak).then(e => {
-            blobs.push(new Blob([e.data], { type: 'ogg/vorbis' }))
-          })
-        } catch (e) {
-          console.log(e);
+      // for (let i = 0; i < data_sets.length; i++) {
+      await axios.get(ak/*, { headers: { 'Range': `bytes=${data_sets[i][0]}-${data_sets[i][1]}` } }*/).then(e => {
+        const byteNumbers = new Array(e.data.length);
+        for (let i = 0; i < e.data.length; i++) {
+          byteNumbers[i] = e.data.charCodeAt(i);
         }
-      }
+        blobs.push(new Blob([new Uint8Array(byteNumbers)], { type: 'application/aac' }))
+      }).catch(e => {
+        console.log(e);
+      })
+      // }
+      audio.current.src = URL.createObjectURL(blobs[0]);
+      console.log(blobs[0], audio.current.src);
     }).catch(e => {
       console.log(e)
     })
-    console.log(blobs)
-    audio.current.src = blobs[2];
     audio.current.onloadeddata = e => {
       console.log(audio)
       setPlay(true);
@@ -117,7 +118,7 @@ export default function Player() {
     if (audio.current.src) {
       if (play) {
         let promise = audio.current.play();
-        promise.catch(err => setPlay(false));
+        promise.catch(err => { console.log(err); setPlay(false) });
       } else {
         audio.current.pause();
       }
