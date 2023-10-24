@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { AudioSrc, NowPlayingId, PlayingAudio } from '@/app/recoilStates';
 import Link from 'next/link';
-import qs from 'qs';
+import ytdl from 'ytdl-core';
 
 export default function Player() {
   // const [audio, setAudio] = useRecoilState(PlayingAudio);
@@ -22,8 +22,15 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
 
   const getMusicUrl = async (the_id, artist, title) => {
-    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=AIzaSyDa4uItii79UYuFou4x3w1-gQyJkkvZF6w&q=${title}+${artist}`).then(e => {
-      console.log(e.data.items[0].id.videoId);
+    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=AIzaSyDa4uItii79UYuFou4x3w1-gQyJkkvZF6w&q=${title}+${artist}`).then(async e => {
+      const urlId = e.data.items[0].id.videoId;
+      console.log(urlId);
+      await axios.get(`/api/get_video?id=${urlId}`).then(e => {
+        console.log(e.data);
+      }).catch(e => {
+        console.log(e);
+      })
+      // const video = ytdl(`https://youtube.com/watch?v=${urlId}`, { filter: 'audioonly' });
     }).catch(e => {
       console.log(e);
     })
