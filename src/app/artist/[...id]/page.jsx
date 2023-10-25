@@ -53,8 +53,10 @@ function InnerContent({ id }) {
       })
   }
   useEffect(e => {
-    getArtistInfo();
-    getArtistAlbums();
+    if (access) {
+      getArtistInfo();
+      getArtistAlbums();
+    }
   }, [access])
   return <><S.PaddingBox />
     <Navi />

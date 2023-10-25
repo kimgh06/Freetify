@@ -39,7 +39,7 @@ function InnerComponent() {
       })
   }
   useEffect(e => {
-    getInfos();
+    access && getInfos();
   }, [access]);
 
   return <S.Profile>

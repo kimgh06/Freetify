@@ -37,8 +37,10 @@ function InnerContent({ id }) {
       });
   }
   useEffect(e => {
-    getAlbumInfos();
-  }, []);
+    if (access) {
+      getAlbumInfos();
+    }
+  }, [access]);
   return <>  <Navi />
     <S.AlbumInfos>
       <div className='header'>

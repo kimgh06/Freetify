@@ -28,11 +28,12 @@ export default function Navi() {
     if (new Date().getTime() >= localStorage.getItem('expire')) {
       refresh_token();
     }
-    if (!id) {
-      setRefreshToken(localStorage.getItem('access'));
+    else if (refreshToken !== '') {
       setId(localStorage.getItem('now_playing_id'));
+    } else {
+      setRefreshToken(localStorage.getItem('access'));
     }
-  }, [])
+  }, [refreshToken]);
   return <>
     <S.Nav>
       <div className={'menu ' + activating} onClick={e => setActivating(a => !a)}>三</div>
