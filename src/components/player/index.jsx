@@ -21,78 +21,36 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
 
   const getMusicUrl = async (the_id, artist, title) => {
-    // const api_key = `AIzaSyDa4uItii79UYuFou4x3w1-gQyJkkvZF6w`;
-    const api_key = `AIzaSyDAhA1LZRQhWKFlrpVqZN2Egb8LXJ6pScY`;
+    const api_key = `AIzaSyDa4uItii79UYuFou4x3w1-gQyJkkvZF6w`;
+    // const api_key = `AIzaSyDAhA1LZRQhWKFlrpVqZN2Egb8LXJ6pScY`;
     await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+${artist}`).then(async e => {
       const urlId = e.data.items[0].id.videoId;
-      console.log(urlId);
+      console.log(e.data.items);
       audio.current.src = `${process.env.NEXT_PUBLIC_BACKEND_URL}/get_video?id=${urlId}`;
+      audio.current.onloadeddata = e => {
+        setSrc(audio.current.src)
+        setPlay(true);
+      }
     }).catch(e => {
       console.log(e);
     })
-    // const undefinedId = 'd5b2acff5a0cde541204f0c062c924300caed77a'
-    // let ak, fa;
-    // const spclient_url = `https://gae2-spclient.spotify.com/storage-resolve/v2/files/audio/interactive/10/${undefinedId}?version=10000000&product=9&platform=39&alt=json`
-    // const seektable_url = `https://seektables.scdn.co/seektable/${undefinedId}.json`;
-    // const Bearer = `BQCufhme7vs2ACIX0t534dTXYZS_TuoMbDWYfJl1vI5_-2YFcoTRC1C9FVZsv7KTI26oDsVUzPHKBmFK090WPJ-xXtRrHx1qdlPghp9T6loqu62Kt9PRWWU2_VxmOolXrAOc5xg-sD3GvcBKYCpz2VlX-npI9-BU-1hIjPkxgW59CuPFDTe4gxuFRfYD5PXcBn1ttaE58TLnd2OlNdAMw_eGAvvSuevpqVnaKn5o05qATAXPF-5QKRK8WCNiPrE3S9GOclEmymuL-3ZYh7JtYH0bNEGebLLRXB8zfvuaYJpzTtZi2hXfJp2cpK6U8f0qF-dpESCQw1gzuCm53EBZ1UInpwkR`;
-
-    // let blobs = [];
-    // let data_sets = [];
-    // let seektable, spclient;
-    // await axios.get(seektable_url).then(e => {
-    //   seektable = e.data;
-    //   console.log(seektable);
-    //   let sum = seektable.offset - 1;
-    //   data_sets.push([0, sum]);
-    //   for (let i = 0; i < seektable.segments.length; i++) {
-    //     data_sets.push([sum + 1, sum + seektable.segments[i][0]]);
-    //     sum += seektable.segments[i][0];
-    //   }
-    // }).catch(e => {
-    //   console.log(e)
-    // })
-    // await axios.get(spclient_url, { headers: { 'Authorization': `Bearer ${Bearer}` } }).then(async e => {
-    //   spclient = e.data;
-    //   ak = spclient.cdnurl[0]; fa = spclient.cdnurl[1];
-    //   let header;
-    //   for (let i = 0; i < data_sets.length; i++) {
-    //     await axios.get(ak, { headers: { 'Range': `bytes=${data_sets[i][0]}-${data_sets[i][1]}` }, responseType: 'blob' }).then(e => {
-    //       blobs.push(e.data);
-    //       if (i === 3) {
-    //         const mergedBlob = new Blob(blobs, { type: blobs[0].type });
-    //         audio.current.src = URL.createObjectURL(mergedBlob);
-    //       }
-    //     }).catch(e => {
-    //       console.log(e);
-    //     })
-    //   }
-    //   const mergedBlob = new Blob(blobs, { type: blobs[0].type })
-    //   audio.current.src = URL.createObjectURL(mergedBlob);
-    //   console.log(mergedBlob.type, audio);
-    //   audio.current.onloadeddata = e => {
-    //     console.log(audio)
-    //     setPlay(true);
-    //   }
-    // }).catch(e => {
-    //   console.log(e)
-    // })
   }
   audio.current?.src && audio.current.addEventListener('timeupdate', e => {
-    if (audio.current.volume) {
+    if (audio.current) {
       audio.current.volume = volume;
-    }
-    const { currentTime, duration } = audio.current;
-    setCurrentT(currentTime * 1000);
-    if (duration - currentTime <= 0) {
-      setPlay(false);
-      const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-      let list = localStorage.getItem("TrackList");
-      if (list) {
-        audio.current.src = null;
-        list = list.split(',');
-        if (list[index + 1]) {
-          setId(list[index + 1]);
-          localStorage.setItem('now_index_in_tracks', index + 1);
+      const { currentTime, duration } = audio.current;
+      setCurrentT(currentTime * 1000);
+      if (duration - currentTime <= 0) {
+        setPlay(false);
+        const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+        let list = localStorage.getItem("TrackList");
+        if (list) {
+          audio.current.src = null;
+          list = list.split(',');
+          if (list[index + 1]) {
+            setId(list[index + 1]);
+            localStorage.setItem('now_index_in_tracks', index + 1);
+          }
         }
       }
     }

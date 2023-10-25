@@ -23,14 +23,8 @@ app.get('/', (rq, rs) => {
 
 app.get('/get_video', (rq, rs) => {
   const id = rq.query.id;
-  const blobStream = BlobStream();
   ytdl(`https://youtube.com/watch?v=${id}`, { filter: 'audioonly', quality: 'highestaudio' })
-    .pipe(rs)
-  // .on('finish', e => {
-  //   const blob = blobStream.toBlob('audio/mp4');
-  //   console.log(blob)
-  //   rs.send(blob)
-  // });
+    .pipe(rs);
 })
 
 // app.post('/getTokens', (rq, rs) => {
