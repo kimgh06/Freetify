@@ -26,13 +26,7 @@ export default function Player() {
     await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+${artist}`).then(async e => {
       const urlId = e.data.items[0].id.videoId;
       console.log(urlId);
-      await axios.get(`/api/get_video?id=${urlId}`, { responseType: 'blob' }).then(e => {
-        console.log(e.data);
-        const music_url = URL.createObjectURL(e.data.blob());
-        console.log(music_url);
-      }).catch(e => {
-        console.log(e);
-      })
+      audio.current.src = `${process.env.NEXT_PUBLIC_BACKEND_URL}/get_video?id=${urlId}`;
     }).catch(e => {
       console.log(e);
     })

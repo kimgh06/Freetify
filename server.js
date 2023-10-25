@@ -4,6 +4,8 @@ const port = 3333;
 const cors = require('cors');
 const request = require('request');
 let ip = require('ip');
+const ytdl = require('ytdl-core');
+const BlobStream = require('blob-stream');
 require('dotenv').config();
 
 const redirect_url = process.env.NEXT_PUBLIC_BACKEND_REDIRECT_URL;
@@ -19,59 +21,71 @@ app.get('/', (rq, rs) => {
   console.log(rs.connection.remoteAddress);
 });
 
-app.post('/getTokens', (rq, rs) => {
-  const { code, state } = rq.body;
-  if (code && state) {
-    const options = {
-      url: 'https://accounts.spotify.com/api/token',
-      form: {
-        code: code,
-        redirect_uri: redirect_url,
-        grant_type: 'authorization_code'
-      },
-      headers: {
-        'Authorization': `Basic ${(new Buffer.from(SpotifyClientId + ":" + SpotyfyClientSecret).toString('base64'))}`
-      },
-      json: true
-    };
-    request.post(options, (err, res, body) => {
-      if (!err) {
-        rs.send(body);
-      } else {
-        rs.send(err);
-      }
-    });
-  } else {
-    rs.sendStatus(400);
-  }
-});
+app.get('/get_video', (rq, rs) => {
+  const id = rq.query.id;
+  const blobStream = BlobStream();
+  ytdl(`https://youtube.com/watch?v=${id}`, { filter: 'audioonly', quality: 'highestaudio' })
+    .pipe(rs)
+  // .on('finish', e => {
+  //   const blob = blobStream.toBlob('audio/mp4');
+  //   console.log(blob)
+  //   rs.send(blob)
+  // });
+})
 
-app.patch('/refresh_token', (rq, rs) => {
-  const { refreshToken } = rq.body;
-  if (refreshToken) {
-    const options = {
-      url: 'https://accounts.spotify.com/api/token',
-      form: {
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken
-      },
-      headers: {
-        'Authorization': `Basic ${(new Buffer.from(SpotifyClientId + ":" + SpotyfyClientSecret).toString('base64'))}`
-      },
-      json: true
-    };
-    request.post(options, (err, res, body) => {
-      if (!err) {
-        rs.send(body);
-      } else {
-        rs.send(err);
-      }
-    });
-  }
-  else {
-    rs.sendStatus(400);
-  }
-});
+// app.post('/getTokens', (rq, rs) => {
+//   const { code, state } = rq.body;
+//   if (code && state) {
+//     const options = {
+//       url: 'https://accounts.spotify.com/api/token',
+//       form: {
+//         code: code,
+//         redirect_uri: redirect_url,
+//         grant_type: 'authorization_code'
+//       },
+//       headers: {
+//         'Authorization': `Basic ${(new Buffer.from(SpotifyClientId + ":" + SpotyfyClientSecret).toString('base64'))}`
+//       },
+//       json: true
+//     };
+//     request.post(options, (err, res, body) => {
+//       if (!err) {
+//         rs.send(body);
+//       } else {
+//         rs.send(err);
+//       }
+//     });
+//   } else {
+//     rs.sendStatus(400);
+//   }
+// });
+
+// app.patch('/refresh_token', (rq, rs) => {
+//   const { refreshToken } = rq.body;
+//   if (refreshToken) {
+//     const options = {
+//       url: 'https://accounts.spotify.com/api/token',
+//       form: {
+//         grant_type: 'refresh_token',
+//         refresh_token: refreshToken
+//       },
+//       headers: {
+//         'Authorization': `Basic ${(new Buffer.from(SpotifyClientId + ":" + SpotyfyClientSecret).toString('base64'))}`
+//       },
+//       json: true
+//     };
+//     request.post(options, (err, res, body) => {
+//       if (!err) {
+//         rs.send(body);
+//       } else {
+//         rs.send(err);
+//       }
+//     });
+//   }
+//   else {
+//     rs.sendStatus(400);
+//   }
+// });
 
 app.listen(port, e => {
   console.log(`Server is running on port ${port}`);
