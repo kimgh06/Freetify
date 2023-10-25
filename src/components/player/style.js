@@ -120,7 +120,7 @@ export const Player = styled.div`
       align-items: center;
       margin-top: 10px;
       @media screen and (max-width: 1199px) {  
-        width: 93vw;
+        width: calc(100vw - 25px);
       }
       .bar{
         border: 3px solid blue;

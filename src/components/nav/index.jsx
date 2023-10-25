@@ -5,13 +5,12 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Player from '../player';
 import { useRecoilState } from 'recoil';
-import { NowPlayingId } from '@/app/recoilStates';
-
-const url = process.env.NEXT_PUBLIC_BACKEND_URL;
+import { AccessToken, NowPlayingId } from '@/app/recoilStates';
 
 export default function Navi() {
   const [activating, setActivating] = useState(false);
   const [id, setId] = useRecoilState(NowPlayingId);
+  const [refreshToken, setRefreshToken] = useRecoilState(AccessToken);
   const refresh_token = async e => {
     await axios.patch(`/api/refresh_token`,
       { refreshToken: localStorage.getItem('refresh') }).then(e => {
@@ -19,8 +18,8 @@ export default function Navi() {
         if (!info?.error) {
           localStorage.setItem('access', info.access_token);
           localStorage.setItem('expire', new Date().getTime() + info.expires_in * 1000);
+          setRefreshToken(info.access_token);
         }
-        window.location.reload();
       }).catch(e => {
         console.log(e);
       })
@@ -30,6 +29,7 @@ export default function Navi() {
       refresh_token();
     }
     if (!id) {
+      setRefreshToken(localStorage.getItem('access'));
       setId(localStorage.getItem('now_playing_id'));
     }
   }, [])

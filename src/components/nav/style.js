@@ -2,6 +2,12 @@ import { styled } from "styled-components";
 
 export const Nav = styled.div`
   .nav{
+    @keyframes nav {
+      0%{
+        width: 0;
+      }
+    }
+    animation: nav 0.5s ease;
     position: fixed;
     top: 0;
     background-color: #00af00;
@@ -10,11 +16,12 @@ export const Nav = styled.div`
     width: 300px;
     padding-top: 60px;
     z-index: 2;
+    @media screen and (max-width: 500px) {  
+      right: 0;
+      width: 140px;
+    }
     p{
       padding: 20px 0 0px 20px;
-      @media screen and (max-width: 500px) {  
-        padding-left: 150px;
-      }
     }
   }
   .menu{

@@ -7,6 +7,10 @@ export const AudioSrc = atom({
   key: 'AudioSrc',
   default: ''
 })
+export const AccessToken = atom({
+  key: 'RefreshToken',
+  default: ''
+})
 
 function string2tag(str) {
   if (str) {

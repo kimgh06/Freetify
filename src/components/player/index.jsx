@@ -3,11 +3,10 @@ import { useEffect, useRef, useState } from 'react';
 import * as S from './style';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import { AudioSrc, NowPlayingId, PlayingAudio } from '@/app/recoilStates';
+import { AccessToken, AudioSrc, NowPlayingId } from '@/app/recoilStates';
 import Link from 'next/link';
 
 export default function Player() {
-  // const [audio, setAudio] = useRecoilState(PlayingAudio);
   const audio = useRef(null);
   const [id, setId] = useRecoilState(NowPlayingId);
   const [src, setSrc] = useRecoilState(AudioSrc);
@@ -16,24 +15,25 @@ export default function Player() {
   const [currentT, setCurrentT] = useState(0);
   const [durationT, setDurationT] = useState(`0:00`);
   const [volume, setVolume] = useState(0.7);
-
+  const [access, setAccess] = useRecoilState(AccessToken);
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
 
   const getMusicUrl = async (the_id, artist, title) => {
     const api_key = `AIzaSyDa4uItii79UYuFou4x3w1-gQyJkkvZF6w`;
     // const api_key = `AIzaSyDAhA1LZRQhWKFlrpVqZN2Egb8LXJ6pScY`;
-    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+${artist}`).then(async e => {
-      const urlId = e.data.items[0].id.videoId;
-      console.log(e.data.items);
-      audio.current.src = `${process.env.NEXT_PUBLIC_BACKEND_URL}/get_video?id=${urlId}`;
-      audio.current.onloadeddata = e => {
-        setSrc(audio.current.src)
-        setPlay(true);
-      }
-    }).catch(e => {
-      console.log(e);
-    })
+    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+${artist}`)
+      .then(async e => {
+        const urlId = e.data.items[0].id.videoId;
+        console.log(e.data.items);
+        audio.current.src = `${process.env.NEXT_PUBLIC_BACKEND_URL}/get_video?id=${urlId}`;
+        audio.current.onloadeddata = e => {
+          setSrc(audio.current.src)
+          setPlay(true);
+        }
+      }).catch(e => {
+        console.log(e);
+      })
   }
   audio.current?.src && audio.current.addEventListener('timeupdate', e => {
     if (audio.current) {
@@ -56,7 +56,7 @@ export default function Player() {
     }
   }, false);
   const getTrackinfos = async id => {
-    await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
+    await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
       console.log(e.data);
       setInfo(e.data);
       const d = e.data.duration_ms;
@@ -68,18 +68,18 @@ export default function Player() {
   }
   useEffect(e => {
     if (id) {
-      setPlay(false)
+      setPlay(false);
       localStorage.setItem('now_playing_id', id);
+      getTrackinfos(id);
       let list = localStorage.getItem("TrackList")?.split(',');
       if (list) {
         const index = parseInt(localStorage.getItem('now_index_in_tracks'));
         console.log(`${list[index - 1] ? `past: ${list[index + 1]}\n` : ''}now: ${id}${list[index + 1] ? `\nxnext: ${list[index + 1]}` : ''} `);
       }
-      getTrackinfos(id);
     } else {
       setId(localStorage.getItem('now_playing_id'));
     }
-  }, [id]);
+  }, [id, access]);
   useEffect(e => {
     console.log(play, audio?.current?.src?.substring(audio.current.src.length - 8), src.substring(src.length - 8));
     if (audio.current.src) {

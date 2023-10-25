@@ -1,5 +1,4 @@
 "use client";
-
 import AritstProfile from "@/components/artistprofile";
 import Navi from "@/components/nav";
 import Tag from "@/components/tag";
@@ -7,17 +6,25 @@ import axios from "axios";
 import * as S from './style';
 import { useEffect, useState } from "react";
 import PlaylistAtom from "@/components/playlistAtom";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useRecoilState } from "recoil";
+import { AccessToken } from "@/app/recoilStates";
 
 const url = 'https://api.spotify.com/v1';
 
 export default function asdf({ params }) {
   const { id } = params;
+  return <RecoilRoot>
+    <InnerContent id={id} />
+  </RecoilRoot>;
+}
+
+function InnerContent({ id }) {
   const [info, setInfos] = useState();
   const [topTracks, setTopTracks] = useState([]);
   const [topAlbums, setTopAlbums] = useState([]);
+  const [access, setAccess] = useRecoilState(AccessToken);
   async function getArtistTopTracks() {
-    await axios.get(`${url}/artists/${id}/top-tracks?market=US`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } })
+    await axios.get(`${url}/artists/${id}/top-tracks?market=US`, { headers: { Authorization: `Bearer ${access}` } })
       .then(e => {
         console.log(e.data);
         setTopTracks(e.data.tracks);
@@ -26,7 +33,7 @@ export default function asdf({ params }) {
       });
   }
   async function getArtistInfo() {
-    await axios.get(`${url}/artists/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } })
+    await axios.get(`${url}/artists/${id}`, { headers: { Authorization: `Bearer ${access}` } })
       .then(e => {
         // console.log(e.data);
         setInfos(e.data);
@@ -37,7 +44,7 @@ export default function asdf({ params }) {
       });
   }
   async function getArtistAlbums() {
-    await axios.get(`${url}/artists/${id}/albums?limit=3`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } })
+    await axios.get(`${url}/artists/${id}/albums?limit=3`, { headers: { Authorization: `Bearer ${access}` } })
       .then(e => {
         console.log(e.data.items);
         setTopAlbums(e.data.items);
@@ -48,9 +55,8 @@ export default function asdf({ params }) {
   useEffect(e => {
     getArtistInfo();
     getArtistAlbums();
-  }, [])
-  return <RecoilRoot>
-    <S.PaddingBox />
+  }, [access])
+  return <><S.PaddingBox />
     <Navi />
     {info && <>
       <AritstProfile id={info?.id} img={info?.images[1]} name={info?.name} popularity={info?.popularity} followers={info?.followers.total} />
@@ -76,6 +82,5 @@ export default function asdf({ params }) {
       <S.End>
         <h3>End</h3>
       </S.End>
-    </>}
-  </RecoilRoot>;
+    </>}</>
 }

@@ -14,7 +14,9 @@ export default function RootLayout({ children }) {
       <head>
         <title>Music Player</title>
       </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        {children}
+      </body>
     </html>
   )
 }

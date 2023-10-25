@@ -5,17 +5,25 @@ import PlaylistAtom from "@/components/playlistAtom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import AritstProfile from "@/components/artistprofile";
-import { RecoilRoot } from "recoil";
+import { RecoilRoot, useRecoilState } from "recoil";
+import { AccessToken } from "../recoilStates";
 
 const url = 'https://api.spotify.com/v1';
 
 export default function asdf() {
+  return <RecoilRoot>
+    <InnerContent />
+  </RecoilRoot>;
+}
+
+function InnerContent() {
   const [q, setQ] = useState('');
   const [albums, setAlbums] = useState([]);
   const [artist, setArtist] = useState([]);
   const [tracks, setTracks] = useState([]);
+  const [access, setAccess] = useRecoilState(AccessToken);
   const searchItems = async e => {
-    await axios.get(`${url}/search?q=${q}&type=album,track,artist&limit=5`, { headers: { Authorization: "Bearer " + localStorage.getItem('access') } }).then(e => {
+    await axios.get(`${url}/search?q=${q}&type=album,track,artist&limit=5`, { headers: { Authorization: "Bearer " + access } }).then(e => {
       const data = e.data;
       let artists = data.artists.items.slice(0, 5);
       console.log("album", data.albums.items, "artists", artists, "tracks", data.tracks.items);
@@ -30,7 +38,7 @@ export default function asdf() {
   useEffect(e => {
     document.title = "search";
   }, []);
-  return <RecoilRoot>
+  return <>
     <Navi />
     <S.Search>
       <form onSubmit={e => {
@@ -69,6 +77,5 @@ export default function asdf() {
             id={i?.id} img={i?.images[2]} name={i?.name} popularity={i?.popularity} />)}
         </div>
       </div>
-    </S.Search>
-  </RecoilRoot>;
+    </S.Search></>
 }

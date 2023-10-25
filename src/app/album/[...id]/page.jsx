@@ -5,15 +5,23 @@ import axios from "axios";
 import { useEffect, useState } from "react"
 import Link from 'next/link';
 import PlaylistAtom from '@/components/playlistAtom';
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot, useRecoilState } from 'recoil';
+import { AccessToken } from '@/app/recoilStates';
 
 export default function asdf({ params }) {
   const id = params.id[0];
+  return <RecoilRoot>
+    <InnerContent id={id} />
+  </RecoilRoot>;
+}
+
+function InnerContent({ id }) {
   const url = 'https://api.spotify.com/v1';
   const [albumInfo, setAlbumInfo] = useState(null);
+  const [access, setAccess] = useRecoilState(AccessToken);
   const [tracks, setTracks] = useState([]);
   const getAlbumInfos = async e => {
-    await axios.get(`${url}/albums/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem("access")}` } })
+    await axios.get(`${url}/albums/${id}`, { headers: { Authorization: `Bearer ${access}` } })
       .then(e => {
         console.log(e.data);
         setAlbumInfo(e.data);
@@ -31,8 +39,7 @@ export default function asdf({ params }) {
   useEffect(e => {
     getAlbumInfos();
   }, []);
-  return <RecoilRoot>
-    <Navi />
+  return <>  <Navi />
     <S.AlbumInfos>
       <div className='header'>
         <img src={albumInfo?.images[1].url} alt='img' />
@@ -60,5 +67,5 @@ export default function asdf({ params }) {
         <h3>End</h3>
       </div>
     </S.AlbumInfos>
-  </RecoilRoot>;
+  </>
 }
