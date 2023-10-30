@@ -33,6 +33,11 @@ export default function Navi() {
     } else {
       setRefreshToken(localStorage.getItem('access'));
     }
+    const timer = setInterval(e => {
+      if (new Date().getTime() >= localStorage.getItem('expire')) {
+        refresh_token();
+      }
+    }, 20 * 1000);
   }, [refreshToken]);
   return <>
     <S.Nav>

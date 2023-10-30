@@ -70,10 +70,7 @@ export default function Player() {
       localStorage.setItem('now_playing_id', id);
       getTrackinfos(id);
       let list = localStorage.getItem("TrackList")?.split(',');
-      if (list) {
-        const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-        console.log(`${list[index - 1] ? `past: ${list[index + 1]}\n` : ''}now: ${id}${list[index + 1] ? `\nxnext: ${list[index + 1]}` : ''} `);
-      }
+      const index = parseInt(localStorage.getItem('now_index_in_tracks'));
     } else {
       setId(localStorage.getItem('now_playing_id'));
     }
