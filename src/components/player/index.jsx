@@ -22,7 +22,7 @@ export default function Player() {
   const getMusicUrl = async (the_id, artist, title) => {
     const api_key = `AIzaSyDAhA1LZRQhWKFlrpVqZN2Egb8LXJ6pScY`;
     const Back_url = '/api'
-    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+${artist}+topic&videoCategory=10&type=video`)
+    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+topic&videoCategory=10&type=video`)
       .then(async e => {
         const urlId = e.data.items[0].id.videoId;
         console.log(urlId);
