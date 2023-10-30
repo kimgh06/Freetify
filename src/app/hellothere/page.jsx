@@ -1,3 +1,3 @@
-export default function asdf() {
+export default function App() {
   return <>General Kenobi!</>;
 }

@@ -11,7 +11,7 @@ import { AccessToken } from "@/app/recoilStates";
 
 const url = 'https://api.spotify.com/v1';
 
-export default function asdf({ params }) {
+export default function App({ params }) {
   const { id } = params;
   return <RecoilRoot>
     <InnerContent id={id} />

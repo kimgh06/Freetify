@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 
-export default function asdf() {
+export default function App() {
   const generateRandomString = (num) => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     let result = '';

@@ -8,7 +8,7 @@ import PlaylistAtom from '@/components/playlistAtom';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import { AccessToken } from '@/app/recoilStates';
 
-export default function asdf({ params }) {
+export default function App({ params }) {
   const id = params.id[0];
   return <RecoilRoot>
     <InnerContent id={id} />

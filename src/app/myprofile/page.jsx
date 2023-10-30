@@ -9,7 +9,7 @@ import { AccessToken } from "../recoilStates";
 
 const spotifyUrl = 'https://api.spotify.com/v1';
 
-export default function asdf() {
+export default function App() {
   return <RecoilRoot>
     <InnerComponent />
   </RecoilRoot>;
