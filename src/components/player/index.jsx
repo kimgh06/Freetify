@@ -26,7 +26,7 @@ export default function Player() {
     await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+${artist}&videoCategory=10&type=video`)
       .then(async e => {
         const urlId = e.data.items[0].id.videoId;
-        console.log(e.data.items);
+        console.log(urlId);
         audio.current.src = `${Back_url}/get_video?id=${urlId}`;
         audio.current.onloadeddata = e => {
           setSrc(audio.current.src)
