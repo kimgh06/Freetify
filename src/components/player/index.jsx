@@ -24,7 +24,7 @@ export default function Player() {
     const api_key = `AIzaSyDAhA1LZRQhWKFlrpVqZN2Egb8LXJ6pScY`;
     // const Back_url = 'https://port-0-spotify-jvpb2mlo5rz7z8.sel5.cloudtype.app';
     const Back_url = '/api'
-    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+${artist}&videoCategory=10&type=video`)
+    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+topic&videoCategory=10&type=video`)
       .then(async e => {
         const urlId = e.data.items[0].id.videoId;
         console.log(urlId);
