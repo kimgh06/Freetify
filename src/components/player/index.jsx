@@ -76,7 +76,6 @@ export default function Player() {
     }
   }, [id, access]);
   useEffect(e => {
-    console.log(play, audio?.current?.src?.substring(audio.current.src.length - 8), src.substring(src.length - 8));
     if (audio.current.src) {
       if (play) {
         let promise = audio.current.play();

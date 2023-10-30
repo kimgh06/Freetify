@@ -26,7 +26,7 @@ function InnerContent({ id }) {
   async function getArtistTopTracks() {
     await axios.get(`${url}/artists/${id}/top-tracks?market=US`, { headers: { Authorization: `Bearer ${access}` } })
       .then(e => {
-        console.log(e.data);
+        console.log(e.data.tracks);
         setTopTracks(e.data.tracks);
       }).catch(e => {
         console.log(e);
@@ -46,7 +46,6 @@ function InnerContent({ id }) {
   async function getArtistAlbums() {
     await axios.get(`${url}/artists/${id}/albums?limit=3`, { headers: { Authorization: `Bearer ${access}` } })
       .then(e => {
-        console.log(e.data.items);
         setTopAlbums(e.data.items);
       }).catch(e => {
         console.log(e);
@@ -67,11 +66,11 @@ function InnerContent({ id }) {
       </S.Genres>
       <S.TracksHeader>Top Albums</S.TracksHeader>
       {topAlbums?.map((i, n) => <PlaylistAtom album={i} key={n} img={i?.images[2]?.url} type={i?.type}
-        id={i?.id} title={i.name} artist={i?.artists[0].name} artistId={i?.artists[0].id} />
+        id={i?.id} title={i.name} artist={i?.artists} artistId={i?.artists[0].id} />
       )}
       <S.TracksHeader>Top Tracks</S.TracksHeader>
       {topTracks !== 0 && <>
-        {topTracks?.map((i, n) => <PlaylistAtom album={i?.album} index={n} preview={i?.preview_url} key={n} artist={info?.name} artistId={id} title={i?.name} id={i?.id}
+        {topTracks?.map((i, n) => <PlaylistAtom album={i?.album} index={n} preview={i?.preview_url} key={n} artist={i?.artists} artistId={id} title={i?.name} id={i?.id}
           img={i?.album?.images[2]?.url} type={i?.type} isInPlay={e => {
             let list = [];
             list = JSON.parse(localStorage.getItem('list'));

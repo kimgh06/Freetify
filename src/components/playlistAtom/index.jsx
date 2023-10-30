@@ -6,13 +6,11 @@ import Link from 'next/link';
 import { useRecoilState } from 'recoil';
 import { NowPlayingId } from '@/app/recoilStates';
 
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
 const url = 'https://api.spotify.com/v1';
 
 export default function PlaylistAtom({ index, img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
   const [toggle, setToggle] = useState(isInPlay);
   const [now_playing_id, setNow_playing_id] = useRecoilState(NowPlayingId);
-  const [currentT, setCurrentT] = useState(0);
   const [durationT, setDurationT] = useState(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
   const getMusicAnalsisData = async e => {
     await axios.get(`${url}/audio-analysis/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
@@ -56,7 +54,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
         {type === "track" && <div className='isInPlay' onClick={listcontrol}>{toggle ? '-' : '+'}</div>}
       </div>
       <div className='foo'>
-        <Link className="artist" href={`/artist/${artistId}`}>{artist}</Link>
+        <Link className="artist" href={`/artist/${artistId}`}>{artist[0].name}{type === 'track' && artist.length > 1 && `+${artist.length - 1}`}</Link>
         {type === 'track' && <div className='audio'>
           <button onClick={e => {
             setNow_playing_id(id);
