@@ -1,7 +1,5 @@
 import ytdl from "ytdl-core";
 import { NextResponse } from "next/server";
-import BlobStream from 'blob-stream';
-import { Readable } from 'stream'
 
 export async function GET(req, res) {
   const id = req.url.split('id=')[1];
