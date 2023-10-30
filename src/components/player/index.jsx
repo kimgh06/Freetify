@@ -20,19 +20,15 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
 
   const getMusicUrl = async (the_id, artist, title) => {
-    // const api_key = `AIzaSyDa4uItii79UYuFou4x3w1-gQyJkkvZF6w`;
     const api_key = `AIzaSyDAhA1LZRQhWKFlrpVqZN2Egb8LXJ6pScY`;
-    // const Back_url = 'https://port-0-spotify-jvpb2mlo5rz7z8.sel5.cloudtype.app';
     const Back_url = '/api'
-    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+topic&videoCategory=10&type=video`)
+    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+${artist}+topic&videoCategory=10&type=video`)
       .then(async e => {
         const urlId = e.data.items[0].id.videoId;
         console.log(urlId);
         audio.current.src = `${Back_url}/get_video?id=${urlId}`;
-        audio.current.onloadeddata = e => {
-          setSrc(audio.current.src)
-          setPlay(true);
-        }
+        setPlay(true);
+        setSrc(audio.current.src);
       }).catch(e => {
         console.log(e);
       })
@@ -41,7 +37,6 @@ export default function Player() {
     if (audio.current) {
       audio.current.volume = volume;
       const { currentTime, duration } = audio.current;
-      setCurrentT(currentTime * 1000);
       if (duration - currentTime <= 0) {
         setPlay(false);
         const index = parseInt(localStorage.getItem('now_index_in_tracks'));
@@ -55,6 +50,7 @@ export default function Player() {
           }
         }
       }
+      setCurrentT(currentTime * 1000);
     }
   }, false);
   const getTrackinfos = async id => {
