@@ -20,9 +20,9 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
 
   const getMusicUrl = async (the_id, artist, title) => {
-    const api_key = `AIzaSyDAhA1LZRQhWKFlrpVqZN2Egb8LXJ6pScY`;
+    const api_key = `AIzaSyDa4uItii79UYuFou4x3w1-gQyJkkvZF6w`;
     const Back_url = '/api'
-    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+topic&videoCategory=10&type=video`)
+    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+${artist}+topic&videoCategory=10&type=video`)
       .then(async e => {
         const urlId = e.data.items[0].id.videoId;
         console.log(urlId);
@@ -35,9 +35,8 @@ export default function Player() {
   }
   audio.current?.src && audio.current.addEventListener('timeupdate', e => {
     if (audio.current) {
-      audio.current.volume = volume;
       const { currentTime, duration } = audio.current;
-      if (duration - currentTime <= 0) {
+      if (durationT / 1000 - currentTime <= 0) {
         setPlay(false);
         const index = parseInt(localStorage.getItem('now_index_in_tracks'));
         let list = localStorage.getItem("TrackList");
@@ -52,7 +51,7 @@ export default function Player() {
       }
       setCurrentT(currentTime * 1000);
     }
-  }, false);
+  });
   const getTrackinfos = async id => {
     await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
       console.log(e.data);
@@ -96,6 +95,9 @@ export default function Player() {
       })
     }
   }, []);
+  useEffect(e => {
+    audio.current.volume = volume;
+  }, [id, volume]);
   return <S.Player style={{ width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' : innerWidth < 1200 ? '98vw' : '30vw'}` }}>
     <div className='audio'>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }} onClick={e => setExtenstionMode(a => !a)}>
@@ -211,7 +213,7 @@ export default function Player() {
         }
       </div>
       <div className='bar_div'>
-        <div className='bar' style={{ width: innerWidth >= 1200 ? `${currentT / durationT * 100}%` : `${currentT / durationT * 93}vw` }} />
+        <div className='bar' style={{ width: `${currentT / durationT * 100}%` }} />
       </div>
       {!(innerWidth >= 1200 && !extensionMode) && `${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
       {!(innerWidth >= 1200 && !extensionMode) ? <div className='volume'>
