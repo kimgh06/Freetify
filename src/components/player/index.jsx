@@ -20,23 +20,14 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
 
   const getMusicUrl = async (the_id, artist, title) => {
-    const api_key = `AIzaSyDa4uItii79UYuFou4x3w1-gQyJkkvZF6w`;
-    const Back_url = '/api'
-    await axios.get(`https://www.googleapis.com/youtube/v3/search?key=${api_key}&q=${title}+${artist}+topic&videoCategory=10&type=video`)
-      .then(async e => {
-        const urlId = e.data.items[0].id.videoId;
-        console.log(urlId);
-        audio.current.src = `${Back_url}/get_video?id=${urlId}`;
-        setPlay(true);
-        setSrc(audio.current.src);
-      }).catch(e => {
-        console.log(e);
-      })
+    audio.current.src = `/api/get_video?q=${title}+${artist}+topi`;
+    setPlay(true);
+    setSrc(audio.current.src);
   }
   audio.current?.src && audio.current.addEventListener('timeupdate', e => {
     if (audio.current) {
       const { currentTime, duration } = audio.current;
-      if (durationT / 1000 - currentTime <= 0) {
+      if (durationT / 1000 <= currentTime) {
         setPlay(false);
         const index = parseInt(localStorage.getItem('now_index_in_tracks'));
         let list = localStorage.getItem("TrackList");
