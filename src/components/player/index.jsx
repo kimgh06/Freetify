@@ -188,7 +188,6 @@ export default function Player() {
       <div className='bar_div' onMouseUp={e => setModify(false)} onMouseMove={e => {
         if (modify) {
           console.log(e.clientX);
-
         }
       }}>
         <div className='bar' style={{ width: `${currentT / durationT * 100}%` }} />

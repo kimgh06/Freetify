@@ -12,8 +12,10 @@ export async function GET(req, res) {
   const list = await youtubesearchapi.GetListByKeyword(q);
 
   const stream = ytdl(`https://youtube.com/watch?v=${list.items[0].id}`, { filter: 'audioonly', quality: 'highestaudio' })
+  const response = new Response(stream);
+  response.headers.set('connection', 'keep-alive');
   try {
-    return new Response(stream).headers.set('connection', 'keep-alive')
+    return response
   } catch (e) {
     return NextResponse.json({ err: e }, { status: 500 })
   }
