@@ -132,7 +132,8 @@ export const Player = styled.div`
         cursor: pointer;
         width: 10px;
         height: 10px;
-        background-color: white;
+        background-color: gray;
+        border: 2px solid white;
         border-radius: 30px;
         margin-left: -4px;
       }

@@ -9,6 +9,7 @@ import Link from 'next/link';
 export default function Player() {
   const audio = useRef(null);
   const [id, setId] = useRecoilState(NowPlayingId);
+  const [modify, setModify] = useState(false);
   const [src, setSrc] = useRecoilState(AudioSrc);
   const [info, setInfo] = useState({});
   const [play, setPlay] = useState(false);
@@ -21,28 +22,8 @@ export default function Player() {
 
   const getMusicUrl = async (the_id, artist, title) => {
     audio.current.src = `/api/get_video?q=${title}+${artist}+topic`;
-    setPlay(true);
     setSrc(audio.current.src);
   }
-  audio.current?.src && audio.current.addEventListener('timeupdate', e => {
-    if (audio.current) {
-      const { currentTime, duration } = audio.current;
-      if (durationT / 1000 <= currentTime) {
-        setPlay(false);
-        const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-        let list = localStorage.getItem("TrackList");
-        if (list) {
-          audio.current.src = null;
-          list = list.split(',');
-          if (list[index + 1]) {
-            setId(list[index + 1]);
-            localStorage.setItem('now_index_in_tracks', index + 1);
-          }
-        }
-      }
-      setCurrentT(currentTime * 1000);
-    }
-  });
   const getTrackinfos = async id => {
     await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
       console.log(e.data);
@@ -61,6 +42,7 @@ export default function Player() {
       getTrackinfos(id);
       let list = localStorage.getItem("TrackList")?.split(',');
       const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+      console.log(index);
     } else {
       setId(localStorage.getItem('now_playing_id'));
     }
@@ -203,8 +185,14 @@ export default function Player() {
           </S.ExtensionMode_mobile>)
         }
       </div>
-      <div className='bar_div'>
+      <div className='bar_div' onMouseUp={e => setModify(false)} onMouseMove={e => {
+        if (modify) {
+          console.log(e.clientX);
+
+        }
+      }}>
         <div className='bar' style={{ width: `${currentT / durationT * 100}%` }} />
+        <div className='bar_cursor' onMouseDown={e => { e.preventDefault(); setModify(true); }} />
       </div>
       {!(innerWidth >= 1200 && !extensionMode) && `${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
       {!(innerWidth >= 1200 && !extensionMode) ? <div className='volume'>
@@ -218,7 +206,27 @@ export default function Player() {
         <div className='title'>{info?.name}</div>
       </S.Main_smaller>}
     </div>
-    <audio ref={audio} />
+    <audio ref={audio} onTimeUpdate={e => {
+      if (audio.current) {
+        const { currentTime, duration } = audio.current;
+        if (durationT / 1000 - currentTime <= 1) {
+          setPlay(false);
+          const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+          let list = localStorage.getItem("TrackList");
+          if (list) {
+            audio.current.src = null;
+            list = list.split(',');
+            if (list[index + 1]) {
+              setId(list[index + 1]);
+              localStorage.setItem('now_index_in_tracks', index + 1);
+            }
+          }
+        }
+        setCurrentT(currentTime * 1000);
+      }
+    }} onLoadedData={e => {
+      setPlay(true);
+    }} />
   </S.Player >;
 }
 

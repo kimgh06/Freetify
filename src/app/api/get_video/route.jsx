@@ -13,7 +13,7 @@ export async function GET(req, res) {
 
   const stream = ytdl(`https://youtube.com/watch?v=${list.items[0].id}`, { filter: 'audioonly', quality: 'highestaudio' })
   try {
-    return new Response(stream)
+    return new Response(stream).headers.set('connection', 'keep-alive')
   } catch (e) {
     return NextResponse.json({ err: e }, { status: 500 })
   }
