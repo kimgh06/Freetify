@@ -20,7 +20,7 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
 
   const getMusicUrl = async (the_id, artist, title) => {
-    audio.current.src = `/api/get_video?q=${title}+${artist}+topi`;
+    audio.current.src = `/api/get_video?q=${title}+${artist}+topic`;
     setPlay(true);
     setSrc(audio.current.src);
   }
