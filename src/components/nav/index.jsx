@@ -44,7 +44,7 @@ export default function Navi() {
       <div className={'menu ' + activating} onClick={e => setActivating(a => !a)}>三</div>
       {activating && <div className='nav'>
         {/* <p><Link href={'/login'}>Spotify 로그인</Link></p> */}
-        <p><Link href={'/myprofile'}>프로필</Link></p>
+        {/* <p><Link href={'/myprofile'}>프로필</Link></p> */}
         <p><Link href={'/search'}>검색</Link></p>
         <p><Link href={'/'}>home</Link></p>
       </div>}

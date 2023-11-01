@@ -8,11 +8,13 @@ export async function GET(req, res) {
   params.forEach((i, n) => {
     paramlist[i.split('=')[0]] = i.split('=')[1];
   })
-  const { id, q } = paramlist;
+  let { id, q } = paramlist;
+  q = q.replace(/%20/g, ' ');
   const list = await youtubesearchapi.GetListByKeyword(q);
 
-  const stream = ytdl(`https://youtube.com/watch?v=${list.items[0].id}`, { filter: 'audioonly', quality: 'highestaudio' })
+  const stream = ytdl(`https://youtube.com/watch?v=${list.items[0].id}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' })
   const response = new Response(stream);
+  response.headers.set('content-type', 'audio/mp3')
   response.headers.set('connection', 'keep-alive');
   try {
     return response

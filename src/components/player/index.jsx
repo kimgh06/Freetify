@@ -20,17 +20,21 @@ export default function Player() {
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
 
-  const getMusicUrl = async (the_id, artist, title) => {
-    audio.current.src = `/api/get_video?q=${title}+${artist}+topic`;
+  const getMusicUrl = async (the_id, artist, title, album) => {
+    const audio_src = await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, { responseType: 'blob' }).then(e => URL.createObjectURL(e.data)).catch(e => {
+      console.log(e);
+    })
+    audio.current.src = audio_src;
     setSrc(audio.current.src);
   }
   const getTrackinfos = async id => {
     await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
-      console.log(e.data);
+      // console.log(e.data);
       setInfo(e.data);
+      console.log(e.data)
       const d = e.data.duration_ms;
       setDurationT(d);
-      getMusicUrl(id, e.data?.artists[0]?.name, e.data?.name);
+      getMusicUrl(id, e.data?.artists[0]?.name, e.data?.name, e.data.album.name);
     }).catch(e => {
       console.log(e);
     });
@@ -59,9 +63,10 @@ export default function Player() {
       localStorage.setItem('now_playing_id', id);
       getTrackinfos(id);
       let list = localStorage.getItem("TrackList")?.split(',');
-      const index = list.findIndex(e => e === id);
-      localStorage.setItem('now_index_in_tracks', index);
-      console.log(index);
+      if (list) {
+        const index = list.findIndex(e => e === id);
+        localStorage.setItem('now_index_in_tracks', index);
+      }
     } else {
       setId(localStorage.getItem('now_playing_id'));
     }
@@ -219,6 +224,7 @@ export default function Player() {
       </S.Main_smaller>}
     </div>
     <audio ref={audio} onTimeUpdate={e => {
+      // audio.current.currentTime = 50
       NextTrack();
     }} onLoadedData={e => {
       setPlay(true);
