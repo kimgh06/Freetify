@@ -47,9 +47,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
     }} />
     <div>
       <div className='hea'>
-        <Link className="title" onClick={e => {
-          localStorage.setItem('now_index_in_tracks', album?.total_tracks - 1)
-        }} href={album ? `/album/${album?.id}` : '#'} >{title}</Link>&nbsp;
+        <Link className="title" href={album ? `/album/${album?.id}` : '#'} >{title}</Link>&nbsp;
         {playingtime && <div className="playingtime">{durationT}</div>}
         {type === "track" && <div className='isInPlay' onClick={listcontrol}>{toggle ? '-' : '+'}</div>}
       </div>

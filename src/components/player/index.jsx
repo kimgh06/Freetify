@@ -41,7 +41,8 @@ export default function Player() {
       localStorage.setItem('now_playing_id', id);
       getTrackinfos(id);
       let list = localStorage.getItem("TrackList")?.split(',');
-      const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+      const index = list.findIndex(e => e === id);
+      localStorage.setItem('now_index_in_tracks', index);
       console.log(index);
     } else {
       setId(localStorage.getItem('now_playing_id'));
@@ -95,7 +96,6 @@ export default function Player() {
                 list = list.split(',');
                 if (list[index - 1]) {
                   setId(list[index - 1]);
-                  localStorage.setItem('now_index_in_tracks', index - 1);
                 }
               }}>{'<'}</button>
               <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
@@ -105,7 +105,6 @@ export default function Player() {
                 list = list.split(',');
                 if (list[index + 1]) {
                   setId(list[index + 1]);
-                  localStorage.setItem('now_index_in_tracks', index + 1);
                 }
               }}>{'>'}</button>
             </div>
@@ -118,7 +117,6 @@ export default function Player() {
             list = list.split(',');
             if (list[index - 1]) {
               setId(list[index - 1]);
-              localStorage.setItem('now_index_in_tracks', index - 1);
             }
           }}>{'<'}</button>
           <button className='right' onClick={e => {
@@ -127,7 +125,6 @@ export default function Player() {
             list = list.split(',');
             if (list[index + 1]) {
               setId(list[index + 1]);
-              localStorage.setItem('now_index_in_tracks', index + 1);
             }
           }}>{'>'}</button></S.Main_smaller>)
           : (!extensionMode ? <>
@@ -166,7 +163,6 @@ export default function Player() {
                     list = list.split(',');
                     if (list[index - 1]) {
                       setId(list[index - 1]);
-                      localStorage.setItem('now_index_in_tracks', index - 1);
                     }
                   }}>{'<'}</button>
                   <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
@@ -176,7 +172,6 @@ export default function Player() {
                     list = list.split(',');
                     if (list[index + 1]) {
                       setId(list[index + 1]);
-                      localStorage.setItem('now_index_in_tracks', index + 1);
                     }
                   }}>{'>'}</button>
                 </div>
@@ -217,7 +212,6 @@ export default function Player() {
             list = list.split(',');
             if (list[index + 1]) {
               setId(list[index + 1]);
-              localStorage.setItem('now_index_in_tracks', index + 1);
             }
           }
         }
