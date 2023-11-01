@@ -35,6 +35,24 @@ export default function Player() {
       console.log(e);
     });
   }
+  const NextTrack = e => {
+    if (audio.current) {
+      const { currentTime, duration } = audio.current;
+      if (durationT / 1000 - currentTime < 1) {
+        setPlay(false);
+        const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+        let list = localStorage.getItem("TrackList");
+        if (list) {
+          audio.current.src = null;
+          list = list.split(',');
+          if (list[index + 1]) {
+            setId(list[index + 1]);
+          }
+        }
+      }
+      setCurrentT(currentTime * 1000);
+    }
+  }
   useEffect(e => {
     if (id) {
       setPlay(false);
@@ -201,24 +219,11 @@ export default function Player() {
       </S.Main_smaller>}
     </div>
     <audio ref={audio} onTimeUpdate={e => {
-      if (audio.current) {
-        const { currentTime, duration } = audio.current;
-        if (durationT / 1000 - currentTime < 1) {
-          setPlay(false);
-          const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-          let list = localStorage.getItem("TrackList");
-          if (list) {
-            audio.current.src = null;
-            list = list.split(',');
-            if (list[index + 1]) {
-              setId(list[index + 1]);
-            }
-          }
-        }
-        setCurrentT(currentTime * 1000);
-      }
+      NextTrack();
     }} onLoadedData={e => {
       setPlay(true);
+    }} onEnded={e => {
+      NextTrack();
     }} />
   </S.Player >;
 }

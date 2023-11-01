@@ -10,15 +10,15 @@ import { AccessToken, NowPlayingId } from '@/app/recoilStates';
 export default function Navi() {
   const [activating, setActivating] = useState(false);
   const [id, setId] = useRecoilState(NowPlayingId);
-  const [refreshToken, setRefreshToken] = useRecoilState(AccessToken);
+  const [access, setAccess] = useRecoilState(AccessToken);
   const refresh_token = async e => {
     await axios.patch(`/api/refresh_token`,
-      { refreshToken: localStorage.getItem('refresh') }).then(e => {
+      { refreshToken: process.env.NEXT_PUBLIC_REFRESH_TOKEN }).then(e => {
         const info = e.data;
         if (!info?.error) {
           localStorage.setItem('access', info.access_token);
           localStorage.setItem('expire', new Date().getTime() + info.expires_in * 1000);
-          setRefreshToken(info.access_token);
+          setAccess(info.access_token);
         }
       }).catch(e => {
         console.log(e);
@@ -28,22 +28,22 @@ export default function Navi() {
     if (new Date().getTime() >= localStorage.getItem('expire')) {
       refresh_token();
     }
-    else if (refreshToken !== '') {
+    else if (access !== '') {
       setId(localStorage.getItem('now_playing_id'));
     } else {
-      setRefreshToken(localStorage.getItem('access'));
+      setAccess(localStorage.getItem('access'));
     }
     const timer = setInterval(e => {
       if (new Date().getTime() >= localStorage.getItem('expire')) {
         refresh_token();
       }
     }, 20 * 1000);
-  }, [refreshToken]);
+  }, [access]);
   return <>
     <S.Nav>
       <div className={'menu ' + activating} onClick={e => setActivating(a => !a)}>三</div>
       {activating && <div className='nav'>
-        <p><Link href={'/login'}>Spotify 로그인</Link></p>
+        {/* <p><Link href={'/login'}>Spotify 로그인</Link></p> */}
         <p><Link href={'/myprofile'}>프로필</Link></p>
         <p><Link href={'/search'}>검색</Link></p>
         <p><Link href={'/'}>home</Link></p>
