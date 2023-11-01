@@ -208,7 +208,7 @@ export default function Player() {
     <audio ref={audio} onTimeUpdate={e => {
       if (audio.current) {
         const { currentTime, duration } = audio.current;
-        if (durationT / 1000 - currentTime <= 1) {
+        if (durationT / 1000 - currentTime < 1) {
           setPlay(false);
           const index = parseInt(localStorage.getItem('now_index_in_tracks'));
           let list = localStorage.getItem("TrackList");

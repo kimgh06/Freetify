@@ -39,17 +39,17 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
   useEffect(e => {
     if (id && type === 'track') {
       setDurationT(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
-
     }
   }, [id]);
   return <S.PlayAtom>
     <img src={img} alt="" onClick={e => {
-      // console.log(id, type);
       getMusicAnalsisData();
     }} />
     <div>
       <div className='hea'>
-        <Link className="title" href={album ? `/album/${album?.id}` : '#'} >{title}</Link>&nbsp;
+        <Link className="title" onClick={e => {
+          localStorage.setItem('now_index_in_tracks', album?.total_tracks - 1)
+        }} href={album ? `/album/${album?.id}` : '#'} >{title}</Link>&nbsp;
         {playingtime && <div className="playingtime">{durationT}</div>}
         {type === "track" && <div className='isInPlay' onClick={listcontrol}>{toggle ? '-' : '+'}</div>}
       </div>
