@@ -21,10 +21,9 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
 
   const getMusicUrl = async (the_id, artist, title, album) => {
-    const audio_src = await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, { responseType: 'blob' }).then(e => URL.createObjectURL(e.data)).catch(e => {
+    audio.current.src = await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, { responseType: 'blob' }).then(e => URL.createObjectURL(e.data)).catch(e => {
       console.log(e);
     })
-    audio.current.src = audio_src;
     setSrc(audio.current.src);
   }
   const getTrackinfos = async id => {
@@ -40,21 +39,15 @@ export default function Player() {
     });
   }
   const NextTrack = e => {
-    if (audio.current) {
-      const { currentTime, duration } = audio.current;
-      if (durationT / 1000 - currentTime < 1) {
-        setPlay(false);
-        const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-        let list = localStorage.getItem("TrackList");
-        if (list) {
-          audio.current.src = null;
-          list = list.split(',');
-          if (list[index + 1]) {
-            setId(list[index + 1]);
-          }
-        }
+    setPlay(false);
+    const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+    let list = localStorage.getItem("TrackList");
+    if (list) {
+      audio.current.src = null;
+      list = list.split(',');
+      if (list[index + 1]) {
+        setId(list[index + 1]);
       }
-      setCurrentT(currentTime * 1000);
     }
   }
   useEffect(e => {
@@ -65,6 +58,7 @@ export default function Player() {
       let list = localStorage.getItem("TrackList")?.split(',');
       if (list) {
         const index = list.findIndex(e => e === id);
+        console.log(index)
         localStorage.setItem('now_index_in_tracks', index);
       }
     } else {
@@ -96,7 +90,11 @@ export default function Player() {
     audio.current.volume = volume;
   }, [id, volume]);
   return <S.Player style={{ width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' : innerWidth < 1200 ? '98vw' : '30vw'}` }}>
-    <div className='audio'>
+    <div className='audio' onMouseUp={e => setModify(false)} onMouseMove={e => {
+      if (modify) {
+        console.log(e.clientX);
+      }
+    }}>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }} onClick={e => setExtenstionMode(a => !a)}>
         <div className='___' />
         <div className='___' />
@@ -203,11 +201,7 @@ export default function Player() {
           </S.ExtensionMode_mobile>)
         }
       </div>
-      <div className='bar_div' onMouseUp={e => setModify(false)} onMouseMove={e => {
-        if (modify) {
-          console.log(e.clientX);
-        }
-      }}>
+      <div className='bar_div'>
         <div className='bar' style={{ width: `${currentT / durationT * 100}%` }} />
         <div className='bar_cursor' onMouseDown={e => { e.preventDefault(); setModify(true); }} />
       </div>
@@ -225,7 +219,11 @@ export default function Player() {
     </div>
     <audio ref={audio} onTimeUpdate={e => {
       // audio.current.currentTime = 50
-      NextTrack();
+      const { currentTime, duration } = audio.current;
+      setCurrentT(currentTime * 1000);
+      if (audio.current && durationT / 1000 - currentTime <= 0) {
+        NextTrack();
+      }
     }} onLoadedData={e => {
       setPlay(true);
     }} onEnded={e => {
