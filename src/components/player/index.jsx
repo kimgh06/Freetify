@@ -45,12 +45,11 @@ export default function Player() {
   }
   const NextTrack = e => {
     setPlay(false);
-    let index = parseInt(localStorage.getItem('now_index_in_tracks'));
     let list = localStorage.getItem("TrackList");
-    index = list.findIndex(e => e === id);
+    const index = list.findIndex(e => e === id);
     if (list) {
       audio.current.src = null;
-      list = list.split(',');
+      const list = list.split(',');
       if (list[index + 1]) {
         setId(list[index + 1]);
       }
@@ -64,8 +63,13 @@ export default function Player() {
       let list = localStorage.getItem("TrackList")?.split(',');
       if (list) {
         const index = list.findIndex(e => e === id);
-        console.log(index)
-        localStorage.setItem('now_index_in_tracks', index);
+        if (index > 0) {
+
+          console.log(index)
+          localStorage.setItem('now_index_in_tracks', index);
+        } else {
+          setId(null);
+        }
       }
     } else {
       setId(localStorage.getItem('now_playing_id'));
@@ -96,9 +100,12 @@ export default function Player() {
     audio.current.volume = volume;
   }, [id, volume]);
   return <S.Player style={{ width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' : innerWidth < 1200 ? '98vw' : '30vw'}` }}>
-    <div className='audio' onMouseUp={e => setModify(false)} onMouseMove={e => {
+    <div className='audio' onMouseUp={e => {
+      setModify(false);
+    }} onMouseMove={e => {
       if (modify) {
-        console.log(e.clientX);
+        const one_vw = innerWidth / 100;
+        console.log(e.clientX - modify, one_vw);
       }
     }}>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }} onClick={e => setExtenstionMode(a => !a)}>
@@ -209,7 +216,7 @@ export default function Player() {
       </div>
       <div className='bar_div'>
         <div className='bar' style={{ width: `${currentT / durationT * 100}%` }} />
-        <div className='bar_cursor' onMouseDown={e => { e.preventDefault(); setModify(true); }} />
+        <div className='bar_cursor' onMouseDown={e => { e.preventDefault(); setModify(e.clientX); }} />
       </div>
       {!(innerWidth >= 1200 && !extensionMode) && `${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
       {!(innerWidth >= 1200 && !extensionMode) ? <div className='volume'>
