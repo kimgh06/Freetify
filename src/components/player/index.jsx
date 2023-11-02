@@ -45,11 +45,11 @@ export default function Player() {
   }
   const NextTrack = e => {
     setPlay(false);
-    let list = localStorage.getItem("TrackList");
-    const index = list.findIndex(e => e === id);
+    const list = localStorage.getItem("TrackList").split(',');
     if (list) {
+      console.log(list)
+      const index = list.findIndex(e => e === id);
       audio.current.src = null;
-      const list = list.split(',');
       if (list[index + 1]) {
         setId(list[index + 1]);
       }
@@ -64,7 +64,6 @@ export default function Player() {
       if (list) {
         const index = list.findIndex(e => e === id);
         if (index > 0) {
-
           console.log(index)
           localStorage.setItem('now_index_in_tracks', index);
         } else {
