@@ -19,9 +19,13 @@ export default function Player() {
   const [access, setAccess] = useRecoilState(AccessToken);
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
+  const Axios_controler = new AbortController();
 
   const getMusicUrl = async (the_id, artist, title, album) => {
-    audio.current.src = await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, { responseType: 'blob' }).then(e => URL.createObjectURL(e.data)).catch(e => {
+    audio.current.src = await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, {
+      responseType: 'blob',
+      signal: Axios_controler.signal
+    }).then(e => URL.createObjectURL(e.data)).catch(e => {
       console.log(e);
     })
     setSrc(audio.current.src);
@@ -33,6 +37,7 @@ export default function Player() {
       console.log(e.data)
       const d = e.data.duration_ms;
       setDurationT(d);
+      // Axios_controler.abort();
       getMusicUrl(id, e.data?.artists[0]?.name, e.data?.name, e.data.album.name);
     }).catch(e => {
       console.log(e);
@@ -40,8 +45,9 @@ export default function Player() {
   }
   const NextTrack = e => {
     setPlay(false);
-    const index = parseInt(localStorage.getItem('now_index_in_tracks'));
+    let index = parseInt(localStorage.getItem('now_index_in_tracks'));
     let list = localStorage.getItem("TrackList");
+    index = list.findIndex(e => e === id);
     if (list) {
       audio.current.src = null;
       list = list.split(',');
