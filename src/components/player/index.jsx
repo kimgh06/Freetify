@@ -22,22 +22,23 @@ export default function Player() {
   const Axios_controler = new AbortController();
 
   const getMusicUrl = async (the_id, artist, title, album) => {
-    audio.current.src = await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, {
+    await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, {
       responseType: 'blob',
       signal: Axios_controler.signal
-    }).then(e => URL.createObjectURL(e.data)).catch(e => {
+    }).then(e => {
+      const url = URL.createObjectURL(e.data);
+      audio.current.src = url;
+      setSrc(url);
+    }).catch(e => {
       console.log(e);
     })
-    setSrc(audio.current.src);
   }
   const getTrackinfos = async id => {
     await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
-      // console.log(e.data);
       setInfo(e.data);
       console.log(e.data)
       const d = e.data.duration_ms;
       setDurationT(d);
-      // Axios_controler.abort();
       getMusicUrl(id, e.data?.artists[0]?.name, e.data?.name, e.data.album.name);
     }).catch(e => {
       console.log(e);
@@ -47,11 +48,21 @@ export default function Player() {
     setPlay(false);
     const list = localStorage.getItem("TrackList").split(',');
     if (list) {
-      console.log(list)
       const index = list.findIndex(e => e === id);
       audio.current.src = null;
       if (list[index + 1]) {
         setId(list[index + 1]);
+      }
+    }
+  }
+  const PreviousTrack = e => {
+    setPlay(false);
+    const list = localStorage.getItem("TrackList").split(',');
+    if (list) {
+      const index = list.findIndex(e => e === id);
+      audio.current.src = null;
+      if (list[index - 1]) {
+        setId(list[index - 1]);
       }
     }
   }
@@ -63,7 +74,7 @@ export default function Player() {
       let list = localStorage.getItem("TrackList")?.split(',');
       if (list) {
         const index = list.findIndex(e => e === id);
-        if (index > 0) {
+        if (index >= 0) {
           console.log(index)
           localStorage.setItem('now_index_in_tracks', index);
         } else {
@@ -104,7 +115,7 @@ export default function Player() {
     }} onMouseMove={e => {
       if (modify) {
         const one_vw = innerWidth / 100;
-        console.log(e.clientX - modify, one_vw);
+        console.log(e.clientX, one_vw);
       }
     }}>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }} onClick={e => setExtenstionMode(a => !a)}>
@@ -124,41 +135,21 @@ export default function Player() {
             </div>
             <div className='playbutton'>
               <button className='left' onClick={e => {
-                let list = localStorage.getItem("TrackList");
-                const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-                list = list.split(',');
-                if (list[index - 1]) {
-                  setId(list[index - 1]);
-                }
+                PreviousTrack();
               }}>{'<'}</button>
               <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
               <button className='right' onClick={e => {
-                let list = localStorage.getItem("TrackList");
-                const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-                list = list.split(',');
-                if (list[index + 1]) {
-                  setId(list[index + 1]);
-                }
+                NextTrack();
               }}>{'>'}</button>
             </div>
           </div>
         </> : <S.Main_smaller>
           <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           <button className='left' onClick={e => {
-            let list = localStorage.getItem("TrackList");
-            const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-            list = list.split(',');
-            if (list[index - 1]) {
-              setId(list[index - 1]);
-            }
+            PreviousTrack();
           }}>{'<'}</button>
           <button className='right' onClick={e => {
-            let list = localStorage.getItem("TrackList");
-            const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-            list = list.split(',');
-            if (list[index + 1]) {
-              setId(list[index + 1]);
-            }
+            NextTrack();
           }}>{'>'}</button></S.Main_smaller>)
           : (!extensionMode ? <>
             <div className='extenstion' onClick={e => setExtenstionMode(true)}>
@@ -191,21 +182,11 @@ export default function Player() {
                 </div>
                 <div className='playbutton'>
                   <button className='left' onClick={e => {
-                    let list = localStorage.getItem("TrackList");
-                    const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-                    list = list.split(',');
-                    if (list[index - 1]) {
-                      setId(list[index - 1]);
-                    }
+                    PreviousTrack();
                   }}>{'<'}</button>
                   <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
                   <button className='right' onClick={e => {
-                    let list = localStorage.getItem("TrackList");
-                    const index = parseInt(localStorage.getItem('now_index_in_tracks'));
-                    list = list.split(',');
-                    if (list[index + 1]) {
-                      setId(list[index + 1]);
-                    }
+                    NextTrack();
                   }}>{'>'}</button>
                 </div>
               </div>
@@ -213,9 +194,9 @@ export default function Player() {
           </S.ExtensionMode_mobile>)
         }
       </div>
-      <div className='bar_div'>
+      <div className='bar_div' onMouseDown={e => { e.preventDefault(); setModify(true); }}>
         <div className='bar' style={{ width: `${currentT / durationT * 100}%` }} />
-        <div className='bar_cursor' onMouseDown={e => { e.preventDefault(); setModify(e.clientX); }} />
+        <div className='bar_cursor' />
       </div>
       {!(innerWidth >= 1200 && !extensionMode) && `${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
       {!(innerWidth >= 1200 && !extensionMode) ? <div className='volume'>
