@@ -21,11 +21,12 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
   const Axios_controler = new AbortController();
 
-  const getMusicUrl = async (the_id, artist, title, album) => {
+  const getMusicUrl = async (artist, title, album) => {
     await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, {
       responseType: 'blob',
       signal: Axios_controler.signal
     }).then(e => {
+      setPlay(false);
       const url = URL.createObjectURL(e.data);
       audio.current.src = url;
       setSrc(url);
@@ -39,28 +40,26 @@ export default function Player() {
       console.log(e.data)
       const d = e.data.duration_ms;
       setDurationT(d);
-      getMusicUrl(id, e.data?.artists[0]?.name, e.data?.name, e.data.album.name);
+      getMusicUrl(e.data?.artists[0]?.name, e.data?.name, e.data.album.name);
     }).catch(e => {
       console.log(e);
     });
   }
   const NextTrack = e => {
-    setPlay(false);
     const list = localStorage.getItem("TrackList").split(',');
     if (list) {
-      const index = list.findIndex(e => e === id);
       audio.current.src = null;
+      const index = list.findIndex(e => e === id);
       if (list[index + 1]) {
         setId(list[index + 1]);
       }
     }
   }
   const PreviousTrack = e => {
-    setPlay(false);
     const list = localStorage.getItem("TrackList").split(',');
     if (list) {
-      const index = list.findIndex(e => e === id);
       audio.current.src = null;
+      const index = list.findIndex(e => e === id);
       if (list[index - 1]) {
         setId(list[index - 1]);
       }
