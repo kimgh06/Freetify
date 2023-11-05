@@ -22,7 +22,7 @@ export default function Player() {
   const Axios_controler = new AbortController();
 
   const getMusicUrl = async (artist, title, album) => {
-    await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, {
+    await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic+official+audio`, {
       responseType: 'blob',
       signal: Axios_controler.signal
     }).then(e => {
@@ -95,7 +95,7 @@ export default function Player() {
     } else {
       audio.current.src = src;
     }
-  }, [play]);
+  }, [play, audio]);
   useEffect(e => {
     if (typeof window !== undefined) {
       setInnerWidth(window.innerWidth);
@@ -114,7 +114,17 @@ export default function Player() {
     }} onMouseMove={e => {
       if (modify) {
         const one_vw = innerWidth / 100;
-        console.log(e.clientX, one_vw);
+        if (innerWidth < 1200) {
+          const percent = (e.clientX - 10) / (innerWidth - one_vw);
+          audio.current.currentTime = Math.floor(percent * durationT) / 1000;
+        }
+        else if (innerWidth >= 1200) {
+          if (extensionMode) {
+            const start_point = (318 + (one_vw * 30 - 300) / 2) - (innerWidth - e.clientX);
+            const percent = start_point / 300;
+            audio.current.currentTime = Math.floor(percent * durationT) / 1000;
+          }
+        }
       }
     }}>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }} onClick={e => setExtenstionMode(a => !a)}>
@@ -149,7 +159,8 @@ export default function Player() {
           }}>{'<'}</button>
           <button className='right' onClick={e => {
             NextTrack();
-          }}>{'>'}</button></S.Main_smaller>)
+          }}>{'>'}</button>
+        </S.Main_smaller>)
           : (!extensionMode ? <>
             <div className='extenstion' onClick={e => setExtenstionMode(true)}>
               <div className='___' />
@@ -193,7 +204,9 @@ export default function Player() {
           </S.ExtensionMode_mobile>)
         }
       </div>
-      <div className='bar_div' onMouseDown={e => { e.preventDefault(); setModify(true); }}>
+      <div className='bar_div'
+        onMouseDown={e => { e.preventDefault(); setModify(true); }}
+      >
         <div className='bar' style={{ width: `${currentT / durationT * 100}%` }} />
         <div className='bar_cursor' />
       </div>
