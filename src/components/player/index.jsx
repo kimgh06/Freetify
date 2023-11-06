@@ -22,7 +22,7 @@ export default function Player() {
   const Axios_controler = new AbortController();
 
   const getMusicUrl = async (artist, title, album) => {
-    await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic+official+audio`, {
+    await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, {
       responseType: 'blob',
       signal: Axios_controler.signal
     }).then(e => {
