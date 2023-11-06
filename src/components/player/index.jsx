@@ -33,6 +33,7 @@ export default function Player() {
     }).catch(e => {
       console.log(e);
     })
+    Axios_controler.abort();
   }
   const getTrackinfos = async id => {
     await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
