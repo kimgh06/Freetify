@@ -30,6 +30,10 @@ export default function Player() {
       const url = URL.createObjectURL(e.data);
       audio.current.src = url;
       setSrc(url);
+
+      let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+      cached_url[`${album}+${title}+${artist}`] = url;
+      localStorage.setItem('cached_url', JSON.stringify(cached_url));
     }).catch(e => {
       console.log(e);
     })
@@ -41,7 +45,16 @@ export default function Player() {
       console.log(e.data)
       const d = e.data.duration_ms;
       setDurationT(d);
-      getMusicUrl(e.data?.artists[0]?.name, e.data?.name, e.data.album.name);
+
+      let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+      const url = cached_url[`${e.data.album.name}+${e.data?.name}+${e.data?.artists[0]?.name}`]
+      if (url) {
+        console.log(url)
+        audio.current.src = url;
+        setSrc(url);
+      } else {
+        getMusicUrl(e.data?.artists[0]?.name, e.data?.name, e.data.album.name);
+      }
     }).catch(e => {
       console.log(e);
     });
@@ -101,6 +114,7 @@ export default function Player() {
     if (typeof window !== undefined) {
       setInnerWidth(window.innerWidth);
       setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
+      localStorage.setItem("cached_url", JSON.stringify({}));
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
