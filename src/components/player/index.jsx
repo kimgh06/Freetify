@@ -49,7 +49,6 @@ export default function Player() {
       let cached_url = JSON.parse(localStorage.getItem('cached_url'));
       const url = cached_url[`${e.data.album.name}+${e.data?.name}+${e.data?.artists[0]?.name}`]
       if (url) {
-        console.log(url)
         audio.current.src = url;
         setSrc(url);
       } else {
@@ -88,10 +87,9 @@ export default function Player() {
       if (list) {
         const index = list.findIndex(e => e === id);
         if (index >= 0) {
-          console.log(index)
           localStorage.setItem('now_index_in_tracks', index);
         } else {
-          setId(null);
+          localStorage.setItem('now_index_in_tracks', 0);
         }
       }
     } else {

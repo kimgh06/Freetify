@@ -59,7 +59,7 @@ function InnerContent({ id }) {
           id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0]?.id} isInPlay={e => {
             let list = [];
             list = JSON.parse(localStorage.getItem('list'));
-            if (list === null) {
+            if (!list) {
               list = [];
             }
             return list.find(a => a === i?.id)
