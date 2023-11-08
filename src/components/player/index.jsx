@@ -28,9 +28,6 @@ export default function Player() {
     }).then(e => {
       setPlay(false);
       const url = URL.createObjectURL(e.data);
-      audio.current.src = url;
-      setSrc(url);
-
       let cached_url = JSON.parse(localStorage.getItem('cached_url'));
       cached_url[`${album}+${title}+${artist}`] = url;
       localStorage.setItem('cached_url', JSON.stringify(cached_url));
@@ -40,20 +37,25 @@ export default function Player() {
     Axios_controler.abort();
   }
   const getTrackinfos = async id => {
-    await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
+    await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(async e => {
       setInfo(e.data);
       console.log(e.data)
       const d = e.data.duration_ms;
       setDurationT(d);
 
       let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-      const url = cached_url[`${e.data.album.name}+${e.data?.name}+${e.data?.artists[0]?.name}`]
+      const url = cached_url[`${e.data.album.name}+${e.data?.name}+${e.data?.artists[0]?.name}`];
       if (url) {
         audio.current.src = url;
         setSrc(url);
       } else {
-        getMusicUrl(e.data?.artists[0]?.name, e.data?.name, e.data.album.name);
+        await getMusicUrl(e.data?.artists[0]?.name, e.data?.name, e.data.album.name).then(() => {
+          let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+          audio.current.src = cached_url[`${e.data.album.name}+${e.data?.name}+${e.data?.artists[0]?.name}`];
+          setSrc(cached_url)[`${e.data.album.name}+${e.data?.name}+${e.data?.artists[0]?.name}`];
+        });
       }
+      // return {artist: e.data?.artist[0]?.name, name: e.data?.name, album: };
     }).catch(e => {
       console.log(e);
     });
