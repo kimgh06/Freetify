@@ -37,25 +37,8 @@ export default function Player() {
     Axios_controler.abort();
   }
   const getTrackinfos = async id => {
-    await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(async e => {
-      setInfo(e.data);
-      console.log(e.data)
-      const d = e.data.duration_ms;
-      setDurationT(d);
-
-      let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-      const url = cached_url[`${e.data.album.name}+${e.data?.name}+${e.data?.artists[0]?.name}`];
-      if (url) {
-        audio.current.src = url;
-        setSrc(url);
-      } else {
-        await getMusicUrl(e.data?.artists[0]?.name, e.data?.name, e.data.album.name).then(() => {
-          let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-          audio.current.src = cached_url[`${e.data.album.name}+${e.data?.name}+${e.data?.artists[0]?.name}`];
-          setSrc(cached_url)[`${e.data.album.name}+${e.data?.name}+${e.data?.artists[0]?.name}`];
-        });
-      }
-      // return {artist: e.data?.artist[0]?.name, name: e.data?.name, album: };
+    return await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(async e => {
+      return e.data;
     }).catch(e => {
       console.log(e);
     });
@@ -80,20 +63,57 @@ export default function Player() {
       }
     }
   }
+  const getCurrentMusicURL = async e => {
+    const music_data = await getTrackinfos(id);
+    setInfo(music_data);
+    setDurationT(music_data.duration_ms)
+    console.log(music_data)
+
+    let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+    const url = cached_url[`${music_data.album.name}+${music_data?.name}+${music_data?.artists[0]?.name}`];
+    let new_src;
+    if (url) {
+      new_src = url;
+    } else {
+      await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album.name).then(() => {
+        let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+        new_src = cached_url[`${music_data?.album.name}+${music_data?.name}+${music_data?.artists[0]?.name}`]
+      });
+    }
+
+    audio.current.src = new_src;
+    setSrc(new_src);
+
+    let list = localStorage.getItem("TrackList")?.split(',');
+    if (list) {
+      const index = list.findIndex(e => e === id);
+      if (index >= 0) {
+        if (index >= list.length - 1) {
+          const next_data = await getTrackinfos(list[index + 1]);
+
+          let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+          const url = cached_url[`${next_data.album.name}+${next_data?.name}+${next_data?.artists[0]?.name}`];
+          let new_src;
+          if (url) {
+            new_src = url;
+          } else {
+            await getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album.name).then(() => {
+              let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+              new_src = cached_url[`${next_data?.album.name}+${next_data?.name}+${next_data?.artists[0]?.name}`]
+            });
+          }
+        }
+        localStorage.setItem('now_index_in_tracks', index);
+      } else {
+        localStorage.setItem('now_index_in_tracks', 0);
+      }
+    }
+  }
   useEffect(e => {
     if (id) {
       setPlay(false);
       localStorage.setItem('now_playing_id', id);
-      getTrackinfos(id);
-      let list = localStorage.getItem("TrackList")?.split(',');
-      if (list) {
-        const index = list.findIndex(e => e === id);
-        if (index >= 0) {
-          localStorage.setItem('now_index_in_tracks', index);
-        } else {
-          localStorage.setItem('now_index_in_tracks', 0);
-        }
-      }
+      getCurrentMusicURL();
     } else {
       setId(localStorage.getItem('now_playing_id'));
     }
