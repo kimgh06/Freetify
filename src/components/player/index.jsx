@@ -254,11 +254,12 @@ export default function Player() {
     <audio ref={audio} onTimeUpdate={e => {
       const { currentTime, duration } = audio.current;
       setCurrentT(currentTime * 1000);
-      if (audio.current && durationT / 1000 - currentTime <= 0) {
+      if (audio.current && durationT / 1000 - currentTime < 0) {
         NextTrack();
       }
     }} onLoadedData={e => setPlay(true)} onEnded={e => NextTrack()}
-      onPause={e => setPlay(false)} onPlay={e => setPlay(true)} />
+      onPause={e => setPlay(false)} onPlay={e => setPlay(true)}
+      onnext />
   </S.Player >;
 }
 
