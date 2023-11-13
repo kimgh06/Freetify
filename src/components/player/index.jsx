@@ -20,7 +20,6 @@ export default function Player() {
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
   const Axios_controler = new AbortController();
-
   const getMusicUrl = async (artist, title, album) => {
     await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, {
       responseType: 'blob',
@@ -253,13 +252,13 @@ export default function Player() {
       </S.Main_smaller>}
     </div>
     <audio ref={audio} onTimeUpdate={e => {
-      // audio.current.currentTime = 50
       const { currentTime, duration } = audio.current;
       setCurrentT(currentTime * 1000);
       if (audio.current && durationT / 1000 - currentTime <= 0) {
         NextTrack();
       }
-    }} onLoadedData={e => setPlay(true)} />
+    }} onLoadedData={e => setPlay(true)} onEnded={e => NextTrack()}
+      onPause={e => setPlay(false)} onPlay={e => setPlay(true)} />
   </S.Player >;
 }
 
