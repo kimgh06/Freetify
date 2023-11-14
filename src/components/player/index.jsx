@@ -21,21 +21,23 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
   const Axios_controler = new AbortController();
   const getMusicUrl = async (artist, title, album) => {
-    await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, {
-      responseType: 'blob',
-      signal: Axios_controler.signal
-    }).then(e => {
-      const url = URL.createObjectURL(e.data);
-      let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-      cached_url[`${album}+${title}+${artist}`] = url;
-      localStorage.setItem('cached_url', JSON.stringify(cached_url));
-    }).catch(e => {
-      console.log(e.message, title);
-    })
-    // Axios_controler.abort();
+    if (artist && title && album) {
+      await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, {
+        responseType: 'blob',
+        signal: Axios_controler.signal
+      }).then(e => {
+        const url = URL.createObjectURL(e.data);
+        let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+        cached_url[`${album}+${title}+${artist}`] = url;
+        localStorage.setItem('cached_url', JSON.stringify(cached_url));
+      }).catch(e => {
+        console.log(e.message, title);
+      })
+      // Axios_controler.abort();
+    }
   }
   const getTrackinfos = async id => {
-    return await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(async e => {
+    return id && await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(async e => {
       return e.data;
     }).catch(e => {
       console.log(e);
@@ -61,42 +63,49 @@ export default function Player() {
   }
   const getCurrentMusicURL = async e => {
     try {
-      const music_data = await getTrackinfos(id);
-      setInfo(music_data);
-      setDurationT(music_data.duration_ms)
 
-      let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-      const url = cached_url[`${music_data.album.name}+${music_data?.name}+${music_data?.artists[0]?.name}`];
-      audio.current.src = null;
-      if (url) {
-        audio.current.src = url
-        console.log('exists')
-      } else {
-        await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album.name).then(() => {
+      if (id) {
+        const music_data = await getTrackinfos(id);
+        if (music_data) {
+          setInfo(music_data);
+          setDurationT(music_data.duration_ms)
+
           let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-          let new_src = cached_url[`${music_data?.album.name}+${music_data?.name}+${music_data?.artists[0]?.name}`]
-          audio.current.src = new_src;
-          setPlay(false);
-          setSrc(new_src);
-        });
-      }
+          const url = cached_url[`${music_data?.album?.name}+${music_data?.name}+${music_data?.artists[0]?.name}`];
+          audio.current.src = null;
+          if (url) {
+            audio.current.src = url
+            console.log('exists')
+          } else {
+            await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name).then(() => {
+              let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+              let new_src = cached_url[`${music_data?.album?.name}+${music_data?.name}+${music_data?.artists[0]?.name}`]
+              audio.current.src = new_src;
+              setPlay(false);
+              setSrc(new_src);
+            });
+          }
 
-      let list = localStorage.getItem("TrackList")?.split(',');
-      if (list) {
-        const index = list.findIndex(e => e === id);
-        if (index >= 0) {
-          if (index < list.length) {
-            const next_data = await getTrackinfos(list[index + 1]);
-            let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-            const url = cached_url[`${next_data.album.name}+${next_data?.name}+${next_data?.artists[0]?.name}`];
-            if (!url) {
-              getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album.name);
-              console.log(next_data)
+          let list = localStorage.getItem("TrackList")?.split(',');
+          if (list) {
+            const index = list.findIndex(e => e === id);
+            if (index >= 0) {
+              if (index < list.length) {
+                const next_data = await getTrackinfos(list[index + 1]);
+                if (next_data) {
+                  let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+                  const url = cached_url[`${next_data.album?.name}+${next_data?.name}+${next_data?.artists[0]?.name}`];
+                  if (!url) {
+                    getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album?.name);
+                    console.log(next_data)
+                  }
+                }
+              }
+              localStorage.setItem('now_index_in_tracks', index);
+            } else {
+              localStorage.setItem('now_index_in_tracks', 0);
             }
           }
-          localStorage.setItem('now_index_in_tracks', index);
-        } else {
-          localStorage.setItem('now_index_in_tracks', 0);
         }
       }
     } catch (e) {
