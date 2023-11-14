@@ -18,6 +18,7 @@ export default function App({ params }) {
 function InnerContent({ id }) {
   const url = 'https://api.spotify.com/v1';
   const [albumInfo, setAlbumInfo] = useState(null);
+  const [totalDuration, setTotalDuration] = useState('0');
   const [access, setAccess] = useRecoilState(AccessToken);
   const [tracks, setTracks] = useState([]);
   const getAlbumInfos = async e => {
@@ -27,9 +28,12 @@ function InnerContent({ id }) {
         setAlbumInfo(e.data);
         setTracks(e.data.tracks.items);
         let TrackList = [];
+        let sum = 0;
         e.data.tracks.items.forEach(items => {
           TrackList.push(items.id);
+          sum += items.duration_ms
         });
+        setTotalDuration(`${Math.floor(sum / 60 / 1000)}분 ${((sum % 60000 - (sum % 60000) % 1000) / 1000).toString().padStart(2, '0')}초`)
         localStorage.setItem('TrackList', `${TrackList}`);
         document.title = e.data.name;
       }).catch(e => {
@@ -50,6 +54,7 @@ function InnerContent({ id }) {
           <div className='information'>
             {albumInfo?.artists.map((i, n) => <Link key={n} href={`/artist/${i?.id}`}>{i.name}</Link>)}
             <span>{albumInfo?.tracks.items.length}곡</span>&nbsp;&nbsp;
+            <span>{totalDuration}</span>&nbsp;&nbsp;
             <span>{albumInfo?.release_date.substr(0, 4)}년</span>
           </div>
         </div>
