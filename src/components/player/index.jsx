@@ -30,6 +30,7 @@ export default function Player() {
         let cached_url = JSON.parse(localStorage.getItem('cached_url'));
         cached_url[`${album}+${title}+${artist}`] = url;
         localStorage.setItem('cached_url', JSON.stringify(cached_url));
+        console.log(title, "loaded");
       }).catch(e => {
         console.log(e.message, title);
       })
@@ -81,7 +82,6 @@ export default function Player() {
               let cached_url = JSON.parse(localStorage.getItem('cached_url'));
               let new_src = cached_url[`${music_data?.album?.name}+${music_data?.name}+${music_data?.artists[0]?.name}`]
               audio.current.src = new_src;
-              console.log(music_data?.name, "loaded")
               setPlay(false);
               setSrc(new_src);
             });
@@ -98,7 +98,6 @@ export default function Player() {
                   const url = cached_url[`${next_data.album?.name}+${next_data?.name}+${next_data?.artists[0]?.name}`];
                   if (!url) {
                     getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album?.name);
-                    console.log(next_data?.name, "loaded")
                   }
                 }
               }
