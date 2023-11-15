@@ -12,11 +12,11 @@ export async function GET(req, res) {
   q = q.replace(/%20/g, ' ');
   const list = await youtubesearchapi.GetListByKeyword(q);
 
-  const stream = ytdl(`https://youtube.com/watch?v=${list.items[0].id}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' })
-  const response = new Response(stream);
-  response.headers.set('content-type', 'audio/mp3')
-  response.headers.set('connection', 'keep-alive');
   try {
+    const stream = ytdl(`https://youtube.com/watch?v=${list.items[0].id}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' })
+    const response = new Response(stream);
+    response.headers.set('content-type', 'audio/mp3')
+    response.headers.set('connection', 'keep-alive');
     return response
   } catch (e) {
     return NextResponse.json({ err: e }, { status: 500 })

@@ -36,6 +36,6 @@
     "tls": "^0.0.1",
     "vertx": "^0.0.1-security",
     "youtube-search-api": "^1.2.1",
-    "ytdl-core": "^4.11.5"
+    "ytdl-core": "^4.11.0"
   }
 }
