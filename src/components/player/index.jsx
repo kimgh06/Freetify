@@ -22,7 +22,7 @@ export default function Player() {
   const Axios_controler = new AbortController();
   const getMusicUrl = async (artist, title, album) => {
     if (artist && title && album) {
-      await axios.get(`/api/get_video?album=${album}&title=${title}&artist=${artist}`, {
+      await axios.get(`/api/get_video?album=${album}&artist=${artist}&title=${title.replace(/&/g, "%38")}`, {
         responseType: 'blob',
         signal: Axios_controler.signal
       }).then(e => {
@@ -130,6 +130,7 @@ export default function Player() {
         })
         if (!exist) {
           recentList.push(id);
+          recentList = recentList.slice(-5);
           localStorage.setItem('recent_track_list', recentList);
         }
       } else {
