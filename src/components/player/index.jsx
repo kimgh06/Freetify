@@ -136,6 +136,12 @@ export default function Player() {
       } else {
         localStorage.setItem('recent_track_list', [id]);
       }
+      navigator.mediaSession.setActionHandler("nexttrack", e => {
+        NextTrack()
+      })
+      navigator.mediaSession.setActionHandler("previoustrack", e => {
+        PreviousTrack()
+      })
     } else {
       setId(localStorage.getItem('now_playing_id'));
     }
