@@ -22,7 +22,7 @@ export default function Player() {
   const Axios_controler = new AbortController();
   const getMusicUrl = async (artist, title, album) => {
     if (artist && title && album) {
-      await axios.get(`/api/get_video?q=${album}+${title}+${artist}+topic`, {
+      await axios.get(`/api/get_video?album=${album}&title=${title}&artist=${artist}`, {
         responseType: 'blob',
         signal: Axios_controler.signal
       }).then(e => {
@@ -116,7 +116,25 @@ export default function Player() {
     if (id) {
       setPlay(false)
       localStorage.setItem('now_playing_id', id);
+      let recentList = JSON.stringify(localStorage.getItem('recent_track_list')).replace(/\\/g, '').replace(/"/g, '');
       getCurrentMusicURL();
+      if (recentList != 'null') {
+        recentList = recentList.split(',');
+        console.log(recentList)
+        let exist = false
+        recentList.forEach(element => {
+          if (element === id) {
+            exist = true;
+            console.log(`This is on the list`)
+          }
+        })
+        if (!exist) {
+          recentList.push(id);
+          localStorage.setItem('recent_track_list', recentList);
+        }
+      } else {
+        localStorage.setItem('recent_track_list', [id]);
+      }
     } else {
       setId(localStorage.getItem('now_playing_id'));
     }
