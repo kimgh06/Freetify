@@ -20,7 +20,7 @@ export default function Player() {
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
   const Axios_controler = new AbortController();
-  const getMusicUrl = async (artist, title, album, length) => {
+  const getMusicUrl = async (artist, title, album, length, id) => {
     if (artist && title && album) {
       await axios.get(`/api/get_video?album=${album}&artist=${artist}&title=${title.replace(/&/g, "%38")}&length=${length}`, {
         responseType: 'blob',
@@ -28,7 +28,7 @@ export default function Player() {
       }).then(e => {
         const url = URL.createObjectURL(e.data);
         let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-        cached_url[`${album}+${title}+${artist}`] = url;
+        cached_url[`${id}`] = url;
         localStorage.setItem('cached_url', JSON.stringify(cached_url));
         console.log(title, "loaded");
       }).catch(e => {
@@ -71,15 +71,16 @@ export default function Player() {
           setDurationT(music_data.duration_ms)
 
           let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-          const url = cached_url[`${music_data?.album?.name}+${music_data?.name}+${music_data?.artists[0]?.name}`];
+          const url = cached_url[`${id}`];
+          console.log(url)
           audio.current.src = null;
           if (url) {
             audio.current.src = url
             console.log(music_data?.name, 'exists')
           } else {
-            await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name, music_data.album.total_tracks).then(() => {
+            await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name, music_data.album.total_tracks, id).then(() => {
               let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-              let new_src = cached_url[`${music_data?.album?.name}+${music_data?.name}+${music_data?.artists[0]?.name}`]
+              let new_src = cached_url[`${id}`]
               audio.current.src = new_src;
               setPlay(false);
               setSrc(new_src);
@@ -102,9 +103,9 @@ export default function Player() {
                 const next_data = await getTrackinfos(list[index + 1]);
                 if (next_data) {
                   let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-                  const url = cached_url[`${next_data.album?.name}+${next_data?.name}+${next_data?.artists[0]?.name}`];
+                  const url = cached_url[list[index + 1]];
                   if (!url) {
-                    getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album?.name, next_data.album.total_tracks);
+                    getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album?.name, next_data.album.total_tracks, list[index + 1]);
                   }
                 }
               }
@@ -205,7 +206,7 @@ export default function Player() {
       <div className='head'>
         {innerWidth >= 1200 ? (extensionMode ? <>
           <div className='main_original'>
-            <img src={info?.album?.images[1]?.url} />
+            <img src={info?.album?.images[1]?.url} alt='img' />
             <div>
               <Link href={`/album/${info?.album?.id} `}>
                 <h2>{info?.name}</h2>
@@ -238,7 +239,7 @@ export default function Player() {
               <div className='___' />
             </div>
             <div className='content'>
-              <img src={info?.album?.images[2]?.url} />
+              <img src={info?.album?.images[2]?.url} alt='img' />
               <div className='between'>
                 <div className='title' href={`/album/${info?.album?.id} `}>{info?.name}</div><br />
                 <div href={`/artist/${info?.artists && info?.artists[0]?.id} `}>{info?.artists && info?.artists[0]?.name}</div>

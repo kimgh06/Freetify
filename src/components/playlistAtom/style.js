@@ -9,7 +9,7 @@ export const PlayAtom = styled.div`
   min-width: 360px;
   border-bottom: 8px solid lightgray;
   padding: 5px 20px;
-  color: #b8b8b8;
+  color: #ffffff;
   img{
     cursor: pointer;
     object-fit: scale-down;

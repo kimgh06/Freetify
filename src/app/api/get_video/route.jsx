@@ -22,7 +22,7 @@ export async function GET(req, res) {
     .replace(/ /g, "")
   artist = artist.replace(/%20/g, " ");
   //고안중 앨범 검색=> 트랙찾기
-  let list = await youtubesearchapi.GetListByKeyword(`${album} full album`, true, 10);
+  let list = await youtubesearchapi.GetListByKeyword(`${album} album`, true, 20);
   list = list.items.filter(item => item.type === "playlist" && item.length >= length && item)
   let playlist = await youtubesearchapi.GetPlaylistData(list[0].id, 100);
   let url;
@@ -41,11 +41,15 @@ export async function GET(req, res) {
   }
 
   try {
-    const stream = ytdl(`https://youtube.com/watch?v=${url}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' })
-    const response = new Response(stream);
-    response.headers.set('content-type', 'audio/mp3')
-    response.headers.set('connection', 'keep-alive');
-    return response
+    if (url) {
+      const stream = ytdl(`https://youtube.com/watch?v=${url}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' })
+      const response = new Response(stream);
+      response.headers.set('content-type', 'audio/mp3')
+      response.headers.set('connection', 'keep-alive');
+      return response
+    } else {
+      throw "no datas"
+    }
   } catch (e) {
     return NextResponse.json({ err: e }, { status: 500 })
   }
