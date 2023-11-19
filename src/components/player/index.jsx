@@ -20,9 +20,9 @@ export default function Player() {
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
   const Axios_controler = new AbortController();
-  const getMusicUrl = async (artist, title, album) => {
+  const getMusicUrl = async (artist, title, album, length) => {
     if (artist && title && album) {
-      await axios.get(`/api/get_video?album=${album}&artist=${artist}&title=${title.replace(/&/g, "%38")}`, {
+      await axios.get(`/api/get_video?album=${album}&artist=${artist}&title=${title.replace(/&/g, "%38")}&length=${length}`, {
         responseType: 'blob',
         signal: Axios_controler.signal
       }).then(e => {
@@ -64,7 +64,6 @@ export default function Player() {
   }
   const getCurrentMusicURL = async e => {
     try {
-
       if (id) {
         const music_data = await getTrackinfos(id);
         if (music_data) {
@@ -78,7 +77,7 @@ export default function Player() {
             audio.current.src = url
             console.log(music_data?.name, 'exists')
           } else {
-            await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name).then(() => {
+            await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name, music_data.album.total_tracks).then(() => {
               let cached_url = JSON.parse(localStorage.getItem('cached_url'));
               let new_src = cached_url[`${music_data?.album?.name}+${music_data?.name}+${music_data?.artists[0]?.name}`]
               audio.current.src = new_src;
@@ -97,7 +96,7 @@ export default function Player() {
                   let cached_url = JSON.parse(localStorage.getItem('cached_url'));
                   const url = cached_url[`${next_data.album?.name}+${next_data?.name}+${next_data?.artists[0]?.name}`];
                   if (!url) {
-                    getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album?.name);
+                    getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album?.name, next_data.album.total_tracks);
                   }
                 }
               }

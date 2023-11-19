@@ -8,7 +8,7 @@ export async function GET(req, res) {
   params.forEach((i, n) => {
     paramlist[i.split('=')[0]] = i.split('=')[1];
   })
-  let { album, title, artist } = paramlist;
+  let { album, title, artist, length } = paramlist;
   album = album.replace(/%20/g, " ");
   title = decodeURIComponent(title);
   title = title.replace(/%20/g, " ")
@@ -22,21 +22,23 @@ export async function GET(req, res) {
     .replace(/ /g, "")
   artist = artist.replace(/%20/g, " ");
   //고안중 앨범 검색=> 트랙찾기
-  let list = await youtubesearchapi.GetListByKeyword(`${album}`, true, 5);
-  list = list.items.filter(item => item.type === "playlist" && item)[0]
-  let playlist = await youtubesearchapi.GetPlaylistData(list.id);
+  let list = await youtubesearchapi.GetListByKeyword(`${album} full album`, true, 10);
+  list = list.items.filter(item => item.type === "playlist" && item.length >= length && item)
+  let playlist = await youtubesearchapi.GetPlaylistData(list[0].id, 100);
   let url;
-  playlist.items.forEach(item => {
+  for (let i = 0; i < playlist.items.length; i++) {
+    const item = playlist.items[i];
     let asdf = item.title
       .replace(/\(/g, "")
       .replace(/\)/g, "")
       .replace(/-/g, "")
       .replace(/ /g, "")
     if (asdf.indexOf(title) !== -1) {
-      console.log(asdf, title)
+      console.log(asdf)
       url = item.id;
+      break;
     }
-  })
+  }
 
   try {
     const stream = ytdl(`https://youtube.com/watch?v=${url}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' })
