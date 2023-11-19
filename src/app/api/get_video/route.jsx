@@ -12,16 +12,15 @@ export async function GET(req, res) {
   album = album.replace(/%20/g, " ");
   title = title.replace(/%35/g, "#");
   title = decodeURIComponent(title);
-  console.log(title)
   title = title.replace(/%20/g, " ")
     .replace(/%27/g, "'")
     .replace(/%38/g, "&")
-    .replace(/8/g, "&")
     .replace(/%E2%80%99/g, "’")
     .replace(/\(/g, "")
     .replace(/\)/g, "")
     .replace(/-/g, "")
     .replace(/ /g, "")
+  console.log(title)
   artist = artist.replace(/%20/g, " ");
   //고안중 앨범 검색=> 트랙찾기
   let list = await youtubesearchapi.GetListByKeyword(`${album} album`, true, 20);

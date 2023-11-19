@@ -37,6 +37,14 @@ export default function Player() {
       // Axios_controler.abort();
     }
   }
+  const recommendTracks = async e => {
+    const data = localStorage.getItem('recent_track_list');
+    await axios.get(`https://api.spotify.com/v1/recommendations?seed_tracks=${data}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
+      console.log(e.data);
+    }).catch(e => {
+      console.log("err: ", e);
+    })
+  }
   const getTrackinfos = async id => {
     return id && await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(async e => {
       return e.data;
@@ -50,6 +58,9 @@ export default function Player() {
       const index = list.findIndex(e => e === id);
       if (list[index + 1]) {
         setId(list[index + 1]);
+      }
+      else { //트랙 추천
+        recommendTracks();
       }
     }
   }
