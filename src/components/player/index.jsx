@@ -22,7 +22,7 @@ export default function Player() {
   const Axios_controler = new AbortController();
   const getMusicUrl = async (artist, title, album, length, id) => {
     if (artist && title && album) {
-      await axios.get(`/api/get_video?album=${album}&artist=${artist}&title=${title.replace(/&/g, "%38")}&length=${length}`, {
+      await axios.get(`/api/get_video?album=${album}&artist=${artist}&title=${title.replace(/&/g, "%38").replace(/#/g, "%35")}&length=${length}`, {
         responseType: 'blob',
         signal: Axios_controler.signal
       }).then(e => {
@@ -72,7 +72,6 @@ export default function Player() {
 
           let cached_url = JSON.parse(localStorage.getItem('cached_url'));
           const url = cached_url[`${id}`];
-          console.log(url)
           audio.current.src = null;
           if (url) {
             audio.current.src = url

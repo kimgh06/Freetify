@@ -10,7 +10,9 @@ export async function GET(req, res) {
   })
   let { album, title, artist, length } = paramlist;
   album = album.replace(/%20/g, " ");
+  title = title.replace(/%35/g, "#");
   title = decodeURIComponent(title);
+  console.log(title)
   title = title.replace(/%20/g, " ")
     .replace(/%27/g, "'")
     .replace(/%38/g, "&")
