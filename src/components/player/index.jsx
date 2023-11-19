@@ -85,6 +85,14 @@ export default function Player() {
               setSrc(new_src);
             });
           }
+          if (music_data) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+              title: music_data.name,
+              artist: music_data.artists[0].name,
+              album: music_data.album.name,
+              artwork: [{ src: music_data.album.images[0].url }]
+            })
+          }
 
           let list = localStorage.getItem("TrackList")?.split(',');
           if (list) {
@@ -292,6 +300,6 @@ export default function Player() {
       }
     }} onLoadedData={e => setPlay(true)}
       onPause={e => setPlay(false)} onPlay={e => setPlay(true)} />
-  </S.Player >;
+  </S.Player>;
 }
 
