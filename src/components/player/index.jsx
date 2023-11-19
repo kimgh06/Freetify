@@ -177,7 +177,7 @@ export default function Player() {
       if (modify) {
         const one_vw = innerWidth / 100;
         if (innerWidth < 1200) {
-          const percent = (e.clientX - 10) / (innerWidth - one_vw);
+          const percent = (e.clientX - 20) / (innerWidth - 4 * one_vw);
           audio.current.currentTime = Math.floor(percent * durationT) / 1000;
         }
         else if (innerWidth >= 1200) {
