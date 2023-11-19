@@ -15,7 +15,6 @@ export async function GET(req, res) {
   title = title.replace(/%20/g, " ")
     .replace(/%27/g, "'")
     .replace(/%38/g, "&")
-    .replace(/%E2%80%99/g, "’")
     .replace(/\(/g, "")
     .replace(/\)/g, "")
     .replace(/-/g, "")

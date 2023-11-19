@@ -148,7 +148,7 @@ export default function Player() {
         })
         if (!exist) {
           recentList.push(id);
-          recentList = recentList.slice(-5);
+          recentList = recentList.slice(0, -5);
           localStorage.setItem('recent_track_list', recentList);
         }
       } else {
@@ -196,7 +196,7 @@ export default function Player() {
       if (modify) {
         const one_vw = innerWidth / 100;
         if (innerWidth < 1200) {
-          const percent = (e.clientX - 20) / (innerWidth - 4 * one_vw);
+          const percent = (e.clientX - (one_vw + 10)) / (innerWidth - 2 * (one_vw + 10));
           audio.current.currentTime = Math.floor(percent * durationT) / 1000;
         }
         else if (innerWidth >= 1200) {
