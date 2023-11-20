@@ -44,8 +44,19 @@ export const Nav = styled.div`
     box-shadow: none;
     background-color: gray;
     color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     &:hover{
       margin-left: -30px;
+    }
+    .bar{
+      width: 35px;
+      height: 3px;
+      margin: 4px;
+      border-radius: 100px;
+      background-color: white;
     }
   }
   .true{
