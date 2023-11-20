@@ -19,6 +19,7 @@ export async function GET(req, res) {
     .replace(/\)/g, "")
     .replace(/-/g, "")
     .replace(/ /g, "")
+    .toLowerCase()
   console.log(title)
   artist = artist.replace(/%20/g, " ");
   //고안중 앨범 검색=> 트랙찾기
@@ -33,6 +34,7 @@ export async function GET(req, res) {
       .replace(/\)/g, "")
       .replace(/-/g, "")
       .replace(/ /g, "")
+      .toLowerCase()
     if (asdf.indexOf(title) !== -1) {
       console.log(asdf)
       url = item.id;

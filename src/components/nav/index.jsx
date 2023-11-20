@@ -46,7 +46,8 @@ export default function Navi() {
         {/* <p><Link href={'/login'}>Spotify 로그인</Link></p> */}
         {/* <p><Link href={'/myprofile'}>프로필</Link></p> */}
         <p><Link href={'/search'}>검색</Link></p>
-        <p><Link href={'/'}>home</Link></p>
+        <p><Link href={'/'}>Host Pick</Link></p>
+        <p><Link href={'/mytrack'}>My Track</Link></p>
       </div>}
     </S.Nav>
     {id && <Player />}

@@ -2,10 +2,10 @@
 import Navi from "@/components/nav";
 import PlaylistAtom from "@/components/playlistAtom";
 import axios from "axios";
-import * as S from './style';
+import * as S from '../style';
 import { useEffect, useState } from "react";
 import { RecoilRoot, useRecoilState } from "recoil";
-import { AccessToken } from "./recoilStates";
+import { AccessToken } from "../recoilStates";
 
 export default function Home() {
   return <RecoilRoot>
@@ -45,7 +45,7 @@ function InnerComponent() {
     }
   }
   const GettingInfos = async e => {
-    let ids = ["3H4ZrsDezaN37zplSpXUWd", "3LDNcikQd7Zui9gJCISTtR", "7fhiGdj0nn0ZCmIAocG8G0"]
+    let ids = JSON.parse(localStorage.getItem('list'))?.join(',') || undefined;
     let tr = await getTrackinfos(ids);
 
     setTracks(tr);
@@ -71,7 +71,7 @@ function InnerComponent() {
   }, [access]);
   return <S.App>
     <Navi />
-    <h1>Host Pick</h1>
+    <h1>My track</h1>
     {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i.album.images[2].url} type={i?.type}
       id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {
         let list = [];

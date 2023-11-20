@@ -40,8 +40,16 @@ export default function Player() {
   const recommendTracks = async e => {
     const recentTrack = localStorage.getItem('recent_track_list');
     const recentArtists = localStorage.getItem('recent_artists_list');
+    let tracklist = localStorage.getItem('TrackList').split(',');
     await axios.get(`https://api.spotify.com/v1/recommendations?seed_tracks=${recentTrack}&seed_artists=${recentArtists}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
-      console.log(e.data);
+      const tracks = e.data.tracks;
+      tracks.forEach(track => {
+        if (tracklist.indexOf(track.id) == -1) {
+          console.log(track);
+          tracklist.push(track.id)
+        }
+      })
+      localStorage.setItem("TrackList", tracklist);
     }).catch(e => {
       console.log("err: ", e);
     })
@@ -106,12 +114,10 @@ export default function Player() {
             })
             let recentList = JSON.stringify(localStorage.getItem('recent_track_list')).replace(/\\/g, '').replace(/"/g, '');
             let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list')).replace(/\\/g, '').replace(/"/g, '');
-            console.log(music_data.artists[0])
             if (recentList != 'null' && recentArtists != 'null') {
               //최근 트랙
               recentList = recentList.split(',');
               recentArtists = recentArtists.split(',');
-              console.log(recentList, recentArtists)
               let exist = false
               recentList.forEach(element => {
                 if (element === id) exist = true;
@@ -317,7 +323,7 @@ export default function Player() {
     <audio ref={audio} onTimeUpdate={e => {
       const { currentTime, duration } = audio.current;
       setCurrentT(currentTime * 1000);
-      if (audio.current && (durationT / 1000 - currentTime < 0 || currentTime >= duration)) {
+      if (audio.current && (durationT / 1000 - currentTime < 0 || currentTime > duration)) {
         NextTrack();
       }
     }} onLoadedData={e => setPlay(true)}
