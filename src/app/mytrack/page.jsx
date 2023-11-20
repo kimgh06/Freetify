@@ -59,7 +59,6 @@ function InnerComponent() {
   }
   useEffect(e => {
     const queries = new URLSearchParams(location.search);
-    document.title = 'My Tracks'
     if (queries.size !== 0) {
       getTokens();
     } else {
