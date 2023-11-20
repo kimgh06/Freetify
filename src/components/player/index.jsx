@@ -38,8 +38,9 @@ export default function Player() {
     }
   }
   const recommendTracks = async e => {
-    const data = localStorage.getItem('recent_track_list');
-    await axios.get(`https://api.spotify.com/v1/recommendations?seed_tracks=${data}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
+    const recentTrack = localStorage.getItem('recent_track_list');
+    const recentArtists = localStorage.getItem('recent_artists_list');
+    await axios.get(`https://api.spotify.com/v1/recommendations?seed_tracks=${recentTrack}&seed_artists=${recentArtists}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
       console.log(e.data);
     }).catch(e => {
       console.log("err: ", e);
@@ -103,6 +104,35 @@ export default function Player() {
               album: music_data.album.name,
               artwork: [{ src: music_data.album.images[0].url }]
             })
+            let recentList = JSON.stringify(localStorage.getItem('recent_track_list')).replace(/\\/g, '').replace(/"/g, '');
+            let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list')).replace(/\\/g, '').replace(/"/g, '');
+            console.log(music_data.artists[0])
+            if (recentList != 'null' && recentArtists != 'null') {
+              //최근 트랙
+              recentList = recentList.split(',');
+              recentArtists = recentArtists.split(',');
+              console.log(recentList, recentArtists)
+              let exist = false
+              recentList.forEach(element => {
+                if (element === id) exist = true;
+              })
+              if (!exist) {
+                recentList.push(id);
+                localStorage.setItem('recent_track_list', recentList.slice(-5));
+              }
+              //최근 아티스트
+              exist = false
+              recentArtists.forEach(element => {
+                if (element === id) exist = true;
+              })
+              if (!exist) {
+                recentArtists.push(id);
+                localStorage.setItem('recent_track_list', recentArtists.slice(-5));
+              }
+            } else {
+              localStorage.setItem('recent_track_list', [id]);
+              localStorage.setItem('recent_artists_list', [music_data.artists[0].id]);
+            }
           }
 
           let list = localStorage.getItem("TrackList")?.split(',');
@@ -134,26 +164,7 @@ export default function Player() {
     if (id) {
       setPlay(false)
       localStorage.setItem('now_playing_id', id);
-      let recentList = JSON.stringify(localStorage.getItem('recent_track_list')).replace(/\\/g, '').replace(/"/g, '');
       getCurrentMusicURL();
-      if (recentList != 'null') {
-        recentList = recentList.split(',');
-        console.log(recentList)
-        let exist = false
-        recentList.forEach(element => {
-          if (element === id) {
-            exist = true;
-            console.log(`This is on the list`)
-          }
-        })
-        if (!exist) {
-          recentList.push(id);
-          recentList = recentList.slice(0, -5);
-          localStorage.setItem('recent_track_list', recentList);
-        }
-      } else {
-        localStorage.setItem('recent_track_list', [id]);
-      }
       navigator.mediaSession.setActionHandler("nexttrack", e => {
         NextTrack()
       })
@@ -293,13 +304,13 @@ export default function Player() {
       </div>
       {!(innerWidth >= 1200 && !extensionMode) && `${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
       {!(innerWidth >= 1200 && !extensionMode) ? <div className='volume'>
-        <button onClick={e => setVolume(a => (a * 100 - 10) / 100 < 0.1 ? a : (a * 100 - 10) / 100)}>-</button>
-        <span>{volume * 100}%</span>
-        <button onClick={e => setVolume(a => (a * 100 + 10) / 100 > 1 ? a : (a * 100 + 10) / 100)}>+</button>
+        <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
+        <span>{Math.round(volume * 100)}%</span>
+        <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
       </div> : <S.Main_smaller>
-        <button onClick={e => setVolume(a => (a * 100 + 10) / 100 > 1 ? a : (a * 100 + 10) / 100)}>+</button>
-        <span>{volume * 100}%</span>
-        <button onClick={e => setVolume(a => (a * 100 - 10) / 100 < 0.1 ? a : (a * 100 - 10) / 100)}>-</button>
+        <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
+        <span>{Math.round(volume * 100)}%</span>
+        <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
         <div className='title'>{info?.name}</div>
       </S.Main_smaller>}
     </div>
