@@ -45,7 +45,7 @@ export default function Player() {
       const tracks = e.data.tracks;
       tracks.forEach(track => {
         if (tracklist.indexOf(track.id) == -1) {
-          console.log(track);
+          console.log(track.name);
           tracklist.push(track.id)
         }
       })
@@ -323,11 +323,11 @@ export default function Player() {
     <audio ref={audio} onTimeUpdate={e => {
       const { currentTime, duration } = audio.current;
       setCurrentT(currentTime * 1000);
-      // if (audio.current && (durationT / 1000 - currentTime < 0 || currentTime > duration)) {
-      //   NextTrack();
-      // }
+      if (audio.current && (durationT / 1000 - currentTime < -1 || currentTime > duration)) {
+        NextTrack();
+      }
     }} onLoadedData={e => setPlay(true)}
-      onEnded={e => NextTrack()}
+      // onEnded={e => NextTrack()}
       onPause={e => setPlay(false)} onPlay={e => setPlay(true)} />
   </S.Player>;
 }
