@@ -10,8 +10,9 @@ export const Nav = styled.div`
     animation: nav 0.5s ease;
     position: fixed;
     top: 0;
-    background-color: #00af00;
-    color: white;
+    background-color: #d0d0d0;
+    color: black;
+    font-size: 16px;
     height: 100vh;
     width: 300px;
     padding-top: 60px;
