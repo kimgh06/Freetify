@@ -71,7 +71,7 @@ function InnerContent({ id }) {
           }} />)}
       </div>
       <div className='end'>
-        <h3>End</h3>
+        {/* <h3>End</h3> */}
       </div>
     </S.AlbumInfos>
   </>

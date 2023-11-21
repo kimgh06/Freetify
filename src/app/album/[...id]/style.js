@@ -43,8 +43,10 @@ export const AlbumInfos = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    @media screen and (max-width: 1200px) {  
+    color: white;
+    margin-top: 200px;
+    /* @media screen and (max-width: 1200px) {  
       margin-bottom: 150px;
-    }
+    } */
   }
 `
