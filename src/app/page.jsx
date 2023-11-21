@@ -45,9 +45,23 @@ function InnerComponent() {
     }
   }
   const GettingInfos = async e => {
-    let ids = ["3H4ZrsDezaN37zplSpXUWd", "3LDNcikQd7Zui9gJCISTtR", "7fhiGdj0nn0ZCmIAocG8G0"]
-    if (localStorage.getItem('recommendation')) {
+    let ids = ["3H4ZrsDezaN37zplSpXUWd", "3LDNcikQd7Zui9gJCISTtR", "7fhiGdj0nn0ZCmIAocG8G0"];
+    if (localStorage.getItem('recommendation') !== null) {
       ids = localStorage.getItem('recommendation').split(',');
+    }
+    else if (localStorage.getItem('recent_track_list') !== null && localStorage.getItem('recent_artists_list') !== null) {
+      const recentTrack = localStorage.getItem('recent_track_list').split(',');
+      const recentArtists = localStorage.getItem('recent_artists_list').split(',');
+      ids = await axios.get(`https://api.spotify.com/v1/recommendations?seed_tracks=${recentTrack}&seed_artists=${recentArtists}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
+        const track = e.data.tracks;
+        let list = [];
+        track.forEach(e => {
+          list.push(e.id)
+        })
+        localStorage.setItem("recommendation", [list]);
+        console.log(list)
+        return list
+      });
     }
     let tr = await getTrackinfos(ids);
 
@@ -74,7 +88,7 @@ function InnerComponent() {
   return <S.App>
     <Navi />
     <h1>Recommendations</h1>
-    {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i.album.images[2].url} type={i?.type}
+    {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i?.album.images[2].url} type={i?.type}
       id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {
         let list = [];
         list = JSON.parse(localStorage.getItem('list'));
