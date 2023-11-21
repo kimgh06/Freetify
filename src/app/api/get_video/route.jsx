@@ -25,21 +25,28 @@ export async function GET(req, res) {
   //고안중 앨범 검색=> 트랙찾기
   let list = await youtubesearchapi.GetListByKeyword(`${album} album`, true, 20);
   list = list.items.filter(item => item.type === "playlist" && item.length >= length && item)
-  let playlist = await youtubesearchapi.GetPlaylistData(list[0].id, 100);
   let url;
-  for (let i = 0; i < playlist.items.length; i++) {
-    const item = playlist.items[i];
-    let asdf = item.title
-      .replace(/\(/g, "")
-      .replace(/\)/g, "")
-      .replace(/-/g, "")
-      .replace(/ /g, "")
-      .toLowerCase()
-    if (asdf.indexOf(title) !== -1) {
-      console.log(asdf)
-      url = item.id;
-      break;
+  if (list.length != 0) {
+    let playlist = await youtubesearchapi.GetPlaylistData(list[0].id, 100);
+    for (let i = 0; i < playlist.items.length; i++) {
+      const item = playlist.items[i];
+      let asdf = item.title
+        .replace(/\(/g, "")
+        .replace(/\)/g, "")
+        .replace(/-/g, "")
+        .replace(/ /g, "")
+        .toLowerCase()
+      if (asdf.indexOf(title) !== -1) {
+        console.log(asdf)
+        url = item.id;
+        break;
+      }
     }
+  } else {
+    //싱글 앨범일 경우에는?
+    list = (await youtubesearchapi.GetListByKeyword(`${title}`)).items;
+    // console.log(list[0].id)
+    url = list[0].id
   }
 
   try {
