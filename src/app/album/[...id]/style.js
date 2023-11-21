@@ -5,7 +5,7 @@ export const AlbumInfos = styled.div`
     display: flex;
     justify-content: center;
     align-items: end;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     background-color: darkgray;
     padding-bottom: 50px;
     border-bottom: 8px solid gray;

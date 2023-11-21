@@ -9,3 +9,6 @@ export const App = styled.div`
     border-radius: 5px;
   }
 `
+export const PaddingBox = styled.div`
+  height: 200px;
+`

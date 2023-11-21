@@ -2,18 +2,20 @@ import { styled } from "styled-components";
 
 export const PlayAtom = styled.div`
   margin: auto;
+  margin-top: 10px;
   text-align: left;
   display: flex;
   color: black;
-  width: 40vw;
+  width: 35vw;
   min-width: 360px;
-  border-bottom: 8px solid lightgray;
+  border: 4px solid lightgray;
   padding: 5px 20px;
   color: #ffffff;
+  border-radius: 5px;
   img{
     cursor: pointer;
     object-fit: scale-down;
-    width: 64px;
+    width: 52px;
     margin-right: 10px;
   }
   .playingtime{
@@ -28,8 +30,8 @@ export const PlayAtom = styled.div`
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 25vw;
-      min-width: 180px;
+      width: 22vw;
+      min-width: 190px;
       &:hover{
         text-decoration-line: underline;
       }
