@@ -45,7 +45,10 @@ function InnerComponent() {
     }
   }
   const GettingInfos = async e => {
-    let ids = ["3H4ZrsDezaN37zplSpXUWd", "3LDNcikQd7Zui9gJCISTtR", "7fhiGdj0nn0ZCmIAocG8G0"] || localStorage.getItem('recommendation').split(',');
+    let ids = ["3H4ZrsDezaN37zplSpXUWd", "3LDNcikQd7Zui9gJCISTtR", "7fhiGdj0nn0ZCmIAocG8G0"]
+    if (localStorage.getItem('recommendation')) {
+      ids = localStorage.getItem('recommendation').split(',');
+    }
     let tr = await getTrackinfos(ids);
 
     setTracks(tr);

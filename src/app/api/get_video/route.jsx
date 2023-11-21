@@ -37,14 +37,14 @@ export async function GET(req, res) {
         .replace(/ /g, "")
         .toLowerCase()
       if (asdf.indexOf(title) !== -1) {
-        console.log(asdf)
+        console.log(title + "found")
         url = item.id;
         break;
       }
     }
   } else {
     //싱글 앨범일 경우에는?
-    list = (await youtubesearchapi.GetListByKeyword(`${title}`)).items;
+    list = (await youtubesearchapi.GetListByKeyword(`${title} ${artist}`)).items;
     // console.log(list[0].id)
     url = list[0].id
   }

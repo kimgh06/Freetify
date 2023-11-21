@@ -178,6 +178,9 @@ export const ExtensionMode_mobile = styled.div`
     justify-content: space-around;
     flex-wrap: wrap;
     align-items: end;
+    img{
+      /* width: 200px; */
+    }
     .texts{
       .links{
         width: 280px;

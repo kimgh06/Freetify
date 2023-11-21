@@ -131,10 +131,10 @@ export default function Player() {
               //최근 아티스트
               exist = false
               recentArtists.forEach(element => {
-                if (element === id) exist = true;
+                if (element === music_data.artists[0].id) exist = true;
               })
-              if (!exist) {
-                recentArtists.push(id);
+              if (exist === false) {
+                recentArtists.push(music_data.artists[0].id);
                 localStorage.setItem('recent_track_list', recentArtists.slice(-5));
               }
             } else {
@@ -325,7 +325,7 @@ export default function Player() {
     <audio ref={audio} onTimeUpdate={e => {
       const { currentTime, duration } = audio.current;
       setCurrentT(currentTime * 1000);
-      if (audio.current && (durationT / 1000 - currentTime < 0 || currentTime > duration)) {
+      if (audio.current && (durationT / 1000 - currentTime < 0 || currentTime >= duration)) {
         NextTrack();
       }
     }} onLoadedData={e => setPlay(true)}
