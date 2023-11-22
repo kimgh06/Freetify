@@ -35,6 +35,7 @@ export async function GET(req, res) {
         .replace(/\)/g, "")
         .replace(/-/g, "")
         .replace(/ /g, "")
+        .replace(/ft./g, "feat.")
         .toLowerCase()
       if (asdf.indexOf(title) !== -1) {
         console.log(title + "found")

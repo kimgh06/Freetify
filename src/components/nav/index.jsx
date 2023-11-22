@@ -25,7 +25,7 @@ export default function Navi() {
       })
   }
   useEffect(e => {
-    if (new Date().getTime() >= localStorage.getItem('expire')) {
+    if (new Date().getTime() >= localStorage.getItem('expire') || !localStorage.getItem('access')) {
       refresh_token();
     }
     else if (access !== '') {

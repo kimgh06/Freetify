@@ -52,6 +52,7 @@ export default function Player() {
       tracks.forEach(track => { list.push(track.id) });
       localStorage.setItem("recommendation", list);
       localStorage.setItem("TrackList", tracklist);
+      NextTrack()
     }).catch(e => {
       console.log("err: ", e);
     })
@@ -72,7 +73,6 @@ export default function Player() {
       }
       else { //트랙 추천
         recommendTracks();
-        NextTrack();
       }
     }
   }
