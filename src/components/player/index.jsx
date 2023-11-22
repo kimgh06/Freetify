@@ -212,6 +212,7 @@ export default function Player() {
   return <S.Player style={{ width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' : innerWidth < 1200 ? '98vw' : '30vw'}` }}>
     <div className='audio' onMouseUp={e => {
       setModify(false);
+      setPlay(true);
     }} onMouseMove={e => {
       if (modify) {
         const one_vw = innerWidth / 100;
@@ -306,7 +307,7 @@ export default function Player() {
         }
       </div>
       <div className='bar_div'
-        onMouseDown={e => { e.preventDefault(); setModify(true); }}
+        onMouseDown={e => { e.preventDefault(); setModify(true); setPlay(false) }}
       >
         <div className='bar' style={{ width: `${currentT / durationT * 100}%` }} />
         <div className='bar_cursor' />
