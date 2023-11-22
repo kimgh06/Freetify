@@ -37,7 +37,9 @@ export async function GET(req, res) {
         .replace(/ /g, "")
         .replace(/ft./g, "feat.")
         .toLowerCase()
-      if (asdf.indexOf(title) !== -1 || title.indexOf(asdf) !== -1) {
+      if (asdf.indexOf(title) !== -1 ||
+        title.indexOf(asdf) !== -1 ||
+        asdf.indexOf(title.replace(/8/g, '&')) !== -1) {
         console.log(title + "found")
         url = item.id;
         break;
