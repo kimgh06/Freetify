@@ -99,7 +99,6 @@ export default function Player() {
 
       let cached_url = JSON.parse(localStorage.getItem('cached_url'));
       const url = cached_url[`${id}`];
-      audio.current.src = null;
       if (url) {
         audio.current.src = url
         console.log(music_data?.name, 'exists')
@@ -337,6 +336,7 @@ export default function Player() {
       const { currentTime, duration } = audio.current;
       setCurrentT(currentTime * 1000);
       if (currentTime >= durationT / 1000 || currentTime >= duration) {
+        audio.current.src = null;
         NextTrack();
       }
     }} onLoadedData={e => setPlay(true)}
