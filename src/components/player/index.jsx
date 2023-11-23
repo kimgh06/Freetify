@@ -9,14 +9,14 @@ import Link from 'next/link';
 export default function Player() {
   const audio = useRef(null);
   const [id, setId] = useRecoilState(NowPlayingId);
-  const [modify, setModify] = useState(false);
   const [src, setSrc] = useRecoilState(AudioSrc);
+  const [access, setAccess] = useRecoilState(AccessToken);
+  const [modify, setModify] = useState(false);
   const [info, setInfo] = useState({});
   const [play, setPlay] = useState(false);
   const [currentT, setCurrentT] = useState(0);
   const [durationT, setDurationT] = useState(`0:00`);
   const [volume, setVolume] = useState(0.7);
-  const [access, setAccess] = useRecoilState(AccessToken);
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
   const Axios_controler = new AbortController();
@@ -207,7 +207,7 @@ export default function Player() {
     if (typeof window !== undefined) {
       setInnerWidth(window.innerWidth);
       setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
-      console.log(id)
+      console.log(id, src)
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
