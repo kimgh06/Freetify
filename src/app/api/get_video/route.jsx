@@ -40,7 +40,7 @@ export async function GET(req, res) {
       if (asdf.indexOf(title) !== -1 ||
         title.indexOf(asdf) !== -1 ||
         asdf.indexOf(title.replace(/8/g, '&')) !== -1) {
-        console.log(title + "found")
+        console.log(title, "found")
         url = item.id;
         break;
       }
