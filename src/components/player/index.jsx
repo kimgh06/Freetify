@@ -186,6 +186,11 @@ export default function Player() {
   }, [id, access]);
   useEffect(e => {
     if (audio.current.src) {
+      console.log(modify, play)
+      if (modify) {
+        audio.current.pause();
+        return;
+      }
       if (play) {
         let promise = audio.current.play();
         promise.catch(err => { console.log(err); setPlay(false) });
@@ -195,7 +200,7 @@ export default function Player() {
     } else {
       audio.current.src = src;
     }
-  }, [play, audio]);
+  }, [play, modify]);
   useEffect(e => {
     if (typeof window !== undefined) {
       setInnerWidth(window.innerWidth);
@@ -212,7 +217,6 @@ export default function Player() {
   return <S.Player style={{ width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' : innerWidth < 1200 ? '98vw' : '30vw'}` }}>
     <div className='audio' onMouseUp={e => {
       setModify(false);
-      // setPlay(true);
     }} onMouseMove={e => {
       if (modify) {
         const one_vw = innerWidth / 100;
@@ -308,8 +312,8 @@ export default function Player() {
       </div>
       <div className='bar_div'
         onMouseDown={e => {
-          e.preventDefault(); setModify(true);
-          // setPlay(false)
+          e.preventDefault();
+          setModify(true);
         }}
       >
         <div className='bar' style={{ width: `${currentT / durationT * 100}%` }} />
@@ -334,7 +338,8 @@ export default function Player() {
         NextTrack();
       }
     }} onLoadedData={e => setPlay(true)}
-      onPause={e => setPlay(false)} onPlay={e => setPlay(true)} />
+      onPause={e => !modify && setPlay(false)}
+      onPlay={e => setPlay(true)} />
   </S.Player>;
 }
 
