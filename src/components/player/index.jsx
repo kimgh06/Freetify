@@ -101,14 +101,15 @@ export default function Player() {
       const url = cached_url[`${id}`];
       if (url) {
         audio.current.src = url
+        setSrc(url)
         console.log(music_data?.name, 'exists')
       } else {
         await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name, music_data.album.total_tracks, id).then(() => {
           let cached_url = JSON.parse(localStorage.getItem('cached_url'));
           let new_src = cached_url[`${id}`]
           audio.current.src = new_src;
-          setPlay(false);
           setSrc(new_src);
+          setPlay(false)
         });
       }
 
@@ -171,10 +172,12 @@ export default function Player() {
   }
   useEffect(e => {
     if (!id) {
-      setId(localStorage.getItem('now_playing_id'));
+      // setId(localStorage.getItem('now_playing_id'));
       return;
     }
     setPlay(false)
+    audio.current.src = null;
+    setSrc(null);
     localStorage.setItem('now_playing_id', id);
     getCurrentMusicURL();
     navigator.mediaSession.setActionHandler("nexttrack", e => {
@@ -186,7 +189,7 @@ export default function Player() {
   }, [id, access]);
   useEffect(e => {
     if (!audio.current.src) {
-      audio.current.src = src;
+      audio.current.src = src
       return;
     }
     if (modify) {
@@ -204,10 +207,11 @@ export default function Player() {
     if (typeof window !== undefined) {
       setInnerWidth(window.innerWidth);
       setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
-      localStorage.setItem("cached_url", JSON.stringify({}));
+      console.log(id)
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
+      localStorage.setItem("cached_url", JSON.stringify({}));
     }
   }, []);
   useEffect(e => {
@@ -332,11 +336,11 @@ export default function Player() {
         <div className='title'>{info?.name}</div>
       </S.Main_smaller>}
     </div>
-    <audio ref={audio} onTimeUpdate={e => {
+    <audio ref={audio} src={src} onTimeUpdate={e => {
       const { currentTime, duration } = audio.current;
       setCurrentT(currentTime * 1000);
       if (currentTime >= durationT / 1000 || currentTime >= duration) {
-        audio.current.src = null;
+        setSrc(null)
         NextTrack();
       }
     }} onLoadedData={e => setPlay(true)}

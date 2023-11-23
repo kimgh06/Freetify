@@ -1,22 +1,16 @@
 import { atom } from "recoil";
+import { recoilPersist } from "recoil-persist";
+const { persistAtom } = recoilPersist()
 export const NowPlayingId = atom({
   key: 'NowPlayingId',
   default: ''
 });
 export const AudioSrc = atom({
   key: 'AudioSrc',
-  default: ''
+  default: '',
+  effects_UNSTABLE: [persistAtom]
 })
 export const AccessToken = atom({
   key: 'RefreshToken',
   default: ''
 })
-
-function string2tag(str) {
-  if (str) {
-    let D = document.createElement("div");
-    D.innerHTML = str;
-    return D.querySelectorAll('audio')[0];
-  }
-  return new Audio(null);
-}
