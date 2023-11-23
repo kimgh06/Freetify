@@ -47,7 +47,7 @@ export async function GET(req, res) {
     }
   }
   if (!url) {
-    //싱글 앨범일 경우거나 꿩 대신 닭
+    //싱글 앨범일 경우거나 못 찾았거나
     list = (await youtubesearchapi.GetListByKeyword(`${title} ${artist} topic`)).items;
     console.log(list[0])
     url = list[0].id

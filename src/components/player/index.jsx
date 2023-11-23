@@ -131,7 +131,7 @@ export default function Player() {
         })
         if (!exist) {
           recentList.push(id);
-          localStorage.setItem('recent_track_list', recentList.slice(-5));
+          localStorage.setItem('recent_track_list', recentList.slice(-3));
         }
         //최근 아티스트
         exist = false
@@ -140,7 +140,7 @@ export default function Player() {
         })
         if (!exist) {
           recentArtists.push(music_data.artists[0].id);
-          localStorage.setItem('recent_track_list', recentArtists.slice(-5));
+          localStorage.setItem('recent_track_list', recentArtists.slice(-3));
         }
       } else {
         localStorage.setItem('recent_track_list', [id]);
@@ -197,9 +197,9 @@ export default function Player() {
     if (play) {
       let promise = audio.current.play();
       promise.catch(err => { console.log(err); setPlay(false) });
-    } else {
-      audio.current.pause();
+      return;
     }
+    audio.current.pause();
   }, [play, modify]);
   useEffect(e => {
     if (typeof window !== undefined) {
@@ -313,7 +313,9 @@ export default function Player() {
       <div className='bar_div'
         onMouseDown={e => {
           e.preventDefault();
-          setModify(true);
+          if (extensionMode || innerWidth <= 1200) {
+            setModify(true);
+          }
         }}
       >
         <div className='bar' style={{ width: `${currentT / durationT * 100}%` }} />

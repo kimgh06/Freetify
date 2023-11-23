@@ -80,5 +80,6 @@ function InnerComponent() {
         }
         return list.find(a => a === i?.id)
       }} />)}
+    <S.PaddingBox />
   </S.App>;
 }
