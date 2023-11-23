@@ -87,82 +87,83 @@ export default function Player() {
   }
   const getCurrentMusicURL = async e => {
     try {
-      if (id) {
-        const music_data = await getTrackinfos(id);
-        if (music_data) {
-          setInfo(music_data);
-          setDurationT(music_data.duration_ms)
+      if (!id) {
+        return;
+      }
+      const music_data = await getTrackinfos(id);
+      if (!music_data) {
+        return;
+      }
+      setInfo(music_data);
+      setDurationT(music_data.duration_ms)
 
+      let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+      const url = cached_url[`${id}`];
+      audio.current.src = null;
+      if (url) {
+        audio.current.src = url
+        console.log(music_data?.name, 'exists')
+      } else {
+        await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name, music_data.album.total_tracks, id).then(() => {
           let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-          const url = cached_url[`${id}`];
-          audio.current.src = null;
-          if (url) {
-            audio.current.src = url
-            console.log(music_data?.name, 'exists')
-          } else {
-            await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name, music_data.album.total_tracks, id).then(() => {
-              let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-              let new_src = cached_url[`${id}`]
-              audio.current.src = new_src;
-              setPlay(false);
-              setSrc(new_src);
-            });
-          }
-          if (music_data) {
-            navigator.mediaSession.metadata = new MediaMetadata({
-              title: music_data.name,
-              artist: music_data.artists[0].name,
-              album: music_data.album.name,
-              artwork: [{ src: music_data.album.images[0].url }]
-            })
-            let recentList = JSON.stringify(localStorage.getItem('recent_track_list')).replace(/\\/g, '').replace(/"/g, '');
-            let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list')).replace(/\\/g, '').replace(/"/g, '');
-            if (recentList != 'null' && recentArtists != 'null') {
-              //최근 트랙
-              recentList = recentList.split(',');
-              recentArtists = recentArtists.split(',');
-              let exist = false
-              recentList.forEach(element => {
-                if (element === id) exist = true;
-              })
-              if (!exist) {
-                recentList.push(id);
-                localStorage.setItem('recent_track_list', recentList.slice(-5));
-              }
-              //최근 아티스트
-              exist = false
-              recentArtists.forEach(element => {
-                if (element === music_data.artists[0].id) exist = true;
-              })
-              if (exist === false) {
-                recentArtists.push(music_data.artists[0].id);
-                localStorage.setItem('recent_track_list', recentArtists.slice(-5));
-              }
-            } else {
-              localStorage.setItem('recent_track_list', [id]);
-              localStorage.setItem('recent_artists_list', [music_data.artists[0].id]);
-            }
-          }
+          let new_src = cached_url[`${id}`]
+          audio.current.src = new_src;
+          setPlay(false);
+          setSrc(new_src);
+        });
+      }
 
-          let list = localStorage.getItem("TrackList")?.split(',');
-          if (list) {
-            const index = list.findIndex(e => e === id);
-            if (index >= 0) {
-              if (index < list.length) {
-                const next_data = await getTrackinfos(list[index + 1]);
-                if (next_data) {
-                  let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-                  const url = cached_url[list[index + 1]];
-                  if (!url) {
-                    getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album?.name, next_data.album.total_tracks, list[index + 1]);
-                  }
-                }
-              }
-              localStorage.setItem('now_index_in_tracks', index);
-            } else {
-              localStorage.setItem('now_index_in_tracks', 0);
-            }
-          }
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: music_data.name,
+        artist: music_data.artists[0].name,
+        album: music_data.album.name,
+        artwork: [{ src: music_data.album.images[0].url }]
+      })
+      let recentList = JSON.stringify(localStorage.getItem('recent_track_list')).replace(/\\/g, '').replace(/"/g, '');
+      let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list')).replace(/\\/g, '').replace(/"/g, '')
+      if (recentList != 'null' && recentArtists != 'null') {
+        //최근 트랙
+        recentList = recentList.split(',');
+        recentArtists = recentArtists.split(',');
+        let exist = false
+        recentList.forEach(element => {
+          if (element === id) exist = true;
+        })
+        if (!exist) {
+          recentList.push(id);
+          localStorage.setItem('recent_track_list', recentList.slice(-5));
+        }
+        //최근 아티스트
+        exist = false
+        recentArtists.forEach(element => {
+          if (element === music_data.artists[0].id) exist = true;
+        })
+        if (!exist) {
+          recentArtists.push(music_data.artists[0].id);
+          localStorage.setItem('recent_track_list', recentArtists.slice(-5));
+        }
+      } else {
+        localStorage.setItem('recent_track_list', [id]);
+        localStorage.setItem('recent_artists_list', [music_data.artists[0].id]);
+      }
+
+
+      let list = localStorage.getItem("TrackList")?.split(',');
+      if (!list) {
+        localStorage.setItem('now_index_in_tracks', 0);
+        return;
+      }
+      const index = list.findIndex(e => e === id);
+      if (index >= 0 && index < list.length) {
+        localStorage.setItem('now_index_in_tracks', index);
+        const next_data = await getTrackinfos(list[index + 1]);
+        if (!next_data) {
+          return;
+        }
+        let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+        const url = cached_url[list[index + 1]];
+        if (!url) {
+          getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album?.name, next_data.album.total_tracks, list[index + 1]);
         }
       }
     } catch (e) {
@@ -170,35 +171,34 @@ export default function Player() {
     }
   }
   useEffect(e => {
-    if (id) {
-      setPlay(false)
-      localStorage.setItem('now_playing_id', id);
-      getCurrentMusicURL();
-      navigator.mediaSession.setActionHandler("nexttrack", e => {
-        NextTrack()
-      })
-      navigator.mediaSession.setActionHandler("previoustrack", e => {
-        PreviousTrack()
-      })
-    } else {
+    if (!id) {
       setId(localStorage.getItem('now_playing_id'));
+      return;
     }
+    setPlay(false)
+    localStorage.setItem('now_playing_id', id);
+    getCurrentMusicURL();
+    navigator.mediaSession.setActionHandler("nexttrack", e => {
+      NextTrack()
+    })
+    navigator.mediaSession.setActionHandler("previoustrack", e => {
+      PreviousTrack()
+    })
   }, [id, access]);
   useEffect(e => {
-    if (audio.current.src) {
-      console.log(modify, play)
-      if (modify) {
-        audio.current.pause();
-        return;
-      }
-      if (play) {
-        let promise = audio.current.play();
-        promise.catch(err => { console.log(err); setPlay(false) });
-      } else {
-        audio.current.pause();
-      }
-    } else {
+    if (!audio.current.src) {
       audio.current.src = src;
+      return;
+    }
+    if (modify) {
+      audio.current.pause();
+      return;
+    }
+    if (play) {
+      let promise = audio.current.play();
+      promise.catch(err => { console.log(err); setPlay(false) });
+    } else {
+      audio.current.pause();
     }
   }, [play, modify]);
   useEffect(e => {

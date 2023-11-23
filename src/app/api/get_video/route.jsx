@@ -60,9 +60,8 @@ export async function GET(req, res) {
       response.headers.set('content-type', 'audio/mp3')
       response.headers.set('connection', 'keep-alive');
       return response
-    } else {
-      throw "no datas"
     }
+    throw "no datas"
   } catch (e) {
     return NextResponse.json({ err: e }, { status: 500 })
   }
