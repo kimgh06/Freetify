@@ -33,9 +33,9 @@ export async function GET(req, res) {
       let asdf = item.title
         .replace(/\(/g, "")
         .replace(/\)/g, "")
+        .replace(/ft. /g, "feat. ")
         .replace(/-/g, "")
         .replace(/ /g, "")
-        .replace(/ft./g, "feat.")
         .toLowerCase()
       if (asdf.indexOf(title) !== -1 ||
         title.indexOf(asdf) !== -1 ||
@@ -45,10 +45,11 @@ export async function GET(req, res) {
         break;
       }
     }
-  } else {
-    //싱글 앨범일 경우에는?
-    list = (await youtubesearchapi.GetListByKeyword(`${title} ${artist}`)).items;
-    // console.log(list[0].id)
+  }
+  if (!url) {
+    //싱글 앨범일 경우거나 꿩 대신 닭
+    list = (await youtubesearchapi.GetListByKeyword(`${title} ${artist} topic`)).items;
+    console.log(list[0])
     url = list[0].id
   }
 
