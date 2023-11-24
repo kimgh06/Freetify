@@ -172,23 +172,14 @@ export default function Player() {
       console.log(e)
     }
   }
-  const InitSrc = async e => {
-    const originId = localStorage.getItem('now_playing_id');
+  const CheckExpiredBlobUrl = async url => {
+    await axios.get(url).then(e => {
+      console.log('exists')
+      audio.current.src = url;
 
-    const music_data = await getTrackinfos(originId);
-    if (!music_data) {
-      return;
-    }
-
-    setInfo(music_data);
-    setDurationT(music_data.duration_ms)
-
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: music_data.name,
-      artist: music_data.artists[0].name,
-      album: music_data.album.name,
-      artwork: [{ src: music_data.album.images[0].url }]
-    })
+    }).catch(e => {
+      console.log("expired")
+    });
   }
   useEffect(e => {
     if (!id) {
@@ -223,7 +214,7 @@ export default function Player() {
   }, [play, modify]);
   useEffect(e => {
     if (typeof window !== undefined) {
-      // InitSrc()
+      CheckExpiredBlobUrl(src)
       setInnerWidth(window.innerWidth);
       setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
       console.log(id, src)
@@ -355,7 +346,7 @@ export default function Player() {
         <div className='title'>{info?.name}</div>
       </S.Main_smaller>}
     </div>
-    <audio ref={audio} src={src} onTimeUpdate={e => {
+    <audio ref={audio} onTimeUpdate={e => {
       const { currentTime, duration } = audio.current;
       setCurrentT(currentTime * 1000);
       if (currentTime >= durationT / 1000 || currentTime >= duration) {
