@@ -21,8 +21,8 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
   const Axios_controler = new AbortController();
   const getMusicUrl = async (artist, title, album, length, id) => {
-    if (artist && title && album) {
-      await axios.get(`/api/get_video?album=${album}&artist=${artist}&title=${title.replace(/&/g, "%38").replace(/#/g, "%35")}&length=${length}`, {
+    if (artist && title && album && length) {
+      await axios.get(`/api/get_video?album=${album}&artist=${artist}&length=${length}&title=${title.replace(/&/g, "%38").replace(/#/g, "%35")}`, {
         responseType: 'blob',
         signal: Axios_controler.signal
       }).then(e => {
@@ -98,7 +98,6 @@ export default function Player() {
       setDurationT(music_data.duration_ms)
 
       audio.current.src = null;
-      setSrc(null);
       let cached_url = JSON.parse(localStorage.getItem('cached_url'));
       const url = cached_url[`${id}`];
       if (url) {
@@ -114,6 +113,7 @@ export default function Player() {
           setPlay(false)
         });
       }
+      setPlay(true);
 
       navigator.mediaSession.metadata = new MediaMetadata({
         title: music_data.name,
@@ -176,9 +176,10 @@ export default function Player() {
     await axios.get(url).then(e => {
       console.log('exists')
       audio.current.src = url;
-
+      setPlay(true);
     }).catch(e => {
       console.log("expired")
+      setSrc(null);
     });
   }
   useEffect(e => {
@@ -353,7 +354,8 @@ export default function Player() {
         setSrc(null)
         NextTrack();
       }
-    }} onLoadedData={e => setPlay(true)}
+    }}
+      // onLoadedData={e => setPlay(true)}
       onPause={e => !modify && setPlay(false)}
       onPlay={e => setPlay(true)} />
   </S.Player>;
