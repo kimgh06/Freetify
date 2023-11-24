@@ -97,6 +97,8 @@ export default function Player() {
       setInfo(music_data);
       setDurationT(music_data.duration_ms)
 
+      audio.current.src = null;
+      setSrc(null);
       let cached_url = JSON.parse(localStorage.getItem('cached_url'));
       const url = cached_url[`${id}`];
       if (url) {
@@ -170,14 +172,30 @@ export default function Player() {
       console.log(e)
     }
   }
+  const InitSrc = async e => {
+    const originId = localStorage.getItem('now_playing_id');
+
+    const music_data = await getTrackinfos(originId);
+    if (!music_data) {
+      return;
+    }
+
+    setInfo(music_data);
+    setDurationT(music_data.duration_ms)
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: music_data.name,
+      artist: music_data.artists[0].name,
+      album: music_data.album.name,
+      artwork: [{ src: music_data.album.images[0].url }]
+    })
+  }
   useEffect(e => {
     if (!id) {
       // setId(localStorage.getItem('now_playing_id'));
       return;
     }
     setPlay(false)
-    audio.current.src = null;
-    setSrc(null);
     localStorage.setItem('now_playing_id', id);
     getCurrentMusicURL();
     navigator.mediaSession.setActionHandler("nexttrack", e => {
@@ -205,6 +223,7 @@ export default function Player() {
   }, [play, modify]);
   useEffect(e => {
     if (typeof window !== undefined) {
+      // InitSrc()
       setInnerWidth(window.innerWidth);
       setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
       console.log(id, src)
