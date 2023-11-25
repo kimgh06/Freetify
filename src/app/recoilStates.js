@@ -3,7 +3,7 @@ import { recoilPersist } from "recoil-persist";
 const { persistAtom } = recoilPersist()
 export const NowPlayingId = atom({
   key: 'NowPlayingId',
-  default: ''
+  default: '',
 });
 export const AudioSrc = atom({
   key: 'AudioSrc',

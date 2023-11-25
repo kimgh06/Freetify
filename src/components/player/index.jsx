@@ -100,6 +100,7 @@ export default function Player() {
       audio.current.src = null;
       let cached_url = JSON.parse(localStorage.getItem('cached_url'));
       const url = cached_url[`${id}`];
+
       if (url) {
         audio.current.src = url
         setSrc(url)
@@ -149,7 +150,6 @@ export default function Player() {
         localStorage.setItem('recent_artists_list', [music_data.artists[0].id]);
       }
 
-
       let list = localStorage.getItem("TrackList")?.split(',');
       if (!list) {
         localStorage.setItem('now_index_in_tracks', 0);
@@ -173,18 +173,27 @@ export default function Player() {
     }
   }
   const CheckExpiredBlobUrl = async url => {
-    await axios.get(url).then(e => {
-      console.log('exists')
-      audio.current.src = url;
-      setPlay(true);
-    }).catch(e => {
-      console.log("expired")
-      setSrc(null);
-    });
+    console.log(id, url)
+    if (url) {
+      await axios.get(url).then(e => {
+        console.log('not expired')
+        audio.current.src = url;
+        let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+        const url = cached_url[`${id}`];
+        localStorage.setItem('cached_url', JSON.stringify(cached_url));
+        setPlay(true);
+        return true
+      }).catch(e => {
+        console.log("expired")
+        audio.current.src = null;
+        setSrc(null);
+        return false
+      });
+    }
   }
   useEffect(e => {
     if (!id) {
-      // setId(localStorage.getItem('now_playing_id'));
+      setId(localStorage.getItem('now_playing_id'));
       return;
     }
     setPlay(false)
@@ -215,13 +224,12 @@ export default function Player() {
   }, [play, modify]);
   useEffect(e => {
     if (typeof window !== undefined) {
-      CheckExpiredBlobUrl(src)
       setInnerWidth(window.innerWidth);
       setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
-      console.log(id, src)
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
+      CheckExpiredBlobUrl(src)
       localStorage.setItem("cached_url", JSON.stringify({}));
     }
   }, []);
