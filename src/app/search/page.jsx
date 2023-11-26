@@ -43,7 +43,6 @@ function InnerContent() {
     <S.Search>
       <form onSubmit={e => {
         e.preventDefault();
-        setAlbums(null);
         searchItems();
       }}>
         <input onChange={e => setQ(e.target.value)} value={q} />

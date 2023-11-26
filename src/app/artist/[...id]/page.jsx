@@ -28,6 +28,11 @@ function InnerContent({ id }) {
       .then(e => {
         console.log(e.data.tracks);
         setTopTracks(e.data.tracks);
+        let list = []
+        e.data.tracks.forEach(e => {
+          list.push(e.id)
+        })
+        localStorage.setItem('TrackList', `${list}`);
       }).catch(e => {
         console.log(e);
       });

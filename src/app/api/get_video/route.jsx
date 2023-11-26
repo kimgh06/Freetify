@@ -48,7 +48,7 @@ export async function GET(req, res) {
   }
   if (!url) {
     //싱글 앨범일 경우거나 못 찾았거나
-    list = (await youtubesearchapi.GetListByKeyword(`${title} ${artist}`)).items;
+    list = (await youtubesearchapi.GetListByKeyword(`${artist} ${title}`)).items;
     console.log(list[0])
     url = list[0].id
   }

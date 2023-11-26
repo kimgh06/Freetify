@@ -26,8 +26,11 @@ export default function Player() {
         responseType: 'blob',
         signal: Axios_controler.signal
       }).then(e => {
-        const url = URL.createObjectURL(e.data);
         let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+        if (cached_url[`${id}`] !== undefined) {
+          return;
+        }
+        const url = URL.createObjectURL(e.data);
         cached_url[`${id}`] = url;
         localStorage.setItem('cached_url', JSON.stringify(cached_url));
         console.log(title, "loaded");
@@ -131,6 +134,7 @@ export default function Player() {
         recentList.forEach(element => {
           if (element === id) exist = true;
         })
+        console.log(exist)
         if (!exist) {
           recentList.push(id);
           localStorage.setItem('recent_track_list', recentList.slice(-3));
@@ -142,7 +146,7 @@ export default function Player() {
         })
         if (!exist) {
           recentArtists.push(music_data.artists[0].id);
-          localStorage.setItem('recent_track_list', recentArtists.slice(-3));
+          localStorage.setItem('recent_artists_list', recentArtists.slice(-3));
         }
       } else {
         localStorage.setItem('recent_track_list', [id]);
@@ -180,13 +184,11 @@ export default function Player() {
         // let cached_url = JSON.parse(localStorage.getItem('cached_url'));
         // cached_url[`${id}`] = url;
         // localStorage.setItem('cached_url', JSON.stringify(cached_url));
-        return true
       }).catch(e => {
         console.log("expired", e.toString())
         audio.current.src = null;
         setSrc(null);
         localStorage.setItem("cached_url", JSON.stringify({}));
-        return false
       });
     }
   }
