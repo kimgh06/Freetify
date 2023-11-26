@@ -14,3 +14,8 @@ export const AccessToken = atom({
   key: 'RefreshToken',
   default: ''
 })
+export const PlayingCurrentTime = atom({
+  key: 'PlayingCurrentTime',
+  default: 0,
+  effects_UNSTABLE: [persistAtom]
+})

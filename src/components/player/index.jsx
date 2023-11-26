@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as S from './style';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import { AccessToken, AudioSrc, NowPlayingId } from '@/app/recoilStates';
+import { AccessToken, AudioSrc, NowPlayingId, PlayingCurrentTime } from '@/app/recoilStates';
 import Link from 'next/link';
 
 export default function Player() {
@@ -14,7 +14,7 @@ export default function Player() {
   const [modify, setModify] = useState(false);
   const [info, setInfo] = useState({});
   const [play, setPlay] = useState(false);
-  const [currentT, setCurrentT] = useState(0);
+  const [currentT, setCurrentT] = useRecoilState(PlayingCurrentTime);
   const [durationT, setDurationT] = useState(`0:00`);
   const [volume, setVolume] = useState(0.7);
   const [extensionMode, setExtenstionMode] = useState(false);
@@ -114,7 +114,6 @@ export default function Player() {
           setPlay(false)
         });
       }
-      setPlay(true);
 
       navigator.mediaSession.metadata = new MediaMetadata({
         title: music_data.name,
@@ -178,9 +177,10 @@ export default function Player() {
       await fetch(url).then(e => {
         console.log('not expired')
         audio.current.src = url;
+        audio.current.currentTime = currentT / 1000
         // let cached_url = JSON.parse(localStorage.getItem('cached_url'));
         // cached_url[`${id}`] = url;
-        localStorage.setItem('cached_url', JSON.stringify(cached_url));
+        // localStorage.setItem('cached_url', JSON.stringify(cached_url));
         return true
       }).catch(e => {
         console.log("expired", e.toString())
@@ -362,7 +362,7 @@ export default function Player() {
         NextTrack();
       }
     }}
-      // onLoadedData={e => setPlay(true)}
+      onLoadedData={e => setPlay(true)}
       onPause={e => !modify && setPlay(false)}
       onPlay={e => setPlay(true)} />
   </S.Player>;
