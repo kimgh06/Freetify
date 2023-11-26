@@ -12,10 +12,16 @@ export const AudioSrc = atom({
 })
 export const AccessToken = atom({
   key: 'RefreshToken',
-  default: ''
+  default: '',
+  effects_UNSTABLE: [persistAtom]
 })
 export const PlayingCurrentTime = atom({
   key: 'PlayingCurrentTime',
   default: 0,
+  effects_UNSTABLE: [persistAtom]
+})
+export const Volume = atom({
+  key: 'Volume',
+  default: 0.7,
   effects_UNSTABLE: [persistAtom]
 })

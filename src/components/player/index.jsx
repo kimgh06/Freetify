@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as S from './style';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import { AccessToken, AudioSrc, NowPlayingId, PlayingCurrentTime } from '@/app/recoilStates';
+import { AccessToken, AudioSrc, NowPlayingId, PlayingCurrentTime, Volume } from '@/app/recoilStates';
 import Link from 'next/link';
 
 export default function Player() {
@@ -11,12 +11,12 @@ export default function Player() {
   const [id, setId] = useRecoilState(NowPlayingId);
   const [src, setSrc] = useRecoilState(AudioSrc);
   const [access, setAccess] = useRecoilState(AccessToken);
+  const [currentT, setCurrentT] = useRecoilState(PlayingCurrentTime);
+  const [volume, setVolume] = useRecoilState(Volume);
   const [modify, setModify] = useState(false);
   const [info, setInfo] = useState({});
   const [play, setPlay] = useState(false);
-  const [currentT, setCurrentT] = useRecoilState(PlayingCurrentTime);
   const [durationT, setDurationT] = useState(`0:00`);
-  const [volume, setVolume] = useState(0.7);
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
   const Axios_controler = new AbortController();
