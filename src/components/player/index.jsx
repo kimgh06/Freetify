@@ -175,24 +175,24 @@ export default function Player() {
   const CheckExpiredBlobUrl = async url => {
     console.log(id, url)
     if (url) {
-      await axios.get(url).then(e => {
+      await fetch(url).then(e => {
         console.log('not expired')
         audio.current.src = url;
-        let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-        const url = cached_url[`${id}`];
+        // let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+        // cached_url[`${id}`] = url;
         localStorage.setItem('cached_url', JSON.stringify(cached_url));
-        setPlay(true);
         return true
       }).catch(e => {
-        console.log("expired")
+        console.log("expired", e.toString())
         audio.current.src = null;
         setSrc(null);
+        localStorage.setItem("cached_url", JSON.stringify({}));
         return false
       });
     }
   }
   useEffect(e => {
-    if (!id) {
+    if (!id && src) {
       setId(localStorage.getItem('now_playing_id'));
       return;
     }
@@ -229,8 +229,7 @@ export default function Player() {
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
-      CheckExpiredBlobUrl(src)
-      localStorage.setItem("cached_url", JSON.stringify({}));
+      CheckExpiredBlobUrl(src);
     }
   }, []);
   useEffect(e => {
