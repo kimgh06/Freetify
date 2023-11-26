@@ -172,12 +172,11 @@ export default function Player() {
     }
   }
   const CheckExpiredBlobUrl = async url => {
-    console.log(id, url)
     if (url) {
       await fetch(url).then(e => {
         console.log('not expired')
         audio.current.src = url;
-        audio.current.currentTime = currentT / 1000
+        audio.current.currentTime = currentT
         // let cached_url = JSON.parse(localStorage.getItem('cached_url'));
         // cached_url[`${id}`] = url;
         // localStorage.setItem('cached_url', JSON.stringify(cached_url));
@@ -339,10 +338,10 @@ export default function Player() {
           }
         }}
       >
-        <div className='bar' style={{ width: `${currentT / durationT * 100}%` }} />
+        <div className='bar' style={{ width: `${currentT * 1000 / durationT * 100}%` }} />
         <div className='bar_cursor' />
       </div>
-      {!(innerWidth >= 1200 && !extensionMode) && `${(currentT - currentT % 60000) / 60000}:${((currentT % 60000 - (currentT % 60000) % 1000) / 1000).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
+      {!(innerWidth >= 1200 && !extensionMode) && `${(currentT - currentT % 60) / 60}:${((currentT % 60 - (currentT % 60) % 1) / 1).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
       {!(innerWidth >= 1200 && !extensionMode) ? <div className='volume'>
         <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
         <span>{Math.round(volume * 100)}%</span>
@@ -356,7 +355,7 @@ export default function Player() {
     </div>
     <audio ref={audio} onTimeUpdate={e => {
       const { currentTime, duration } = audio.current;
-      setCurrentT(currentTime * 1000);
+      setCurrentT(currentTime);
       if (currentTime >= durationT / 1000 || currentTime >= duration) {
         setSrc(null)
         NextTrack();
