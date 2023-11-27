@@ -181,9 +181,7 @@ export default function Player() {
         console.log('not expired')
         audio.current.src = url;
         audio.current.currentTime = currentT
-        // let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-        // cached_url[`${id}`] = url;
-        // localStorage.setItem('cached_url', JSON.stringify(cached_url));
+        setPlay(false);
       }).catch(e => {
         console.log("expired", e.toString())
         audio.current.src = null;
@@ -225,13 +223,12 @@ export default function Player() {
   }, [play, modify]);
   useEffect(e => {
     if (typeof window !== undefined) {
+      CheckExpiredBlobUrl(src);
       setInnerWidth(window.innerWidth);
       setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
-      setPlay(false)
-      CheckExpiredBlobUrl(src);
     }
   }, []);
   useEffect(e => {
@@ -241,19 +238,20 @@ export default function Player() {
     <div className='audio' onMouseUp={e => {
       setModify(false);
     }} onMouseMove={e => {
-      if (modify) {
-        const one_vw = innerWidth / 100;
-        if (innerWidth < 1200) {
-          const percent = (e.clientX - (one_vw + 10)) / (innerWidth - 2 * (one_vw + 10));
-          audio.current.currentTime = Math.floor(percent * durationT) / 1000;
-        }
-        else if (innerWidth >= 1200) {
-          if (extensionMode) {
-            const start_point = (318 + (one_vw * 30 - 300) / 2) - (innerWidth - e.clientX);
-            const percent = start_point / 300;
-            audio.current.currentTime = Math.floor(percent * durationT) / 1000;
-          }
-        }
+      if (!modify) {
+        return;
+      }
+      const one_vw = innerWidth / 100;
+      if (innerWidth < 1200) {
+        const percent = (e.clientX - (one_vw + 10)) / (innerWidth - 2 * (one_vw + 10));
+        audio.current.currentTime = Math.floor(percent * durationT) / 1000;
+        return;
+      }
+      if (innerWidth >= 1200 && extensionMode) {
+        const start_point = (318 + (one_vw * 30 - 300) / 2) - (innerWidth - e.clientX);
+        const percent = start_point / 300;
+        audio.current.currentTime = Math.floor(percent * durationT) / 1000;
+        return;
       }
     }}>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }} onClick={e => setExtenstionMode(a => !a)}>

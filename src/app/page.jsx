@@ -79,7 +79,6 @@ function InnerComponent() {
     if (queries.size !== 0) {
       getTokens();
     } else {
-      console.log((localStorage.getItem('expire') - new Date().getTime()) / 60000); //시간 계산용
       if (access) {
         GettingInfos();
       }
