@@ -12,6 +12,7 @@ export const PlayAtom = styled.div`
   padding: 5px 20px;
   color: #ffffff;
   border-radius: 5px;
+  justify-content: space-between;
   img{
     cursor: pointer;
     object-fit: scale-down;
@@ -23,15 +24,13 @@ export const PlayAtom = styled.div`
   }
   .hea{
     display: flex;
-    width: 100%;
     justify-content: space-between;
+    width: calc(32vw - 85px);
     .title{
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 22vw;
-      min-width: 190px;
       &:hover{
         text-decoration-line: underline;
       }
