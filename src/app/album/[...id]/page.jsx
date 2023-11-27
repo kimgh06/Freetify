@@ -33,7 +33,7 @@ function InnerContent({ id }) {
           TrackList.push(items.id);
           sum += items.duration_ms
         });
-        setTotalDuration(`${Math.floor(sum / 60 / 1000)}분 ${((sum % 60000 - (sum % 60000) % 1000) / 1000).toString().padStart(2, '0')}초`)
+        setTotalDuration(`${Math.floor(sum / 60 / 1000)}m ${((sum % 60000 - (sum % 60000) % 1000) / 1000).toString().padStart(2, '0')}s`)
         localStorage.setItem('TrackList', `${TrackList}`);
         document.title = e.data.name;
       }).catch(e => {
@@ -53,9 +53,9 @@ function InnerContent({ id }) {
           <h1>{albumInfo?.name}</h1>
           <div className='information'>
             {albumInfo?.artists.map((i, n) => <Link key={n} href={`/artist/${i?.id}`}>{i.name}</Link>)}
-            <span>{albumInfo?.tracks.items.length}곡</span>&nbsp;&nbsp;
+            <span>{albumInfo?.tracks.items.length} {albumInfo?.tracks.items.length === 1 ? "track" : "tracks"}</span>&nbsp;&nbsp;
             <span>{totalDuration}</span>&nbsp;&nbsp;
-            <span>{albumInfo?.release_date.substr(0, 4)}년</span>
+            <span>Released on {albumInfo?.release_date.substr(0, 4)}</span>
           </div>
         </div>
       </div>

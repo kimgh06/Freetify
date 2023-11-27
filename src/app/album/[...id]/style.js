@@ -25,6 +25,7 @@ export const AlbumInfos = styled.div`
       .information{
         display: flex;
         font-weight: bold;
+        align-items: center;
         @media screen and (max-width: 1000px) {  
           justify-content: center;
         }

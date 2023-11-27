@@ -40,6 +40,7 @@ function InnerComponent() {
   }
   useEffect(e => {
     access && getInfos();
+    window.location.href = '/'
   }, [access]);
 
   return <S.Profile>
