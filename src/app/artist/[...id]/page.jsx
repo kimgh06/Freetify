@@ -85,8 +85,6 @@ function InnerContent({ id }) {
             return list.find(a => a === i?.id)
           }} playingtime={i?.duration_ms} />)}
       </>}
-      <S.End>
-        <h3>End</h3>
-      </S.End>
+      <S.End />
     </>}</>
 }
