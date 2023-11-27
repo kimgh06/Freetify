@@ -230,6 +230,7 @@ export default function Player() {
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
+      setPlay(false)
       CheckExpiredBlobUrl(src);
     }
   }, []);

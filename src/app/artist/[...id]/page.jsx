@@ -49,7 +49,7 @@ function InnerContent({ id }) {
       });
   }
   async function getArtistAlbums() {
-    await axios.get(`${url}/artists/${id}/albums?limit=3`, { headers: { Authorization: `Bearer ${access}` } })
+    await axios.get(`${url}/artists/${id}/albums?limit=8`, { headers: { Authorization: `Bearer ${access}` } })
       .then(e => {
         setTopAlbums(e.data.items);
       }).catch(e => {
