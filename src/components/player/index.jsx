@@ -41,8 +41,8 @@ export default function Player() {
     }
   }
   const recommendTracks = async e => {
-    const recentTrack = localStorage.getItem('recent_track_list');
-    const recentArtists = localStorage.getItem('recent_artists_list');
+    const recentTrack = localStorage.getItem('recent_track_list').split(',').slice(-2);
+    const recentArtists = localStorage.getItem('recent_artists_list').split(',').slice(-2);
     let tracklist = localStorage.getItem('TrackList').split(',');
     await axios.get(`https://api.spotify.com/v1/recommendations?seed_tracks=${recentTrack}&seed_artists=${recentArtists}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
       const tracks = e.data.tracks;
@@ -61,7 +61,8 @@ export default function Player() {
     })
   }
   const getTrackinfos = async id => {
-    return id && await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${access}` } }).then(async e => {
+    let token = access
+    return id && await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${token}` } }).then(async e => {
       return e.data;
     }).catch(e => {
       console.log(e);
@@ -134,10 +135,9 @@ export default function Player() {
         recentList.forEach(element => {
           if (element === id) exist = true;
         })
-        console.log(exist)
         if (!exist) {
           recentList.push(id);
-          localStorage.setItem('recent_track_list', recentList.slice(-3));
+          localStorage.setItem('recent_track_list', recentList);
         }
         //최근 아티스트
         exist = false
@@ -146,7 +146,7 @@ export default function Player() {
         })
         if (!exist) {
           recentArtists.push(music_data.artists[0].id);
-          localStorage.setItem('recent_artists_list', recentArtists.slice(-3));
+          localStorage.setItem('recent_artists_list', recentArtists);
         }
       } else {
         localStorage.setItem('recent_track_list', [id]);
