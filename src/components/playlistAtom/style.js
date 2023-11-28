@@ -25,7 +25,8 @@ export const PlayAtom = styled.div`
   .hea{
     display: flex;
     justify-content: space-between;
-    width: calc(32vw - 85px);
+    width: calc(32vw - 105px);
+    min-width: 220px;
     .title{
       cursor: pointer;
       display: flex;
