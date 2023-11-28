@@ -229,6 +229,11 @@ export default function Player() {
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
+      window.addEventListener('keydown', e => {
+        if (e.code === 'Space') {
+          setPlay(a => !a)
+        }
+      })
     }
   }, []);
   useEffect(e => {

@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const App = styled.div`
+export const App = styled.main`
   h1{
     border-bottom: 8px solid lightgray;
     width: 30vw;
