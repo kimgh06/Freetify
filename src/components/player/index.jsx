@@ -27,7 +27,7 @@ export default function Player() {
         signal: Axios_controler.signal
       }).then(e => {
         let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-        if (cached_url[`${id}`] !== undefined) {
+        if (cached_url[`${id}`]) {
           return;
         }
         const url = URL.createObjectURL(e.data);

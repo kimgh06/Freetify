@@ -8,10 +8,11 @@ export async function GET(req, res) {
   params.forEach((i, n) => {
     paramlist[i.split('=')[0]] = i.split('=')[1];
   })
-  let { album, title, artist, length } = paramlist;
+  let { album, title, artist, length, duration } = paramlist;
   album = album.replace(/%20/g, " ");
   title = title.replace(/%35/g, "#");
   title = decodeURIComponent(title);
+  artist = decodeURIComponent(artist)
   title = title.replace(/%20/g, " ")
     .replace(/%27/g, "'")
     .replace(/%38/g, "&")
@@ -20,7 +21,7 @@ export async function GET(req, res) {
     .replace(/-/g, "")
     .replace(/ /g, "")
     .toLowerCase()
-  console.log(title)
+  console.log(title, artist)
   artist = artist.replace(/%20/g, " ");
   //고안중 앨범 검색=> 트랙찾기
   let list = (await youtubesearchapi.GetListByKeyword(`${album} album`, true, 20)).items;
@@ -48,7 +49,7 @@ export async function GET(req, res) {
   }
   if (!url) {
     //싱글 앨범일 경우거나 못 찾았거나
-    list = (await youtubesearchapi.GetListByKeyword(`${artist} ${title}`)).items;
+    list = (await youtubesearchapi.GetListByKeyword(`${artist} ${title} lyrics`)).items;
     console.log(list[0])
     url = list[0].id
   }
