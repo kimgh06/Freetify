@@ -5,7 +5,7 @@ import axios from "axios";
 import * as S from './style';
 import { useEffect, useState } from "react";
 import { RecoilRoot, useRecoilState } from "recoil";
-import { AccessToken, AudioSrc, NowPlayingId } from "../recoilStates";
+import { AccessToken } from "../recoilStates";
 
 export default function Home() {
   return <RecoilRoot>
