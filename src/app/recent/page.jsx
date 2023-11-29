@@ -5,7 +5,7 @@ import axios from "axios";
 import * as S from './style';
 import { useEffect, useState } from "react";
 import { RecoilRoot, useRecoilState } from "recoil";
-import { AccessToken } from "../recoilStates";
+import { AccessToken, AudioSrc, NowPlayingId } from "../recoilStates";
 
 export default function Home() {
   return <RecoilRoot>
@@ -16,6 +16,7 @@ export default function Home() {
 function InnerComponent() {
   const [tracks, setTracks] = useState([]);
   const [access, setAccess] = useRecoilState(AccessToken);
+  const [src, _] = useRecoilState(AudioSrc);
   const getTrackinfos = async ids => {
     if (ids) {
       return await axios.get(`https://api.spotify.com/v1/tracks?ids=${ids}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
@@ -33,7 +34,6 @@ function InnerComponent() {
       ids = ids.join(',')
     }
     let tr = await getTrackinfos(ids);
-    console.log(tr)
 
     setTracks(tr);
     let TrackList = [];
@@ -48,7 +48,7 @@ function InnerComponent() {
     if (access) {
       GettingInfos();
     }
-  }, [access]);
+  }, [access, src]);
   return <S.App>
     <Navi />
     <h1>Recent Tracks</h1>
