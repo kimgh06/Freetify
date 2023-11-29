@@ -16,7 +16,6 @@ export default function Home() {
 function InnerComponent() {
   const [tracks, setTracks] = useState([]);
   const [access, setAccess] = useRecoilState(AccessToken);
-  const [src, _] = useRecoilState(AudioSrc);
   const getTrackinfos = async ids => {
     if (ids) {
       return await axios.get(`https://api.spotify.com/v1/tracks?ids=${ids}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
@@ -48,7 +47,7 @@ function InnerComponent() {
     if (access) {
       GettingInfos();
     }
-  }, [access, src]);
+  }, [access]);
   return <S.App>
     <Navi />
     <h1>Recent Tracks</h1>
