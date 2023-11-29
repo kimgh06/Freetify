@@ -52,6 +52,7 @@ export default function Navi() {
         <p><Link href={'/search'}>Search</Link></p>
         <p><Link href={'/'}>Recommendations</Link></p>
         <p><Link href={'/mytrack'}>My Tracks</Link></p>
+        <p><Link href={'/recent'}>Recent Tracks</Link></p>
       </div>}
     </S.Nav>
     {id && <Player />}

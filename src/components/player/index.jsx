@@ -131,23 +131,16 @@ export default function Player() {
         //최근 트랙
         recentList = recentList.split(',');
         recentArtists = recentArtists.split(',');
-        let exist = false
-        recentList.forEach(element => {
-          if (element === id) exist = true;
-        })
-        if (!exist) {
-          recentList.push(id);
-          localStorage.setItem('recent_track_list', recentList);
-        }
+        recentList = recentList.filter(element => element !== id && element)
+
+        recentList.push(id);
+        localStorage.setItem('recent_track_list', recentList);
+
         //최근 아티스트
-        exist = false
-        recentArtists.forEach(element => {
-          if (element === music_data.artists[0].id) exist = true;
-        })
-        if (!exist) {
-          recentArtists.push(music_data.artists[0].id);
-          localStorage.setItem('recent_artists_list', recentArtists);
-        }
+        recentArtists = recentArtists.filter(element => element !== music_data.artists[0].id && element)
+        recentArtists.push(music_data.artists[0].id);
+        localStorage.setItem('recent_artists_list', recentArtists);
+
       } else {
         localStorage.setItem('recent_track_list', [id]);
         localStorage.setItem('recent_artists_list', [music_data.artists[0].id]);
@@ -231,6 +224,7 @@ export default function Player() {
       })
       window.addEventListener('keydown', e => {
         if (e.code === 'Space') {
+          e.preventDefault()
           setPlay(a => !a)
         }
       })
@@ -363,6 +357,7 @@ export default function Player() {
       const { currentTime, duration } = audio.current;
       setCurrentT(currentTime);
       if (currentTime >= durationT / 1000 || currentTime >= duration) {
+        audio.current.src = null;
         setSrc(null)
         NextTrack();
       }
