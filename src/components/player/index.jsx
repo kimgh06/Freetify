@@ -26,7 +26,7 @@ export default function Player() {
         responseType: 'blob',
         signal: Axios_controler.signal
       }).then(e => {
-        let cached_url = JSON.parse(localStorage.getItem('cached_url'));
+        let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
         if (cached_url[`${id}`]) {
           return;
         }
@@ -91,83 +91,83 @@ export default function Player() {
     }
   }
   const getCurrentMusicURL = async e => {
-    try {
-      if (!id) {
-        return;
-      }
-      const music_data = await getTrackinfos(id);
-      if (!music_data) {
-        return;
-      }
-      setInfo(music_data);
-      setDurationT(music_data.duration_ms)
-
-      audio.current.src = null;
-      let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-      const url = cached_url[`${id}`];
-
-      if (url) {
-        audio.current.src = url
-        setSrc(url)
-        console.log(music_data?.name, 'exists')
-      } else {
-        await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name, music_data.album.total_tracks, id).then(() => {
-          let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-          let new_src = cached_url[`${id}`]
-          audio.current.src = new_src;
-          setSrc(new_src);
-          setPlay(false)
-        });
-      }
-
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: music_data.name,
-        artist: music_data.artists[0].name,
-        album: music_data.album.name,
-        artwork: [{ src: music_data.album.images[0].url }]
-      })
-      let recentList = JSON.stringify(localStorage.getItem('recent_track_list')).replace(/\\/g, '').replace(/"/g, '');
-      let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list')).replace(/\\/g, '').replace(/"/g, '')
-      if (recentList != 'null' && recentArtists != 'null') {
-        //최근 트랙
-        recentList = recentList.split(',');
-        recentArtists = recentArtists.split(',');
-        recentList = recentList.filter(element => element !== id && element)
-
-        recentList.push(id);
-        localStorage.setItem('recent_track_list', recentList);
-
-        //최근 아티스트
-        recentArtists = recentArtists.filter(element => element !== music_data.artists[0].id && element)
-        recentArtists.push(music_data.artists[0].id);
-        localStorage.setItem('recent_artists_list', recentArtists);
-
-      } else {
-        localStorage.setItem('recent_track_list', [id]);
-        localStorage.setItem('recent_artists_list', [music_data.artists[0].id]);
-      }
-
-      let list = localStorage.getItem("TrackList")?.split(',');
-      if (!list) {
-        localStorage.setItem('now_index_in_tracks', 0);
-        return;
-      }
-      const index = list.findIndex(e => e === id);
-      if (index >= 0 && index < list.length) {
-        localStorage.setItem('now_index_in_tracks', index);
-        const next_data = await getTrackinfos(list[index + 1]);
-        if (!next_data) {
-          return;
-        }
-        let cached_url = JSON.parse(localStorage.getItem('cached_url'));
-        const url = cached_url[list[index + 1]];
-        if (!url) {
-          getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album?.name, next_data.album.total_tracks, list[index + 1]);
-        }
-      }
-    } catch (e) {
-      console.log(e)
+    // try {
+    if (!id) {
+      return;
     }
+    const music_data = await getTrackinfos(id);
+    if (!music_data) {
+      return;
+    }
+    setInfo(music_data);
+    setDurationT(music_data.duration_ms)
+
+    audio.current.src = null;
+    let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
+    const url = cached_url[`${id}`];
+
+    if (url) {
+      audio.current.src = url
+      setSrc(url)
+      console.log(music_data?.name, 'exists')
+    } else {
+      await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name, music_data.album.total_tracks, id).then(() => {
+        let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
+        let new_src = cached_url[`${id}`]
+        audio.current.src = new_src;
+        setSrc(new_src);
+        setPlay(false)
+      });
+    }
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: music_data.name,
+      artist: music_data.artists[0].name,
+      album: music_data.album.name,
+      artwork: [{ src: music_data.album.images[0].url }]
+    })
+    let recentList = JSON.stringify(localStorage.getItem('recent_track_list')).replace(/\\/g, '').replace(/"/g, '');
+    let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list')).replace(/\\/g, '').replace(/"/g, '')
+    if (recentList != 'null' && recentArtists != 'null') {
+      //최근 트랙
+      recentList = recentList.split(',');
+      recentArtists = recentArtists.split(',');
+      recentList = recentList.filter(element => element !== id && element)
+
+      recentList.push(id);
+      localStorage.setItem('recent_track_list', recentList);
+
+      //최근 아티스트
+      recentArtists = recentArtists.filter(element => element !== music_data.artists[0].id && element)
+      recentArtists.push(music_data.artists[0].id);
+      localStorage.setItem('recent_artists_list', recentArtists);
+
+    } else {
+      localStorage.setItem('recent_track_list', [id]);
+      localStorage.setItem('recent_artists_list', [music_data.artists[0].id]);
+    }
+
+    let list = localStorage.getItem("TrackList")?.split(',');
+    if (!list) {
+      localStorage.setItem('now_index_in_tracks', 0);
+      return;
+    }
+    const index = list.findIndex(e => e === id);
+    if (index >= 0 && index < list.length) {
+      localStorage.setItem('now_index_in_tracks', index);
+      const next_data = await getTrackinfos(list[index + 1]);
+      if (!next_data) {
+        return;
+      }
+      let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
+      const url = cached_url[list[index + 1]];
+      if (!url) {
+        getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album?.name, next_data.album.total_tracks, list[index + 1]);
+      }
+    }
+    // } catch (e) {
+    //   console.log(e)
+    // }
   }
   const CheckExpiredBlobUrl = async url => {
     if (url) {
