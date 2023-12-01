@@ -109,7 +109,6 @@ export default function Player() {
       if (url) {
         audio.current.src = url
         setSrc(url)
-        console.log(music_data?.name, 'exists')
       } else {
         await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name, music_data.album.total_tracks, id).then(() => {
           let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
@@ -255,6 +254,7 @@ export default function Player() {
       }
     }} onTouchEnd={e => setModify(false)}
       onTouchMove={e => {
+        setModify(true)
         const one_vw = innerWidth / 100;
         if (innerWidth < 1200) {
           const percent = (e.touches[0].clientX - (one_vw + 10)) / (innerWidth - 2 * (one_vw + 10));
