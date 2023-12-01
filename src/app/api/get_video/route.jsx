@@ -23,7 +23,7 @@ export async function GET(req, res) {
     .toLowerCase()
   console.log(title, artist)
   artist = artist.replace(/%20/g, " ");
-  //고안중 앨범 검색=> 트랙찾기
+  //앨범 검색=> 트랙찾기
   let list = (await youtubesearchapi.GetListByKeyword(`${album} album`, true, 20)).items;
   list = list.filter(item => item.type === "playlist" && item.length >= length && item)
   let url;
