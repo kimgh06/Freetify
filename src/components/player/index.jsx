@@ -65,6 +65,7 @@ export default function Player() {
     return id && await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${token}` } }).then(async e => {
       return e.data;
     }).catch(e => {
+      setAccess(localStorage.getItem('access'))
       console.log(e);
     });
   }

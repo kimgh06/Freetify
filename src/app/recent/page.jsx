@@ -33,7 +33,8 @@ function InnerComponent() {
       ids = ids.join(',')
     }
     let tr = await getTrackinfos(ids);
-
+    if (!tr)
+      return;
     setTracks(tr);
     let TrackList = [];
     tr.forEach(items => {
