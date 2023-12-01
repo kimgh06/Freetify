@@ -253,7 +253,22 @@ export default function Player() {
         audio.current.currentTime = Math.floor(percent * durationT) / 1000;
         return;
       }
-    }}>
+    }} onTouchEnd={e => setModify(false)}
+      onTouchMove={e => {
+        const one_vw = innerWidth / 100;
+        if (innerWidth < 1200) {
+          const percent = (e.touches[0].clientX - (one_vw + 10)) / (innerWidth - 2 * (one_vw + 10));
+          audio.current.currentTime = Math.floor(percent * durationT) / 1000;
+          return;
+        }
+        if (innerWidth >= 1200 && extensionMode) {
+          const start_point = (318 + (one_vw * 30 - 300) / 2) - (innerWidth - e.clientX);
+          const percent = start_point / 300;
+          audio.current.currentTime = Math.floor(percent * durationT) / 1000;
+          return;
+        }
+      }}
+    >
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }} onClick={e => setExtenstionMode(a => !a)}>
         <div className='___' />
         <div className='___' />

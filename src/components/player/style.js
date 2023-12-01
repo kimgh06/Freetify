@@ -113,6 +113,7 @@ export const Player = styled.div`
       }
     }
     .bar_div{
+      z-index: 10;
       background-color: lightgray;
       border-radius: 30px;
       height: 4.8px;
