@@ -47,12 +47,12 @@ export default function Navi() {
         <div className='bar' />
       </div>
       {activating && <div className='nav'>
-        {/* <p><Link href={'/login'}>Spotify 로그인</Link></p> */}
         {/* <p><Link href={'/myprofile'}>프로필</Link></p> */}
         <p><Link href={'/search'}>Search</Link></p>
         <p><Link href={'/'}>Recommendations</Link></p>
         <p><Link href={'/mytrack'}>My Tracks</Link></p>
         <p><Link href={'/recent'}>Recent Tracks</Link></p>
+        <p><Link href={'/login'}>Login / Sign up</Link></p>
       </div>}
     </S.Nav>
     {id && <Player />}

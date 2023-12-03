@@ -8,8 +8,10 @@ const Connection = mysql2.createConnection({
   database: process.env.NEXT_PUBLIC_SQL_DATABASE
 })
 
-export const useQuery = async query => {
-  Connection.query(query, (err, res, fields) => {
-    console.log(res);
+export const useQuery = query => {
+  return new Promise((resolve, reject) => {
+    const result = Connection.query(query, (err, res, fields) => {
+      resolve({ err, res, fields })
+    })
   })
 }

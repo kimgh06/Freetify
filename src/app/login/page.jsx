@@ -1,24 +1,41 @@
 "use client";
-import { useEffect } from "react";
+import axios from 'axios';
+import * as S from './style';
+import { useState } from "react";
 
 export default function App() {
-  const generateRandomString = (num) => {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    let result = '';
-    const charactersLength = characters.length;
-    for (let i = 0; i < num; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-
-    return result;
-  }
-  useEffect(e => {
-    const SpotifyClientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENTID;
-    const redirectUrl = process.env.NEXT_PUBLIC_BACKEND_REDIRECT_URL;
-    const state = generateRandomString(16);
-    const scope = 'user-read-private user-read-email user-top-read user-follow-read streaming app-remote-control user-read-playback-state';
-    window.location.href = '/'
-    // window.location.href = `https://accounts.spotify.com/authorize?response_type=code&client_id=${SpotifyClientId}&scope=${scope}&redirect_uri=${redirectUrl}&state=${state}`;
-  }, []);
-  return <></>;
+  const [mode, setMode] = useState('login');
+  const [nickname, setNickname] = useState('');
+  const [pw, setPw] = useState('');
+  const [repw, setRepw] = useState('');
+  return <>
+    <S.Back>
+      <S.Form onSubmit={async e => {
+        e.preventDefault()
+        switch (mode) {
+          case 'login':
+            const { data } = await axios.post('/api/login', { nickname, pw })
+            console.log(data)
+            break;
+          case 'signup':
+            break;
+          case 'missing':
+            break;
+        }
+      }}>
+        <S.Navigators>
+          <div onClick={e => setMode('login')} className={mode === 'login' ? 'active' : ''}>Login</div>
+          <div onClick={e => setMode('signup')} className={mode === 'signup' ? 'active' : ''}>Sign up</div>
+          <div onClick={e => setMode('missing')} className={mode === 'missing' ? 'active' : ''}>Missing pw</div>
+        </S.Navigators>
+        <h1>Freetify</h1>
+        <input onChange={e => setNickname(e.target.value)} placeholder='NiCKNAME' />
+        <input onChange={e => setPw(e.target.value)} placeholder={`${mode === 'missing' ? 'NEW ' : ''}PASSWORD`} />
+        {mode !== 'login' && <input placeholder='CHECK PASSWORD'
+          onChange={e => setRepw(e.target.value)}
+        />}
+        <button>SUBMIT</button>
+      </S.Form>
+    </S.Back>
+  </>;
 }
