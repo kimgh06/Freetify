@@ -8,7 +8,7 @@ export async function GET(req, res) {
   params.forEach((i, n) => {
     paramlist[i.split('=')[0]] = i.split('=')[1];
   })
-  let { album, title, artist, length, duration } = paramlist;
+  let { album, title, artist, length, songId } = paramlist;
   album = album.replace(/%20/g, " ");
   title = title.replace(/%35/g, "#");
   title = decodeURIComponent(title);

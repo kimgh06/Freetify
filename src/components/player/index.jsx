@@ -22,7 +22,7 @@ export default function Player() {
   const Axios_controler = new AbortController();
   const getMusicUrl = async (artist, title, album, length, id) => {
     if (artist && title && album && length) {
-      await axios.get(`/api/get_video?album=${album}&artist=${artist}&length=${length}&title=${title.replace(/&/g, "%38").replace(/#/g, "%35")}`, {
+      await axios.get(`/api/get_video?songId=${id}&album=${album}&artist=${artist}&length=${length}&title=${title.replace(/&/g, "%38").replace(/#/g, "%35")}`, {
         responseType: 'blob',
         signal: Axios_controler.signal
       }).then(e => {
@@ -44,30 +44,34 @@ export default function Player() {
     const recentTrack = localStorage.getItem('recent_track_list').split(',').slice(-2);
     const recentArtists = localStorage.getItem('recent_artists_list').split(',').slice(-2);
     let tracklist = localStorage.getItem('TrackList').split(',');
-    await axios.get(`https://api.spotify.com/v1/recommendations?seed_tracks=${recentTrack}&seed_artists=${recentArtists}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
-      const tracks = e.data.tracks;
-      tracks.forEach(track => {
-        if (tracklist.indexOf(track.id) == -1) {
-          tracklist.push(track.id)
-        }
+    await axios.get(`https://api.spotify.com/v1/recommendations?seed_tracks=${recentTrack}&seed_artists=${recentArtists}`,
+      { headers: { Authorization: `Bearer ${access}` } })
+      .then(e => {
+        const tracks = e.data.tracks;
+        tracks.forEach(track => {
+          if (tracklist.indexOf(track.id) == -1) {
+            tracklist.push(track.id)
+          }
+        })
+        let list = [];
+        tracks.forEach(track => { list.push(track.id) });
+        localStorage.setItem("recommendation", list);
+        localStorage.setItem("TrackList", tracklist);
+        NextTrack()
+      }).catch(e => {
+        console.log("err: ", e);
       })
-      let list = [];
-      tracks.forEach(track => { list.push(track.id) });
-      localStorage.setItem("recommendation", list);
-      localStorage.setItem("TrackList", tracklist);
-      NextTrack()
-    }).catch(e => {
-      console.log("err: ", e);
-    })
   }
   const getTrackinfos = async id => {
     let token = access
-    return id && await axios.get(`https://api.spotify.com/v1/tracks/${id}`, { headers: { Authorization: `Bearer ${token}` } }).then(async e => {
-      return e.data;
-    }).catch(e => {
-      setAccess(localStorage.getItem('access'))
-      console.log(e);
-    });
+    return id && await axios.get(`https://api.spotify.com/v1/tracks/${id}`,
+      { headers: { Authorization: `Bearer ${token}` } })
+      .then(async e => {
+        return e.data;
+      }).catch(e => {
+        setAccess(localStorage.getItem('access'))
+        console.log(e);
+      });
   }
   const NextTrack = e => {
     const list = localStorage.getItem("TrackList").split(',');
@@ -125,8 +129,10 @@ export default function Player() {
         album: music_data.album.name,
         artwork: [{ src: music_data.album.images[0].url }]
       })
-      let recentList = JSON.stringify(localStorage.getItem('recent_track_list')).replace(/\\/g, '').replace(/"/g, '');
-      let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list')).replace(/\\/g, '').replace(/"/g, '')
+      let recentList = JSON.stringify(localStorage.getItem('recent_track_list'))
+        .replace(/\\/g, '').replace(/"/g, '');
+      let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list'))
+        .replace(/\\/g, '').replace(/"/g, '')
       if (recentList != 'null' && recentArtists != 'null') {
         //최근 트랙
         recentList = recentList.split(',');
@@ -233,7 +239,10 @@ export default function Player() {
   useEffect(e => {
     audio.current.volume = volume;
   }, [id, volume]);
-  return <S.Player style={{ width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' : innerWidth < 1200 ? '98vw' : '30vw'}` }}>
+  return <S.Player style={{
+    width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
+      innerWidth < 1200 ? '98vw' : '30vw'}`
+  }}>
     <div className='audio' onMouseUp={e => {
       setModify(false);
     }} onMouseMove={e => {
@@ -269,7 +278,8 @@ export default function Player() {
         }
       }}
     >
-      {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }} onClick={e => setExtenstionMode(a => !a)}>
+      {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }}
+        onClick={e => setExtenstionMode(a => !a)}>
         <div className='___' />
         <div className='___' />
         <div className='___' />
@@ -282,20 +292,24 @@ export default function Player() {
               <Link href={`/album/${info?.album?.id} `}>
                 <h2>{info?.name}</h2>
               </Link>
-              <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>{info?.artists && info?.artists[0]?.name}</Link>
+              <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>
+                {info?.artists && info?.artists[0]?.name}
+              </Link>
             </div>
             <div className='playbutton'>
               <button className='left' onClick={e => {
                 PreviousTrack();
               }}>{'<'}</button>
-              <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+              <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
+                onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
               <button className='right' onClick={e => {
                 NextTrack();
               }}>{'>'}</button>
             </div>
           </div>
         </> : <S.Main_smaller>
-          <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+          <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
+            onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           <button className='left' onClick={e => {
             PreviousTrack();
           }}>{'<'}</button>
@@ -313,9 +327,12 @@ export default function Player() {
               <img src={info?.album?.images[2]?.url} alt='img' />
               <div className='between'>
                 <div className='title' href={`/album/${info?.album?.id} `}>{info?.name}</div><br />
-                <div href={`/artist/${info?.artists && info?.artists[0]?.id} `}>{info?.artists && info?.artists[0]?.name}</div>
+                <div href={`/artist/${info?.artists && info?.artists[0]?.id} `}>
+                  {info?.artists && info?.artists[0]?.name}
+                </div>
               </div>
-              <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+              <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
+                onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
             </div>
           </> : <S.ExtensionMode_mobile>
             <div className='extenstion' onClick={e => setExtenstionMode(false)}>
@@ -330,7 +347,9 @@ export default function Player() {
                   <Link href={`/album/${info?.album?.id} `}>
                     <h2>{info?.name}</h2>
                   </Link>
-                  <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>{info?.artists && info?.artists[0]?.name}</Link>
+                  <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>
+                    {info?.artists && info?.artists[0]?.name}
+                  </Link>
                 </div>
                 <div className='playbutton'>
                   <button className='left' onClick={e => {
@@ -357,7 +376,8 @@ export default function Player() {
         <div className='bar' style={{ width: `${currentT * 1000 / durationT * 100}%` }} />
         <div className='bar_cursor' />
       </div>
-      {!(innerWidth >= 1200 && !extensionMode) && `${(currentT - currentT % 60) / 60}:${((currentT % 60 - (currentT % 60) % 1) / 1).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
+      {!(innerWidth >= 1200 && !extensionMode) &&
+        `${(currentT - currentT % 60) / 60}:${((currentT % 60 - (currentT % 60) % 1) / 1).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
       {!(innerWidth >= 1200 && !extensionMode) ? <div className='volume'>
         <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
         <span>{Math.round(volume * 100)}%</span>
