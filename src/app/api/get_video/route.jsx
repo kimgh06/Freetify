@@ -1,21 +1,6 @@
 import ytdl from "ytdl-core";
 import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
-import mysql2 from 'mysql2';
-
-const Connection = mysql2.createConnection({
-  host: process.env.NEXT_PUBLIC_SQL_HOST,
-  port: '3306',
-  user: process.env.NEXT_PUBLIC_SQL_USR,
-  password: process.env.NEXT_PUBLIC_SQL_PWD,
-  database: process.env.NEXT_PUBLIC_SQL_DATABASE
-})
-
-const useQuery = async query => {
-  Connection.query(query, (err, res, fields) => {
-    console.log(res);
-  })
-}
 
 export async function GET(req, res) {
   const params = req.url.split('?')[1].split('&');
@@ -68,7 +53,6 @@ export async function GET(req, res) {
     console.log(list[0])
     url = list[0].id
   }
-  // useQuery(`select * from user_info where nickname = 'kimgh06'`);
 
   try {
     if (url) {
