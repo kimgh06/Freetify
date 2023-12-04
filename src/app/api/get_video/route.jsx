@@ -1,9 +1,13 @@
 import ytdl from "ytdl-core";
 import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
+import jwt from "jsonwebtoken";
 
 export async function GET(req, res) {
-  console.log(req.headers.get('Authorization'))
+  // const Auth = jwt.verify(req.headers.get('Authorization'), process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET);
+  // if (Auth['exp'] < new Date().getTime()) {
+  //   return NextResponse.json({ msg: 'Token is expired.' }, { status: 403 })
+  // }
   const params = req.url.split('?')[1].split('&');
   let paramlist = {};
   params.forEach((i, n) => {
