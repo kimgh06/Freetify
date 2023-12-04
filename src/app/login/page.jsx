@@ -53,6 +53,7 @@ export default function App() {
                 const data = e.data;
                 console.log(data)
                 localStorage.setItem('user_access', data['AccessToken'])
+                localStorage.setItem('user_refresh', data['RefreshToken'])
                 localStorage.setItem('user_exp', data['exp'])
                 localStorage.setItem('user_nickname', data['nickname'])
                 window.location.href = '/';
