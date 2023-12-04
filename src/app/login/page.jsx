@@ -75,8 +75,11 @@ export default function App() {
               alert('Passwords are not correspond.');
               return;
             }
-            const { status } = await (await axios.post('/api/signup', { email, pw, nickname })).data;
-            if (status === 200) {
+            const response = await axios.post('/api/signup', { email, pw, nickname }).catch(e => {
+              alert(e.response.data.msg)
+              return e
+            })
+            if (response?.status === 200) {
               setMode('login')
             }
             break;

@@ -16,7 +16,7 @@ export async function POST(req, response) {
   const AccessToken = jwt.sign({
     user_id: res[0]['user_id'],
     pw: pw,
-    exp: (Math.floor(Date.now() / 1000) + (60 * 30)) * 1000
+    exp: (Math.floor(Date.now() / 1000) + (60 * 30)) * 1000 //30분
   }, process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET)
   return NextResponse.json({ AccessToken, exp, nickname: res[0]['nickname'], status: 200 })
 } 
