@@ -29,22 +29,21 @@ export default function App() {
               alert("Your answer is not corrected")
               return;
             }
-            alert("Corrected!")
-            setVerified(true)
+            alert("Corrected!");
+            setVerified(true);
             return;
           }
-          if (verified) {
-            return;
-          }
-        }
-        if (!verified) {
-          alert('Please verify your Email');
-          return;
         }
         switch (mode) {
           case 'login':
-            const { data } = await axios.post('/api/login', { nickname: email, pw })
-            console.log(data)
+            if (!email || !pw) {
+              alert('Enter your information');
+              return;
+            }
+            const { data } = await axios.post('/api/login', { email, pw });
+            if (data) {
+              console.log(data)
+            }
             break;
           case 'signup':
             break;

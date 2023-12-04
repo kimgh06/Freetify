@@ -1,9 +1,19 @@
 import { useQuery } from "@/app/useQuery";
 import { NextResponse } from "next/server";
+import jwt from 'jsonwebtoken';
 
 export async function POST(req, response) {
-  const { nickname, pw } = await req.json();
-  const { res } = await useQuery(`select * from user_info where nickname = '${nickname}' and password = '${pw}'`)
-  console.log(res[0])
-  return NextResponse.json({ result: res[0] }, { status: 200 })
-}
+  const { email, pw } = await req.json();
+  const { err, res, fields } = await useQuery(`select * from user_info where email = '${email}' and password = '${pw}'`)
+
+  if (err) {
+    return NextResponse.json({ status: 500 });
+  }
+  const exp = (Math.floor(Date.now() / 1000) + (60 * 30)) * 1000;
+  const AccessToken = jwt.sign({
+    user_id: res[0]['user_id'],
+    pw: pw,
+    exp: (Math.floor(Date.now() / 1000) + (60 * 30)) * 1000
+  }, process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET)
+  return NextResponse.json({ AccessToken, exp, nickname: res[0]['nickname'] }, { status: 200 })
+} 
