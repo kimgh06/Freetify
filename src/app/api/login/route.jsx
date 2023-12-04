@@ -41,5 +41,5 @@ export async function PATCH(req, res) {
     pw: Auth['pw'],
     exp: (Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 3)) * 1000, //3일
   }, process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET)
-  return NextResponse.json({ AccessToken, RefreshToken, exp: (Math.floor(Date.now() / 1000) + (60 * 60 * 24 * 3)) * 1000 })
+  return NextResponse.json({ AccessToken, RefreshToken, exp: (Math.floor(Date.now() / 1000) + (60 * 30)) * 1000 })
 }

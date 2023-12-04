@@ -27,7 +27,10 @@ export default function Navi() {
   const user_refresh = async e => {
     await axios.patch('/api/login', {}, { headers: { 'Authorization': localStorage.getItem('user_refresh') } })
       .then(e => {
-        console.log(e.data);
+        const data = e.data;
+        localStorage.setItem('user_access', data['AccessToken'])
+        localStorage.setItem('user_refresh', data['RefreshToken'])
+        localStorage.setItem('user_exp', data['exp'])
       }).catch(e => {
         console.log(e)
       })
@@ -45,7 +48,7 @@ export default function Navi() {
       if (new Date().getTime() >= localStorage.getItem('expire')) {
         refresh_token();
       }
-      if (new Date().getTime() >= localStorage.getItem('user_exp') || true) {
+      if (new Date().getTime() >= localStorage.getItem('user_exp')) {
         user_refresh();
       }
     }, 20 * 1000);
