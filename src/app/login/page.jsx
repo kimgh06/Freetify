@@ -1,15 +1,19 @@
 "use client";
 import axios from 'axios';
 import * as S from './style';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function App() {
   const [mode, setMode] = useState('login');
   const [verified, setVerified] = useState(false);
   const [verifyCode, setVerifyCode] = useState('');
+  const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [repw, setRepw] = useState('');
+  useEffect(e => {
+    setVerified(false);
+  }, [email]);
   return <>
     <S.Back>
       <S.Form onSubmit={async e => {
@@ -63,6 +67,18 @@ export default function App() {
             }
             break;
           case 'signup':
+            if (!email || !pw || !repw || !nickname) {
+              alert('Enter your information');
+              return;
+            }
+            if (pw !== repw) {
+              alert('Passwords are not correspond.');
+              return;
+            }
+            const { status } = await (await axios.post('/api/signup', { email, pw, nickname })).data;
+            if (status === 200) {
+              setMode('login')
+            }
             break;
           case 'missing':
             break;
@@ -74,15 +90,18 @@ export default function App() {
           <div onClick={e => setMode('missing')} className={mode === 'missing' ? 'active' : ''}>Missing pw</div>
         </S.Navigators>
         <h1>Freetify</h1>
+        {mode === 'signup' && <input onChange={e => setNickname(e.target.value)} value={nickname} placeholder='NICKNAME' />}
         <input onChange={e => setEmail(e.target.value)} value={email} placeholder='EMAIL' />
         {mode !== 'login' && <>
-          {typeof verified === 'string' && <input onChange={e => setVerifyCode(e.target.value)} value={verifyCode} />}
+          {typeof verified === 'string' && <input onChange={e => setVerifyCode(e.target.value)} placeholder='CHECK YOUR EMAILBOX' value={verifyCode} />}
           {verified !== true ? <button className='verifying'>VERIFYING EMAIL</button> : <div className='verified'>VERIFIED</div>}
         </>}
-        <input onChange={e => setPw(e.target.value)} placeholder={`${mode === 'missing' ? 'NEW ' : ''}PASSWORD`} />
+        <input onChange={e => setPw(e.target.value)} value={pw}
+          type='password'
+          placeholder={`${mode === 'missing' ? 'NEW ' : ''}PASSWORD`} />
         {mode !== 'login' && <input placeholder='CHECK PASSWORD'
           onChange={e => setRepw(e.target.value)}
-          value={repw}
+          value={repw} type='password'
         />}
         <button>SUBMIT</button>
       </S.Form>
