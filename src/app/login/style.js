@@ -11,6 +11,11 @@ export const Form = styled.form`
   h1{
     margin: 30px;
   }
+  button{
+    width: 100px;
+    height: 35px;
+    cursor: pointer;
+  }
   input{
     width: 250px;
     height: 35px;
@@ -18,10 +23,11 @@ export const Form = styled.form`
     color: black;
     margin-bottom: 30px;
   }
-  button{
-    width: 100px;
-    height: 35px;
-    cursor: pointer;
+  .verifying{
+    width: 250px;
+    height: 20px;
+    margin-top: -30px;
+    margin-bottom: 20px;
   }
 `
 export const Back = styled.div`
