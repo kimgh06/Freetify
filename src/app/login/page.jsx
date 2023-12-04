@@ -75,15 +75,30 @@ export default function App() {
               alert('Passwords are not correspond.');
               return;
             }
-            const response = await axios.post('/api/signup', { email, pw, nickname }).catch(e => {
-              alert(e.response.data.msg)
-              return e
-            })
-            if (response?.status === 200) {
-              setMode('login')
-            }
+            await axios.post('/api/signup', { email, pw, nickname })
+              .then(e => {
+                setMode('login')
+              })
+              .catch(e => {
+                alert(e.response.data.msg)
+                return e
+              })
             break;
           case 'missing':
+            if (!email || !pw || !repw || !nickname) {
+              alert('Enter your information');
+              return;
+            }
+            if (pw !== repw) {
+              alert('Passwords are not correspond.');
+              return;
+            }
+            await axios.patch('/api/missingpw', { email, pw })
+              .then(e => {
+                console.log(e.data);
+              }).catch(e => {
+                console.log(e)
+              })
             break;
         }
       }}>
