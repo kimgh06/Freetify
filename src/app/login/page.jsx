@@ -55,9 +55,9 @@ export default function App() {
                 localStorage.setItem('user_access', data['AccessToken'])
                 localStorage.setItem('user_exp', data['exp'])
                 localStorage.setItem('user_nickname', data['nickname'])
-                // window.location.href = '/';
+                window.location.href = '/';
               }).catch(e => {
-                console.log(e.response.data.msg);
+                alert(e.response.data.msg);
                 return;
               })
             break;
@@ -105,7 +105,7 @@ export default function App() {
         </S.Navigators>
         <h1>Freetify</h1>
         {mode === 'signup' && <input onChange={e => setNickname(e.target.value)} value={nickname} placeholder='NICKNAME' />}
-        <input onChange={e => setEmail(e.target.value)} value={email} placeholder='EMAIL' />
+        <input onChange={e => setEmail(e.target.value)} value={email} placeholder='EMAIL' type='email' />
         {mode !== 'login' && <>
           {typeof verified === 'string' && <input onChange={e => setVerifyCode(e.target.value)} placeholder='CHECK YOUR EMAILBOX' value={verifyCode} />}
           {verified !== true ? <button className='verifying'>VERIFYING EMAIL</button> : <div className='verified'>VERIFIED</div>}

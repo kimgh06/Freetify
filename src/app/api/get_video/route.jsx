@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
 
 export async function GET(req, res) {
+  console.log(req.headers.get('Authorization'))
   const params = req.url.split('?')[1].split('&');
   let paramlist = {};
   params.forEach((i, n) => {

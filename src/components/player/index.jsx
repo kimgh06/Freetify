@@ -24,7 +24,10 @@ export default function Player() {
     if (artist && title && album && length) {
       await axios.get(`/api/get_video?songId=${id}&album=${album}&artist=${artist}&length=${length}&title=${title.replace(/&/g, "%38").replace(/#/g, "%35")}`, {
         responseType: 'blob',
-        signal: Axios_controler.signal
+        signal: Axios_controler.signal,
+        headers: {
+          'Authorization': localStorage.getItem('user_access')
+        }
       }).then(e => {
         let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
         if (cached_url[`${id}`]) {
