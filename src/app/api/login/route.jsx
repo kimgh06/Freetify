@@ -7,10 +7,10 @@ export async function POST(req, response) {
   const { err, res } = await useQuery(`select * from user_info where email = '${email}' and password = '${pw}'`)
 
   if (err !== null) {
-    return NextResponse.json({ status: 500 });
+    return NextResponse.json({ msg: 'serverError' }, { status: 500 });
   }
   if (res.length <= 0) {
-    return NextResponse.json({ status: 404 })
+    return NextResponse.json({ msg: 'Failed to find your account. Check your information.' }, { status: 404 })
   }
   const exp = (Math.floor(Date.now() / 1000) + (60 * 30)) * 1000;
   const AccessToken = jwt.sign({
@@ -18,5 +18,5 @@ export async function POST(req, response) {
     pw: pw,
     exp: (Math.floor(Date.now() / 1000) + (60 * 30)) * 1000 //30분
   }, process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET)
-  return NextResponse.json({ AccessToken, exp, nickname: res[0]['nickname'], status: 200 })
+  return NextResponse.json({ AccessToken, exp, nickname: res[0]['nickname'] })
 } 

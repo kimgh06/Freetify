@@ -48,23 +48,18 @@ export default function App() {
               alert('Enter your information');
               return;
             }
-            const { data } = await axios.post('/api/login', { email, pw });
-            if (data['status'] === 200) {
-              console.log(data)
-              localStorage.setItem('user_access', data['AccessToken'])
-              localStorage.setItem('user_exp', data['exp'])
-              localStorage.setItem('user_nickname', data['nickname'])
-              // window.location.href = '/';
-              return;
-            }
-            if (data['status'] === 404) {
-              alert('Failed to find your account. Check your information.');
-              return;
-            }
-            if (data['status'] === 500) {
-              alert('Server Error. Try again later.')
-              return;
-            }
+            await axios.post('/api/login', { email, pw })
+              .then(e => {
+                const data = e.data;
+                console.log(data)
+                localStorage.setItem('user_access', data['AccessToken'])
+                localStorage.setItem('user_exp', data['exp'])
+                localStorage.setItem('user_nickname', data['nickname'])
+                // window.location.href = '/';
+              }).catch(e => {
+                console.log(e.response.data.msg);
+                return;
+              })
             break;
           case 'signup':
             if (!email || !pw || !repw || !nickname) {
@@ -96,6 +91,7 @@ export default function App() {
             await axios.patch('/api/missingpw', { email, pw })
               .then(e => {
                 console.log(e.data);
+                setMode('login')
               }).catch(e => {
                 console.log(e)
               })
