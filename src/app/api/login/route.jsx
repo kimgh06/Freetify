@@ -4,10 +4,13 @@ import jwt from 'jsonwebtoken';
 
 export async function POST(req, response) {
   const { email, pw } = await req.json();
-  const { err, res, fields } = await useQuery(`select * from user_info where email = '${email}' and password = '${pw}'`)
+  const { err, res } = await useQuery(`select * from user_info where email = '${email}' and password = '${pw}'`)
 
-  if (err) {
+  if (err !== null) {
     return NextResponse.json({ status: 500 });
+  }
+  if (res.length <= 0) {
+    return NextResponse.json({ status: 404 })
   }
   const exp = (Math.floor(Date.now() / 1000) + (60 * 30)) * 1000;
   const AccessToken = jwt.sign({
@@ -15,5 +18,5 @@ export async function POST(req, response) {
     pw: pw,
     exp: (Math.floor(Date.now() / 1000) + (60 * 30)) * 1000
   }, process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET)
-  return NextResponse.json({ AccessToken, exp, nickname: res[0]['nickname'] }, { status: 200 })
+  return NextResponse.json({ AccessToken, exp, nickname: res[0]['nickname'], status: 200 })
 } 

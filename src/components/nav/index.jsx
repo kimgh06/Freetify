@@ -52,7 +52,9 @@ export default function Navi() {
         <p><Link href={'/'}>Recommendations</Link></p>
         <p><Link href={'/mytrack'}>My Tracks</Link></p>
         <p><Link href={'/recent'}>Recent Tracks</Link></p>
-        <p><Link href={'/login'}>Login / Sign up</Link></p>
+        {localStorage.getItem('user_nickname') ? <p>
+          {localStorage.getItem('user_nickname')}
+        </p> : <p><Link href={'/login'}>Login / Sign up</Link></p>}
       </div>}
     </S.Nav>
     {id && <Player />}
