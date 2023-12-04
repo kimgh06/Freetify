@@ -24,6 +24,14 @@ export default function Navi() {
         console.log(e);
       })
   }
+  const user_refresh = async e => {
+    await axios.patch('/api/login', {}, { headers: { 'Authorization': localStorage.getItem('user_refresh') } })
+      .then(e => {
+        console.log(e.data);
+      }).catch(e => {
+        console.log(e)
+      })
+  }
   useEffect(e => {
     if (new Date().getTime() >= localStorage.getItem('expire') || !localStorage.getItem('access')) {
       refresh_token();
@@ -36,6 +44,9 @@ export default function Navi() {
     const timer = setInterval(e => {
       if (new Date().getTime() >= localStorage.getItem('expire')) {
         refresh_token();
+      }
+      if (new Date().getTime() >= localStorage.getItem('user_exp') || true) {
+        user_refresh();
       }
     }, 20 * 1000);
   }, [access]);
