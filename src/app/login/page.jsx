@@ -6,6 +6,7 @@ import { useState } from "react";
 export default function App() {
   const [mode, setMode] = useState('login');
   const [verified, setVerified] = useState(false);
+  const [verifyCode, setVerifyCode] = useState('');
   const [email, setEmail] = useState('');
   const [pw, setPw] = useState('');
   const [repw, setRepw] = useState('');
@@ -14,15 +15,30 @@ export default function App() {
       <S.Form onSubmit={async e => {
         e.preventDefault()
         if (e.nativeEvent.submitter === document.querySelector('.verifying')) {
-          await axios.post('/api/verifyingemail', { email }).then(e => {
-            console.log(e.data);
-          }).catch(e => {
-            console.log(e)
-          })
-          return;
+          if (!verified) {
+            await axios.post('/api/verifyingemail', { email }).then(e => {
+              console.log(e.data);
+              setVerified(e.data.code)
+            }).catch(e => {
+              console.log(e)
+            })
+            return;
+          }
+          if (typeof verified === 'string') {
+            if (verified !== verifyCode) {
+              alert("Your answer is not corrected")
+              return;
+            }
+            alert("Corrected!")
+            setVerified(true)
+            return;
+          }
+          if (verified) {
+            return;
+          }
         }
         if (!verified) {
-          alert('이메일 인증을 해주세요')
+          alert('Please verify your Email');
           return;
         }
         switch (mode) {
@@ -43,7 +59,10 @@ export default function App() {
         </S.Navigators>
         <h1>Freetify</h1>
         <input onChange={e => setEmail(e.target.value)} placeholder='EMAIL' />
-        {mode !== 'login' && <button className='verifying'>VERIFYING EMAIL</button>}
+        {mode !== 'login' && <>
+          {typeof verified === 'string' && <input onChange={e => setVerifyCode(e.target.value)} />}
+          {verified !== true ? <button className='verifying'>VERIFYING EMAIL</button> : <div className='verified'>VERIFIED</div>}
+        </>}
         <input onChange={e => setPw(e.target.value)} placeholder={`${mode === 'missing' ? 'NEW ' : ''}PASSWORD`} />
         {mode !== 'login' && <input placeholder='CHECK PASSWORD'
           onChange={e => setRepw(e.target.value)}

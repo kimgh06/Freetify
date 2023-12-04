@@ -29,6 +29,18 @@ export const Form = styled.form`
     margin-top: -30px;
     margin-bottom: 20px;
   }
+  .verified{
+    width: 250px;
+    height: 20px;
+    margin-top: -30px;
+    margin-bottom: 20px;
+    background-color: #00b500;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+  }
 `
 export const Back = styled.div`
   width: 100vw;

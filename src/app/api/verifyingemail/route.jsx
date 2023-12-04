@@ -11,21 +11,19 @@ let transporter = nodemailer.createTransport({
 
 export async function POST(req, response) {
   const { email } = await req.json();
-  const randNUM = Math.floor(Math.random() * 100000)
+  const verfifycode = Math.floor(Math.random() * 1000000).toString().padStart(6, "0")
   const mailOption = {
     from: process.env.NEXT_PUBLIC_AUTH_EMAIL,
     to: email,
     subject: "VERIFY EMAIL FROM FREETIFY",
     html: `<div>
-      VERIFY NUMBER: ${randNUM}
+      VERIFY CODE: ${verfifycode}
     </div>`
   }
   await transporter.sendMail(mailOption, (err, info) => {
     if (err) {
       console.log(err);
-      return;
     }
-    console.log(info)
   })
-  return NextResponse.json({ msg: 200, status: 200 })
+  return NextResponse.json({ code: verfifycode })
 }
