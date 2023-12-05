@@ -25,7 +25,7 @@ export default function App() {
               return;
             }
             await axios.post('/api/verifyingemail', { email }).then(e => {
-              console.log(e.data);
+              // console.log(e.data);
               setVerified(e.data.code)
             }).catch(e => {
               console.log(e)
@@ -51,7 +51,7 @@ export default function App() {
             await axios.post('/api/login', { email, pw })
               .then(e => {
                 const data = e.data;
-                console.log(data)
+                // console.log(data)
                 localStorage.setItem('user_access', data['AccessToken'])
                 localStorage.setItem('user_refresh', data['RefreshToken'])
                 localStorage.setItem('user_exp', data['exp'])
@@ -91,7 +91,7 @@ export default function App() {
             }
             await axios.patch('/api/missingpw', { email, pw })
               .then(e => {
-                console.log(e.data);
+                // console.log(e.data);
                 setMode('login')
               }).catch(e => {
                 console.log(e)
