@@ -114,30 +114,15 @@ export const Player = styled.div`
     }
     .bar_div{
       z-index: 10;
-      background-color: lightgray;
+      border-color: lightgray;
       border-radius: 30px;
       height: 4.8px;
       display: flex;
       align-items: center;
       margin-top: 10px;
+      
       @media screen and (max-width: 1199px) {  
         width: calc(98vw - 20px);
-        
-      }
-      .bar{
-        border: 3px solid blue;
-        width: 0;
-        height: 0;
-        border-radius: 20px;
-      }
-      .bar_cursor{
-        cursor: pointer;
-        width: 10px;
-        height: 10px;
-        background-color: gray;
-        border: 2px solid white;
-        border-radius: 30px;
-        margin-left: -4px;
       }
     }
     .volume{
