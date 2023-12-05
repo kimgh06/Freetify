@@ -340,7 +340,7 @@ export default function Player() {
       <div className='bar_div' style={{ width: innerWidth >= 1200 ? (!extensionMode ? '80px' : '300px') : '' }} >
         <div className='bar' style={{ width: `${currentT * 1000 / durationT * 100}%` }} />
         <input className='bar_cursor' type='range'
-          style={{ width: `${extensionMode ? '300px' : '80px'}` }}
+          style={{ width: innerWidth >= 1200 ? (extensionMode ? '300px' : '80px') : 'calc(98vw - 20px)' }}
           onChange={e => {
             setCurrentT(e.target.value / 1000)
             audio.current.currentTime = e.target.value / 1000;

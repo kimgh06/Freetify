@@ -46,6 +46,9 @@ function InnerComponent() {
   }
   const GettingInfos = async e => {
     let ids = JSON.parse(localStorage.getItem('list'))?.join(',') || undefined;
+    if (!ids) {
+      return;
+    }
     let tr = await getTrackinfos(ids);
 
     setTracks(tr);
