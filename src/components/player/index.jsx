@@ -339,10 +339,12 @@ export default function Player() {
       </div>
       <div className='bar_div' style={{ width: innerWidth >= 1200 ? (!extensionMode ? '80px' : '300px') : '' }} >
         <div className='bar' style={{ width: `${currentT * 1000 / durationT * 100}%` }} />
-        <input className='bar_cursor' type='range' onChange={e => {
-          setCurrentT(e.target.value / 1000)
-          audio.current.currentTime = e.target.value / 1000;
-        }} value={currentT * 1000} min={0} max={durationT} />
+        <input className='bar_cursor' type='range'
+          style={{ width: `${extensionMode ? '300px' : '80px'}` }}
+          onChange={e => {
+            setCurrentT(e.target.value / 1000)
+            audio.current.currentTime = e.target.value / 1000;
+          }} value={currentT * 1000} min={0} max={durationT} />
       </div>
       {!(innerWidth >= 1200 && !extensionMode) &&
         `${(currentT - currentT % 60) / 60}:${((currentT % 60 - (currentT % 60) % 1) / 1).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
@@ -354,7 +356,9 @@ export default function Player() {
         <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
         <span>{Math.round(volume * 100)}%</span>
         <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
-        <div className='title'>{info?.name}</div>
+        <div className='title'>
+          <span>{info?.name}</span>
+        </div>
       </S.Main_smaller>}
     </div>
     <audio ref={audio} onTimeUpdate={e => {

@@ -129,10 +129,10 @@ export const Player = styled.div`
         border-radius: 20px;
       }
       .bar_cursor{
-        cursor: pointer;
         -webkit-appearance: none;
+        cursor: pointer;
         z-index: 10;
-        width:100%;
+        width:300px;
         height: 0;
         position: absolute;
         @media screen and (max-width: 1199px) {  
@@ -244,6 +244,10 @@ export const ExtensionMode_mobile = styled.div`
 
 export const Main_smaller = styled.div`
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   .play{
     text-align: center;
     width: 70px;
@@ -272,10 +276,9 @@ export const Main_smaller = styled.div`
     }
   }
   .title{
-    position: absolute;
     writing-mode: vertical-lr;
-    width: 30vh;
-    margin-left: 30px;
-    margin-top: 10px;
+    height: 20vh;
+    /* margin-left: 30px;
+    margin-top: 10px; */
   }
 `

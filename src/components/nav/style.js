@@ -10,11 +10,11 @@ export const Nav = styled.nav`
     animation: nav 0.5s ease;
     position: fixed;
     top: 0;
-    background-color: #d0d0d0;
+    background-color: #d0d0d0de;
     color: black;
     font-size: 16px;
     height: 100vh;
-    width: 300px;
+    width: 250px;
     padding-top: 60px;
     z-index: 2;
     @media screen and (max-width: 500px) {  
