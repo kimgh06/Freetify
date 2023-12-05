@@ -1,5 +1,5 @@
 # Summary
-**Freetify** is replacement of Spority using free!
+**Freetify**is replacement of Spotify to use for free!
 
 I have been trying to make this project as music player.
 
@@ -9,4 +9,4 @@ The deployed website is https://freetify.vercel.app/
 
 You can always give feedbacks on this project by creating a issue.
 
-Also, If you have any **Question** or would be like **to inform bugs**, you could make a issue in this repository.
+And, If you have any **Question** or would be like **to inform bugs**, you could make a issue in this repository.
