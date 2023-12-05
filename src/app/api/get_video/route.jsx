@@ -13,11 +13,10 @@ export async function GET(req, res) {
     paramlist[i.split('=')[0]] = i.split('=')[1];
   })
   let { album, title, artist, length, songId } = paramlist;
-  album = album.replace(/%20/g, " ");
-  title = title.replace(/%35/g, "#");
+  album = decodeURIComponent(album);
   title = decodeURIComponent(title);
   artist = decodeURIComponent(artist)
-  title = title.replace(/%20/g, " ")
+  title = decodeURIComponent(title).replace(/%20/g, " ")
     .replace(/%27/g, "'")
     .replace(/%38/g, "&")
     .replace(/\(/g, "")

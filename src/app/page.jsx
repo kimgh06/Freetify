@@ -27,9 +27,7 @@ function InnerComponent() {
         localStorage.setItem('access', info.access_token);
         localStorage.setItem('refresh', info.refresh_token);
         localStorage.setItem('expire', new Date().getTime() + info.expires_in * 1000);
-        localStorage.setItem('scopes', info.scope)
-        // window.location.href = '/';
-        history.pushState(null, null, '/');
+        localStorage.setItem('scopes', info.scope);
       }
     }).catch(e => {
       console.log(e);
@@ -50,8 +48,8 @@ function InnerComponent() {
       ids = localStorage.getItem('recommendation').split(',');
     }
     else if (localStorage.getItem('recent_track_list') !== null && localStorage.getItem('recent_artists_list') !== null) {
-      const recentTrack = localStorage.getItem('recent_track_list').split(',');
-      const recentArtists = localStorage.getItem('recent_artists_list').split(',');
+      const recentTrack = localStorage.getItem('recent_track_list').split(',').slice(-3);
+      const recentArtists = localStorage.getItem('recent_artists_list').split(',').slice(-3);
       ids = await axios.get(`https://api.spotify.com/v1/recommendations?seed_tracks=${recentTrack}&seed_artists=${recentArtists}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
         const track = e.data.tracks;
         let list = [];

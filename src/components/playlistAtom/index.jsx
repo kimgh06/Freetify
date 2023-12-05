@@ -29,7 +29,10 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
       }
       if (!toggle) {
         list.push(id);
-        await axios.post('/api/playlist/', { playlist, song_id: id },
+        if (!localStorage.getItem('user_access')) {
+          return;
+        }
+        await axios.post('/api/playlist/', { playlist: 0, song_id: id },
           { headers: { 'Authorization': localStorage.getItem('user_access') } })
           .then(e => {
             console.log(e.data);
@@ -38,10 +41,13 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
           })
       } else if (toggle) {
         list = list.filter(track => track !== id);
+        if (!localStorage.getItem('user_access')) {
+          return;
+        }
         await axios.delete('/api/playlist/', {
           headers: { 'Authorization': localStorage.getItem('user_access') },
           data: {
-            playlist,
+            playlist: 0,
             song_id: id
           }
         })
