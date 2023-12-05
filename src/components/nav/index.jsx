@@ -70,7 +70,7 @@ export default function Navi() {
         <p><Link href={'/mytrack'}>My Tracks</Link></p>
         <p><Link href={'/recent'}>Recent Tracks</Link></p>
         {localStorage.getItem('user_nickname') ? <><p>
-          <Link href={'/myprofile'}>{localStorage.getItem('user_nickname')}'{localStorage.getItem('user_nickname').slice(-1) !== 's' && 's'} profile</Link>
+          <Link href={'/myprofile'}>{localStorage.getItem('user_nickname')}{localStorage.getItem('user_nickname').slice(-1) !== 's' ? "'s" : "'"} profile</Link>
         </p>
           <p onClick={e => {
             if (!confirm('Do you want to log out here?')) {
