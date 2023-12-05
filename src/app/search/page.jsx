@@ -45,7 +45,7 @@ function InnerContent() {
         e.preventDefault();
         searchItems();
       }}>
-        <input onChange={e => setQ(e.target.value)} value={q} />
+        <input onChange={e => setQ(e.target.value)} value={q} className="search" />
         <button>검색</button>
       </form>
       <div className="results">

@@ -13,11 +13,14 @@ export const PlayAtom = styled.div`
   color: #ffffff;
   border-radius: 5px;
   justify-content: space-between;
+  align-items: center;
   img{
     cursor: pointer;
     object-fit: scale-down;
     width: 52px;
+    height: 52px;
     margin-right: 10px;
+    border-radius: 5px;
   }
   .playingtime{
     margin-right: 2vw;

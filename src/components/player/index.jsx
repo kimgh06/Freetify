@@ -232,6 +232,9 @@ export default function Player() {
         setInnerWidth(window.innerWidth);
       })
       window.addEventListener('keydown', e => {
+        if (e.target === document.querySelector('.search')) {
+          return;
+        }
         if (e.code === 'Space') {
           e.preventDefault()
           setPlay(a => !a)
