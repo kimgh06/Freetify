@@ -10,6 +10,7 @@ const url = 'https://api.spotify.com/v1';
 
 export default function PlaylistAtom({ index, img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
   const [toggle, setToggle] = useState(isInPlay);
+  const [playlist, setPlaylist] = useState(0);
   const [now_playing_id, setNow_playing_id] = useRecoilState(NowPlayingId);
   const [durationT, setDurationT] = useState(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
   const getMusicAnalsisData = async e => {
@@ -28,7 +29,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
       }
       if (!toggle) {
         list.push(id);
-        await axios.post('/api/playlist/', { song_id: id },
+        await axios.post('/api/playlist/', { playlist, song_id: id },
           { headers: { 'Authorization': localStorage.getItem('user_access') } })
           .then(e => {
             console.log(e.data);
@@ -40,6 +41,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
         await axios.delete('/api/playlist/', {
           headers: { 'Authorization': localStorage.getItem('user_access') },
           data: {
+            playlist,
             song_id: id
           }
         })
