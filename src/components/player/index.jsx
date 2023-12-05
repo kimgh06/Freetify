@@ -337,21 +337,13 @@ export default function Player() {
           </S.ExtensionMode_mobile>)
         }
       </div>
-      {/* <div className='bar_div'
-        onMouseDown={e => {
-          e.preventDefault();
-          if (extensionMode || innerWidth <= 1200) {
-            setModify(true);
-          }
-        }}
-      >
+      <div className='bar_div' style={{ width: innerWidth >= 1200 ? (!extensionMode ? '80px' : '300px') : '' }} >
         <div className='bar' style={{ width: `${currentT * 1000 / durationT * 100}%` }} />
-        <div className='bar_cursor' />
-      </div> */}
-      <input className='bar_div' type='range' style={{ width: innerWidth >= 1200 ? (!extensionMode ? '80px' : '300px') : 'calc(98vw - 20px)' }} onChange={e => {
-        setCurrentT(e.target.value / 1000)
-        audio.current.currentTime = e.target.value / 1000;
-      }} value={currentT * 1000} min={0} max={durationT} />
+        <input className='bar_cursor' type='range' onChange={e => {
+          setCurrentT(e.target.value / 1000)
+          audio.current.currentTime = e.target.value / 1000;
+        }} value={currentT * 1000} min={0} max={durationT} />
+      </div>
       {!(innerWidth >= 1200 && !extensionMode) &&
         `${(currentT - currentT % 60) / 60}:${((currentT % 60 - (currentT % 60) % 1) / 1).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
       {!(innerWidth >= 1200 && !extensionMode) ? <div className='volume'>

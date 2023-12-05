@@ -113,16 +113,43 @@ export const Player = styled.div`
       }
     }
     .bar_div{
-      z-index: 10;
-      border-color: lightgray;
-      border-radius: 30px;
-      height: 4.8px;
       display: flex;
       align-items: center;
+      border-radius: 30px;
       margin-top: 10px;
-      
+      background-color: white;
+      height: 4.8px;
       @media screen and (max-width: 1199px) {  
         width: calc(98vw - 20px);
+      }
+      .bar{
+        position: static;
+        background-color: blue;
+        height: 4.8px;
+        border-radius: 20px;
+      }
+      .bar_cursor{
+        cursor: pointer;
+        -webkit-appearance: none;
+        z-index: 10;
+        width:100%;
+        height: 0;
+        position: absolute;
+        @media screen and (max-width: 1199px) {  
+          width: calc(98vw - 20px);
+        }
+        
+        &:focus{
+          outline: none;
+        }
+        &::-webkit-slider-thumb{
+          -webkit-appearance: none;
+          background-color: gray;
+          width: 13px;
+          height: 13px;
+          border-radius: 100px;
+          border: 3px solid white;
+        }
       }
     }
     .volume{
@@ -246,9 +273,9 @@ export const Main_smaller = styled.div`
   }
   .title{
     position: absolute;
-    transform: rotate(90deg);
+    writing-mode: vertical-lr;
     width: 30vh;
-    margin-left: -80px;
-    margin-top: 14.5vh;
+    margin-left: 30px;
+    margin-top: 10px;
   }
 `
