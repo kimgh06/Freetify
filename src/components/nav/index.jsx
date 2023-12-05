@@ -35,25 +35,23 @@ export default function Navi() {
         console.log(e)
       })
   }
-  useEffect(e => {
-    if (new Date().getTime() >= localStorage.getItem('expire') || !localStorage.getItem('access')) {
+  const refreshAll = e => {
+    if (new Date().getTime() >= localStorage.getItem('expire') && localStorage.getItem('refresh')) {
       refresh_token();
     }
     if (new Date().getTime() >= localStorage.getItem('user_exp') && localStorage.getItem('user_refresh')) {
       user_refresh();
     }
-    else if (access !== '') {
+  }
+  useEffect(e => {
+    refreshAll();
+    if (access !== '') {
       setId(localStorage.getItem('now_playing_id'));
     } else {
       setAccess(localStorage.getItem('access'));
     }
     const timer = setInterval(e => {
-      if (new Date().getTime() >= localStorage.getItem('expire')) {
-        refresh_token();
-      }
-      if (new Date().getTime() >= localStorage.getItem('user_exp') && localStorage.getItem('user_refresh')) {
-        user_refresh();
-      }
+      refreshAll();
     }, 20 * 1000);
   }, [access]);
   return <>

@@ -19,7 +19,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
       console.log(e);
     });
   }
-  const listcontrol = e => {
+  const listcontrol = async e => {
     if (type === 'track') {
       let list = [];
       list = JSON.parse(localStorage.getItem('list'));
@@ -28,8 +28,26 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
       }
       if (!toggle) {
         list.push(id);
+        await axios.post('/api/playlist/', { song_id: id },
+          { headers: { 'Authorization': localStorage.getItem('user_access') } })
+          .then(e => {
+            console.log(e.data);
+          }).catch(e => {
+            console.log(e)
+          })
       } else if (toggle) {
         list = list.filter(track => track !== id);
+        await axios.delete('/api/playlist/', {
+          headers: { 'Authorization': localStorage.getItem('user_access') },
+          data: {
+            song_id: id
+          }
+        })
+          .then(e => {
+            console.log(e.data);
+          }).catch(e => {
+            console.log(e)
+          })
       }
       console.log(list);
       localStorage.setItem('list', JSON.stringify(list));
