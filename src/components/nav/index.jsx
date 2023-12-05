@@ -39,6 +39,9 @@ export default function Navi() {
     if (new Date().getTime() >= localStorage.getItem('expire') || !localStorage.getItem('access')) {
       refresh_token();
     }
+    if (new Date().getTime() >= localStorage.getItem('user_exp') && localStorage.getItem('user_refresh')) {
+      user_refresh();
+    }
     else if (access !== '') {
       setId(localStorage.getItem('now_playing_id'));
     } else {
@@ -48,7 +51,7 @@ export default function Navi() {
       if (new Date().getTime() >= localStorage.getItem('expire')) {
         refresh_token();
       }
-      if (new Date().getTime() >= localStorage.getItem('user_exp')) {
+      if (new Date().getTime() >= localStorage.getItem('user_exp') && localStorage.getItem('user_refresh')) {
         user_refresh();
       }
     }, 20 * 1000);
@@ -66,11 +69,20 @@ export default function Navi() {
         <p><Link href={'/'}>Recommendations</Link></p>
         <p><Link href={'/mytrack'}>My Tracks</Link></p>
         <p><Link href={'/recent'}>Recent Tracks</Link></p>
-        {localStorage.getItem('user_nickname') ? <p>
-          {localStorage.getItem('user_nickname')}
-        </p> : <p><Link href={'/login'}>Login / Sign up</Link></p>}
+        {localStorage.getItem('user_nickname') ? <><p>
+          <Link href={'/myprofile'}>{localStorage.getItem('user_nickname')}'{localStorage.getItem('user_nickname').slice(-1) !== 's' && 's'} profile</Link>
+        </p>
+          <p onClick={e => {
+            if (!confirm('Do you want to log out here?')) {
+              return;
+            }
+            localStorage.clear();
+            window.location.href = '/';
+          }}><Link href='#'>Log out</Link></p>
+        </> : <p><Link href={'/login'}>Login / Sign up</Link></p>}
       </div>}
-    </S.Nav>
-    {id && <Player />}
+    </S.Nav >
+    {id && <Player />
+    }
   </>;
 }

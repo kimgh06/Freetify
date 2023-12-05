@@ -1,7 +1,6 @@
 import ytdl from "ytdl-core";
 import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
-import jwt from "jsonwebtoken";
 
 export async function GET(req, res) {
   // const Auth = jwt.verify(req.headers.get('Authorization'), process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET);
