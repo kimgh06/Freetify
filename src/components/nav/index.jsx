@@ -36,7 +36,7 @@ export default function Navi() {
       })
   }
   const refreshAll = e => {
-    if (new Date().getTime() >= localStorage.getItem('expire') && localStorage.getItem('refresh')) {
+    if (new Date().getTime() >= localStorage.getItem('expire') || !localStorage.getItem('access')) {
       refresh_token();
     }
     if (new Date().getTime() >= localStorage.getItem('user_exp') && localStorage.getItem('user_refresh')) {
