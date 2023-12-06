@@ -89,14 +89,14 @@ export const PlayAtom = styled.div`
           }
           10%{
             max-height: 0px;
-            margin-left: -240px;
+            margin-left: -300px;
           }
         }
         position: absolute;
         text-align: left;
-        margin-left: -280px;
-        margin-top: -150px;
-        max-height: 200px;
+        margin-left: -320px;
+        margin-top: -80px;
+        max-height: 100px;
         overflow-y: scroll;
         overflow-x:hidden;
         animation: init 0.1s linear;

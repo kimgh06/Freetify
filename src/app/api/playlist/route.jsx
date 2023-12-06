@@ -9,18 +9,25 @@ export async function GET(req, response) { //전체 플레이리스트 조회
   const id = q.get('id');
   const { user_id } = Auth
   if (id) {
-    const { err, res } = await useQuery(`select distinct playlist_id, case when (select count(*) from playlist p2 where song_id='${id}' and p1.playlist_id = p2.playlist_id)>0 then 1 else 0 end as exist from playlist p1 where user_id = ${user_id}`);
-    if (err !== null) {
-      return NextResponse.json({ err: err }, { status: 500 });
-    }
-    return NextResponse.json({ res });
+    return searchId(user_id);
   } else {
-    const { err, res } = await useQuery(`select distinct playlist_id from playlist`)
-    if (err !== null) {
-      return NextResponse.json({ err: err }, { status: 500 })
-    }
-    return NextResponse.json({ res });
+    return searchAll();
   }
+}
+async function searchId(id) {
+  const { err, res } = await useQuery(`select distinct playlist_id, case when (select count(*) from playlist p2 where song_id='${id}' and p1.playlist_id = p2.playlist_id)>0 then 1 else 0 end as exist from playlist p1 where user_id = ${user_id}`);
+  if (err !== null) {
+    return NextResponse.json({ err: err }, { status: 500 });
+  }
+  return NextResponse.json({ res });
+}
+
+async function searchAll() {
+  const { err, res } = await useQuery(`select distinct playlist_id from playlist`)
+  if (err !== null) {
+    return NextResponse.json({ err: err }, { status: 500 })
+  }
+  return NextResponse.json({ res });
 }
 
 export async function POST(req, response) { //특정 플레이리스트 목록 조회
