@@ -11,7 +11,7 @@ const url = 'https://api.spotify.com/v1';
 export default function PlaylistAtom({ index, img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
   const [toggle, setToggle] = useState(isInPlay);
   const [clicked, setClicked] = useRecoilState(AddbuttonIndex);
-  const [playlist, setPlaylist] = useState('0');
+  const [input, setInput] = useState(false);
   const [allList, setAllList] = useState([{}]);
   const [now_playing_id, setNow_playing_id] = useRecoilState(NowPlayingId);
   const [durationT, setDurationT] = useState(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
@@ -79,6 +79,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
     if (clicked === index) {
       getAllPlaylist();
     }
+    setInput(false)
   }, [clicked])
   return <S.PlayAtom>
     <img src={img} alt="" onClick={e => {
@@ -114,13 +115,25 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
           {allList?.map((i, n) => <div key={n}>{i['playlist_id']}
             <p onClick={e => {
               if (!i['exist']) {
-                setPlaylist(i['playlist_id']);
                 putPlaylist(i['playlist_id']);
               } else {
                 deletePlaylist(i['playlist_id'])
               }
             }}>{!i['exist'] ? '+' : '-'}</p></div>)}
-          <div><span>+</span></div>
+          <div><span onClick={e => {
+            if (input === false) {
+              setInput('')
+            }
+          }}>{input === false ? '+' : <>
+            <input onChange={e => setInput(e.target.value)} value={input} autoFocus />
+            <button onClick={e => {
+              if (!input) {
+                return;
+              }
+              putPlaylist(input);
+              setInput(false);
+            }}>+</button>
+          </>}</span></div>
         </div>}
       </div>}
     </div>}

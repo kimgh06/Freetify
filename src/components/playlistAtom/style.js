@@ -73,7 +73,8 @@ export const PlayAtom = styled.div`
         width: 100%;
         height: 100%;
         border-radius:200px;
-        text-align: center;
+        display: flex;
+        justify-content: center;
         &:hover{
           background-color: lightgray;
         }
