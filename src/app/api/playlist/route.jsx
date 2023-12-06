@@ -3,11 +3,20 @@ import { useQuery } from "@/app/useQuery";
 import jwt from 'jsonwebtoken'
 const secret = process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET;
 
-export async function POST(req, response) {
+export async function GET(req, response) { //전체 플레이리스트 조회
+  console.log(req);
+  return NextResponse.json({ msg: 'get' });
+}
+
+export async function POST(req, response) { //특정 플레이리스트 목록 조회
+  console.log(req)
+  return NextResponse.json({ msg: 'post' });
+}
+
+export async function PUT(req, response) {
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);
   const { song_id, playlist } = await req.json();
-  console.log(song_id, playlist)
-  const { err, res } = await useQuery(`insert into playlist values(${playlist}, ${Auth['user_id']}, '${song_id}')`)
+  const { err, res } = await useQuery(`insert into playlist values('${playlist}', ${Auth['user_id']}, '${song_id}')`)
   if (new Date().getTime() > Auth['exp']) {
     return NextResponse.json({ msg: "Need to refresh" }, { status: 403 })
   }
