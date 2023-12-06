@@ -7,12 +7,12 @@ export async function GET(req, res) {
   // if (Auth['exp'] < new Date().getTime()) {
   //   return NextResponse.json({ msg: 'Token is expired.' }, { status: 403 })
   // }
-  const params = req.url.split('?')[1].split('&');
-  let paramlist = {};
-  params.forEach((i, n) => {
-    paramlist[i.split('=')[0]] = i.split('=')[1];
-  })
-  let { album, title, artist, length, songId } = paramlist;
+  const q = new URLSearchParams(new URL(req?.url).search)
+  let album = q.get('album');
+  let songId = q.get('osngId');
+  let artist = q.get('artist');
+  let length = q.get('length');
+  let title = q.get('title');
   album = decodeURIComponent(album);
   title = decodeURIComponent(title);
   artist = decodeURIComponent(artist)
