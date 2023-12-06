@@ -10,6 +10,7 @@ export const Nav = styled.nav`
     animation: nav 0.5s ease;
     position: fixed;
     top: 0;
+    left: 0;
     background-color: #d0d0d0de;
     color: black;
     font-size: 16px;
@@ -18,6 +19,7 @@ export const Nav = styled.nav`
     padding-top: 60px;
     z-index: 2;
     @media screen and (max-width: 500px) {  
+      left: auto;
       right: 0;
       width: 140px;
     }
