@@ -6,9 +6,9 @@ const secret = process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET;
 export async function GET(req, response) { //전체 플레이리스트 조회
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);
   const q = new URLSearchParams(new URL(req?.url).search)
-  console.log(q.get('id'))
+  const id = q.get('id');
   const { user_id } = Auth
-  const { err, res } = await useQuery(`select playlist_id from playlist where user_id = ${user_id}`);
+  const { err, res } = await useQuery(`select distinct playlist_id, case when (select count(*) from playlist p2 where song_id='${id}' and p1.playlist_id = p2.playlist_id)>0 then 1 else 0 end as exist from playlist p1 where user_id = ${user_id}`);
   if (err !== null) {
     return NextResponse.json({ err: err }, { status: 500 });
   }
@@ -39,7 +39,8 @@ export async function PUT(req, response) {
 export async function DELETE(req, response) {
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);
   const { song_id, playlist } = await req.json();
-  const { err, res } = await useQuery(`delete from playlist where playlist_id = ${playlist} and user_id = ${Auth['user_id']} and song_id = '${song_id}'`)
+  const { err, res } = await useQuery(`delete from playlist where playlist_id = '${playlist}' and user_id = ${Auth['user_id']} and song_id = '${song_id}'`)
+  console.log(err)
   if (new Date().getTime() > Auth['exp']) {
     return NextResponse.json({ msg: "Need to refresh" }, { status: 403 })
   }

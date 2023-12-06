@@ -9,7 +9,7 @@ export async function GET(req, res) {
   // }
   const q = new URLSearchParams(new URL(req?.url).search)
   let album = q.get('album');
-  let songId = q.get('osngId');
+  let songId = q.get('songId');
   let artist = q.get('artist');
   let length = q.get('length');
   let title = q.get('title');

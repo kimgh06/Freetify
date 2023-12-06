@@ -68,6 +68,7 @@ export const PlayAtom = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
+      user-select:none;
       span{
         width: 100%;
         height: 100%;
@@ -96,14 +97,17 @@ export const PlayAtom = styled.div`
         max-height: 100px;
         overflow-y: scroll;
         overflow-x:hidden;
-        animation: init 0.2s linear;
-        p{
+        animation: init 0.1s linear;
+        div{
           width: 200px;
           border-radius: 10px;
           padding-left:10px;
+          padding-right:10px;
           color: black;
           background-color: #ffffff;
           margin-bottom: 10px;
+          display: flex;
+          justify-content: space-between;
         }
         &::-webkit-scrollbar{
           width: 5px;

@@ -22,6 +22,31 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
       console.log(e);
     });
   }
+  const putPlaylist = async playlist => {
+    await axios.put('/api/playlist/', { playlist: playlist, song_id: id },
+      { headers: { 'Authorization': localStorage.getItem('user_access') } })
+      .then(e => {
+        console.log(e.data);
+        getAllPlaylist();
+      }).catch(e => {
+        console.log(e)
+      })
+  }
+  const deletePlaylist = async playlist => {
+    await axios.delete('/api/playlist/', {
+      headers: { 'Authorization': localStorage.getItem('user_access') },
+      data: {
+        playlist: playlist,
+        song_id: id
+      }
+    })
+      .then(e => {
+        console.log(e.data);
+        getAllPlaylist()
+      }).catch(e => {
+        console.log(e)
+      })
+  }
   const listcontrol = async e => {
     if (type === 'track') {
       let list = JSON.parse(localStorage.getItem('list'));
@@ -30,33 +55,8 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
       }
       if (!toggle) {
         list.push(id);
-        if (!localStorage.getItem('user_access')) {
-          return;
-        }
-        await axios.put('/api/playlist/', { playlist: playlist, song_id: id },
-          { headers: { 'Authorization': localStorage.getItem('user_access') } })
-          .then(e => {
-            console.log(e.data);
-          }).catch(e => {
-            console.log(e)
-          })
       } else if (toggle) {
         list = list.filter(track => track !== id);
-        if (!localStorage.getItem('user_access')) {
-          return;
-        }
-        await axios.delete('/api/playlist/', {
-          headers: { 'Authorization': localStorage.getItem('user_access') },
-          data: {
-            playlist: playlist,
-            song_id: id
-          }
-        })
-          .then(e => {
-            console.log(e.data);
-          }).catch(e => {
-            console.log(e)
-          })
       }
       localStorage.setItem('list', JSON.stringify(list));
       setToggle(a => !a);
@@ -100,6 +100,10 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
       }}>{now_playing_id === id ? '⏸' : '▶'}</button>
       {type === "track" && <div className='isInPlay'>
         <span onClick={e => {
+          if (!localStorage.getItem('user_access')) {
+            listcontrol()
+            return;
+          }
           if (clicked === index) {
             setClicked(false);
             return;
@@ -107,7 +111,16 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
           setClicked(index);
         }}>{toggle ? '-' : '+'}</span>
         {clicked === index && <div className='floating'>
-          {allList?.map((i, n) => <p key={n} onClick={e => setPlaylist(i['playlist_id'])}>{i['playlist_id']}</p>)}
+          {allList?.map((i, n) => <div key={n}>{i['playlist_id']}
+            <p onClick={e => {
+              if (!i['exist']) {
+                setPlaylist(i['playlist_id']);
+                putPlaylist(i['playlist_id']);
+              } else {
+                deletePlaylist(i['playlist_id'])
+              }
+            }}>{!i['exist'] ? '+' : '-'}</p></div>)}
+          <div><span>+</span></div>
         </div>}
       </div>}
     </div>}
