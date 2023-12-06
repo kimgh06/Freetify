@@ -25,3 +25,7 @@ export const Volume = atom({
   default: 0.7,
   effects_UNSTABLE: [persistAtom]
 })
+export const AddbuttonIndex = atom({
+  key: 'AddButtonIndex',
+  default: false
+})

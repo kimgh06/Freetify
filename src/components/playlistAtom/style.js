@@ -68,10 +68,50 @@ export const PlayAtom = styled.div`
       display: flex;
       align-items: center;
       justify-content: center;
-      &:hover{
-        background-color: lightgray;
+      span{
+        width: 100%;
+        height: 100%;
+        border-radius:200px;
+        text-align: center;
+        &:hover{
+          background-color: lightgray;
+        }
+        transition: ease 0.2s all;
       }
-      transition: ease 0.2s all;
+      .floating{
+        @keyframes init {
+          0%{
+            max-height: 0;
+            margin-left: 0;
+          }
+          10%{
+            max-height: 0px;
+            margin-left: 250px;
+          }
+        }
+        position: absolute;
+        text-align: left;
+        margin-left: 300px;
+        margin-top: -50px;
+        max-height: 100px;
+        overflow-y: scroll;
+        overflow-x:hidden;
+        animation: init 0.2s linear;
+        p{
+          width: 200px;
+          border-radius: 10px;
+          padding-left:10px;
+          color: black;
+          background-color: #ffffff;
+          margin-bottom: 10px;
+        }
+        &::-webkit-scrollbar{
+          width: 5px;
+        }
+        &::-webkit-scrollbar-thumb{
+          background-color: #ffffff;
+        }
+      }
     }
   }
 `

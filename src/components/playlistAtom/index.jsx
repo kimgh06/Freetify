@@ -4,12 +4,13 @@ import * as S from './style';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRecoilState } from 'recoil';
-import { NowPlayingId } from '@/app/recoilStates';
+import { AddbuttonIndex, NowPlayingId } from '@/app/recoilStates';
 
 const url = 'https://api.spotify.com/v1';
 
 export default function PlaylistAtom({ index, img, title, artist, id, type, playingtime, artistId, isInPlay, album }) {
   const [toggle, setToggle] = useState(isInPlay);
+  const [clicked, setClicked] = useRecoilState(AddbuttonIndex);
   const [playlist, setPlaylist] = useState('0');
   const [now_playing_id, setNow_playing_id] = useRecoilState(NowPlayingId);
   const [durationT, setDurationT] = useState(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
@@ -22,8 +23,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
   }
   const listcontrol = async e => {
     if (type === 'track') {
-      let list = [];
-      list = JSON.parse(localStorage.getItem('list'));
+      let list = JSON.parse(localStorage.getItem('list'));
       if (list === null) {
         list = [];
       }
@@ -57,7 +57,6 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
             console.log(e)
           })
       }
-      console.log(list);
       localStorage.setItem('list', JSON.stringify(list));
       setToggle(a => !a);
     }
@@ -85,7 +84,23 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
         setNow_playing_id(id);
         localStorage.setItem('now_index_in_tracks', index);
       }}>{now_playing_id === id ? '⏸' : '▶'}</button>
-      {type === "track" && <div className='isInPlay' onClick={listcontrol}>{toggle ? '-' : '+'}</div>}
+      {type === "track" && <div className='isInPlay'>
+        <span onClick={e => {
+          if (clicked === index) {
+            setClicked(false);
+            return;
+          }
+          setClicked(index);
+        }}>{toggle ? '-' : '+'}</span>
+        {clicked === index && <div className='floating'>
+          <p>playlist1</p>
+          <p>playlist1</p>
+          <p>playlist1</p>
+          <p>playlist1</p>
+          <p>playlist1</p>
+          <p>playlist1</p>
+        </div>}
+      </div>}
     </div>}
   </S.PlayAtom>;
 }
