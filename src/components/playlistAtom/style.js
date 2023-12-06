@@ -95,8 +95,8 @@ export const PlayAtom = styled.div`
         position: absolute;
         text-align: left;
         margin-left: -280px;
-        margin-top: -60px;
-        max-height: 100px;
+        margin-top: -150px;
+        max-height: 200px;
         overflow-y: scroll;
         overflow-x:hidden;
         animation: init 0.1s linear;

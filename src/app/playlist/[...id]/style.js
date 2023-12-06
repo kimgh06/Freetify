@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 
-export const Profile = styled.div`
+export const Playlist = styled.div`
   display: flex;
   justify-content: center;
   main{
