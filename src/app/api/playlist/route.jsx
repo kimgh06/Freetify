@@ -4,8 +4,15 @@ import jwt from 'jsonwebtoken'
 const secret = process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET;
 
 export async function GET(req, response) { //전체 플레이리스트 조회
-  console.log(req);
-  return NextResponse.json({ msg: 'get' });
+  const Auth = jwt.verify(req.headers.get('Authorization'), secret);
+  const q = new URLSearchParams(new URL(req?.url).search)
+  console.log(q.get('id'))
+  const { user_id } = Auth
+  const { err, res } = await useQuery(`select playlist_id from playlist where user_id = ${user_id}`);
+  if (err !== null) {
+    return NextResponse.json({ err: err }, { status: 500 });
+  }
+  return NextResponse.json({ res });
 }
 
 export async function POST(req, response) { //특정 플레이리스트 목록 조회

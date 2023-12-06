@@ -12,6 +12,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
   const [toggle, setToggle] = useState(isInPlay);
   const [clicked, setClicked] = useRecoilState(AddbuttonIndex);
   const [playlist, setPlaylist] = useState('0');
+  const [allList, setAllList] = useState([{}]);
   const [now_playing_id, setNow_playing_id] = useRecoilState(NowPlayingId);
   const [durationT, setDurationT] = useState(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
   const getMusicAnalsisData = async e => {
@@ -61,11 +62,24 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
       setToggle(a => !a);
     }
   }
+  const getAllPlaylist = async e => {
+    await axios.get(`/api/playlist?id=${id}`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
+      .then(e => {
+        setAllList(e.data.res);
+      }).catch(e => {
+        console.log(e);
+      })
+  }
   useEffect(e => {
     if (id && type === 'track') {
       setDurationT(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
     }
   }, [id]);
+  useEffect(e => {
+    if (clicked === index) {
+      getAllPlaylist();
+    }
+  }, [clicked])
   return <S.PlayAtom>
     <img src={img} alt="" onClick={e => {
       getMusicAnalsisData();
@@ -93,12 +107,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
           setClicked(index);
         }}>{toggle ? '-' : '+'}</span>
         {clicked === index && <div className='floating'>
-          <p>playlist1</p>
-          <p>playlist1</p>
-          <p>playlist1</p>
-          <p>playlist1</p>
-          <p>playlist1</p>
-          <p>playlist1</p>
+          {allList?.map((i, n) => <p key={n} onClick={e => setPlaylist(i['playlist_id'])}>{i['playlist_id']}</p>)}
         </div>}
       </div>}
     </div>}
