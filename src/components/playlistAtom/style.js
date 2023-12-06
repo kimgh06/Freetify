@@ -81,6 +81,7 @@ export const PlayAtom = styled.div`
         transition: ease 0.2s all;
       }
       .floating{
+        font-size: 18px;
         @keyframes init {
           0%{
             max-height: 0;
@@ -88,22 +89,21 @@ export const PlayAtom = styled.div`
           }
           10%{
             max-height: 0px;
-            margin-left: 250px;
+            margin-left: -240px;
           }
         }
         position: absolute;
         text-align: left;
-        margin-left: 300px;
-        margin-top: -50px;
+        margin-left: -280px;
+        margin-top: -60px;
         max-height: 100px;
         overflow-y: scroll;
         overflow-x:hidden;
         animation: init 0.1s linear;
         div{
-          width: 200px;
+          width: 230px;
           border-radius: 10px;
-          padding-left:10px;
-          padding-right:10px;
+          padding:2px 10px;
           color: black;
           background-color: #ffffff;
           margin-bottom: 10px;

@@ -231,15 +231,6 @@ export default function Player() {
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
-      window.addEventListener('keydown', e => {
-        if (e.target === document.querySelector('.search')) {
-          return;
-        }
-        if (e.code === 'Space') {
-          e.preventDefault()
-          setPlay(a => !a)
-        }
-      })
     }
   }, []);
   useEffect(e => {
@@ -248,7 +239,7 @@ export default function Player() {
   return <S.Player style={{
     width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
       innerWidth < 1200 ? '98vw' : '30vw'}`
-  }}>
+  }} >
     <div className='audio'>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }}
         onClick={e => setExtenstionMode(a => !a)}>
@@ -272,7 +263,7 @@ export default function Player() {
               <button className='left' onClick={e => {
                 PreviousTrack();
               }}>{'<'}</button>
-              <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
+              <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
                 onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
               <button className='right' onClick={e => {
                 NextTrack();
@@ -280,7 +271,7 @@ export default function Player() {
             </div>
           </div>
         </> : <S.Main_smaller>
-          <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
+          <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
             onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           <button className='left' onClick={e => {
             PreviousTrack();
@@ -303,7 +294,7 @@ export default function Player() {
                   {info?.artists && info?.artists[0]?.name}
                 </div>
               </div>
-              <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
+              <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
                 onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
             </div>
           </> : <S.ExtensionMode_mobile>
@@ -327,7 +318,7 @@ export default function Player() {
                   <button className='left' onClick={e => {
                     PreviousTrack();
                   }}>{'<'}</button>
-                  <button className='play' style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+                  <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
                   <button className='right' onClick={e => {
                     NextTrack();
                   }}>{'>'}</button>

@@ -112,6 +112,22 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
           setClicked(index);
         }}>{toggle ? '-' : '+'}</span>
         {clicked === index && <div className='floating'>
+          <div>
+            <span onClick={e => {
+              if (input === false) {
+                setInput('')
+              }
+            }}>{input === false ? '+' : <>
+              <input onChange={e => setInput(e.target.value)} value={input} autoFocus />
+              <button onClick={e => {
+                if (!input) {
+                  return;
+                }
+                putPlaylist(input);
+                setInput(false);
+              }}>+</button>
+            </>}</span>
+          </div>
           {allList?.map((i, n) => <div key={n}>{i['playlist_id']}
             <p onClick={e => {
               if (!i['exist']) {
@@ -120,20 +136,6 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
                 deletePlaylist(i['playlist_id'])
               }
             }}>{!i['exist'] ? '+' : '-'}</p></div>)}
-          <div><span onClick={e => {
-            if (input === false) {
-              setInput('')
-            }
-          }}>{input === false ? '+' : <>
-            <input onChange={e => setInput(e.target.value)} value={input} autoFocus />
-            <button onClick={e => {
-              if (!input) {
-                return;
-              }
-              putPlaylist(input);
-              setInput(false);
-            }}>+</button>
-          </>}</span></div>
         </div>}
       </div>}
     </div>}
