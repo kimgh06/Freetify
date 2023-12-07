@@ -34,7 +34,7 @@ async function SearchAll(user_id) {
 export async function POST(req, response) { //특정 플레이리스트 목록 조회
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);
   const { nickname, playlist } = await req.json();
-  const { err, res } = await useQuery(`select song_id from playlist where user_id = (select user_id from user_info where nickname = '${nickname}') and playlist_id = '${playlist}'`)
+  const { err, res } = await useQuery(`select song_id from playlist where user_id = (select user_id from user_info where nickname = '${nickname}') and playlist_id = '${playlist}' order by play_index`)
   if (err !== null) {
     return NextResponse.json({ msg: err }, { status: 500 });
   }
@@ -44,11 +44,12 @@ export async function POST(req, response) { //특정 플레이리스트 목록 �
 export async function PUT(req, response) {
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);
   const { song_id, playlist } = await req.json();
-  const { err, res } = await useQuery(`insert into playlist values('${playlist}', ${Auth['user_id']}, '${song_id}')`)
+  const { err, res } = await useQuery(`insert into playlist values('${playlist}', ${Auth['user_id']}, '${song_id}', (select mx from (select max(play_index) mx from playlist where playlist_id = '${playlist}' and user_id = ${Auth['user_id']}) sub))`)
   if (new Date().getTime() > Auth['exp']) {
     return NextResponse.json({ msg: "Need to refresh" }, { status: 403 })
   }
   if (err !== null) {
+    console.log(err)
     if (err['errno'] === 1062) {
       return NextResponse.json({ msg: 'Already exists' }, { status: 400 })
     }

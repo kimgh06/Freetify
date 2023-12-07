@@ -128,7 +128,8 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
               }}>+</button>
             </>}</span>
           </div>
-          {allList?.map((i, n) => <div key={n}>{i['playlist_id']}
+          {allList?.map((i, n) => <div key={n}>
+            <Link href={`/playlist/${localStorage.getItem('user_nickname')}?playlist=${i['playlist_id']}`}>{i['playlist_id']}</Link>
             <p onClick={e => {
               if (!i['exist']) {
                 putPlaylist(i['playlist_id']);

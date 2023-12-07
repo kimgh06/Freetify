@@ -50,7 +50,7 @@ function PlaylistPage(props) {
   }
   useEffect(e => {
     getPlaylistAtoms()
-  }, [])
+  }, [props])
   return <S.Playlist>
     <Navi />
     <main>

@@ -109,6 +109,13 @@ export const PlayAtom = styled.div`
           margin-bottom: 10px;
           display: flex;
           justify-content: space-between;
+          p{
+            max-width: 10px;
+            min-width: 10px;
+            width: 10px;
+            margin: 0;
+            border: none;
+          }
         }
         &::-webkit-scrollbar{
           width: 5px;
