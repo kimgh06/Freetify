@@ -2,6 +2,8 @@ import ytdl from "ytdl-core";
 import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
 import axios from "axios";
+import jwt from "jsonwebtoken";
+import { useQuery } from "@/app/useQuery";
 
 async function getInfo(id, access) {
   return await axios.get(`https://api.spotify.com/v1/tracks/${id}`,
@@ -13,24 +15,25 @@ async function getInfo(id, access) {
     });
 }
 
-export async function GET(req, res) {
+export async function GET(req, response) {
   const access = req.headers.get('Authorization')
-  // jwt.verify(req.headers.get('Authorization'), process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET);
+  const user_access = req.headers.get('user_access') ? jwt.verify(req.headers.get('user_access'), process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET) : null;
   // if (Auth['exp'] < new Date().getTime()) {
   //   return NextResponse.json({ msg: 'Token is expired.' }, { status: 403 })
   // }
   const q = new URLSearchParams(new URL(req?.url).search)
   let songId = q.get('songId');
+  const user_id = user_access?.user_id
+  let { err, res } = await useQuery(`insert into song_stat values('${songId}', ${user_id || -1},0,false)`)
+  if (err?.errno === 1062) {
+    let { err, res } = await useQuery(`update song_stat set count = count+1 where song_id = '${songId}' and user_id = ${user_id || -1}`)
+  }
   const info = await getInfo(songId, access);
   let album = info?.album?.name
   let artist = info?.artists[0].name;
   let length = info.album.total_tracks;
   let title = info?.name;
-  // album = decodeURIComponent(album);
-  // title = decodeURIComponent(title);
-  title = decodeURIComponent(title)
-    .replace(/%27/g, "'")
-    .replace(/%38/g, "&")
+  title = title
     .replace(/\(/g, "")
     .replace(/\)/g, "")
     .replace(/-/g, "")

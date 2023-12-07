@@ -25,7 +25,8 @@ export default function Player() {
       responseType: 'blob',
       signal: Axios_controler.signal,
       headers: {
-        'Authorization': access
+        'Authorization': access,
+        'user_access': localStorage.getItem('user_access') || null
       }
     }).then(e => {
       let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
