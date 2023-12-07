@@ -33,12 +33,6 @@ export async function GET(req, response) {
   let artist = info?.artists[0].name;
   let length = info.album.total_tracks;
   let title = info?.name;
-  title = title
-    .replace(/\(/g, "")
-    .replace(/\)/g, "")
-    .replace(/-/g, "")
-    .replace(/ /g, "")
-    .toLowerCase()
   artist = artist.replace(/%20/g, " ");
   artist = decodeURIComponent(artist)
   console.log(title, artist)
@@ -48,6 +42,12 @@ export async function GET(req, response) {
   let url;
   if (list.length != 0) {
     let playlist = await youtubesearchapi.GetPlaylistData(list[0].id, 100);
+    const newTitle = title
+      .replace(/\(/g, "")
+      .replace(/\)/g, "")
+      .replace(/-/g, "")
+      .replace(/ /g, "")
+      .toLowerCase();
     for (let i = 0; i < playlist.items.length; i++) {
       const item = playlist.items[i];
       let asdf = item.title
@@ -57,9 +57,9 @@ export async function GET(req, response) {
         .replace(/-/g, "")
         .replace(/ /g, "")
         .toLowerCase()
-      if (asdf.indexOf(title) !== -1 ||
-        title.indexOf(asdf) !== -1 ||
-        asdf.indexOf(title.replace(/8/g, '&')) !== -1) {
+      if (asdf.indexOf(newTitle) !== -1 ||
+        newTitle.indexOf(asdf) !== -1 ||
+        asdf.indexOf(newTitle.replace(/8/g, '&')) !== -1) {
         console.log(title, "found")
         url = item.id;
         break;
