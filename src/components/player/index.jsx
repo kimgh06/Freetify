@@ -20,28 +20,26 @@ export default function Player() {
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
   const Axios_controler = new AbortController();
-  const getMusicUrl = async (artist, title, album, length, id) => {
-    if (artist && title && album && length) {
-      await axios.get(`/api/get_video?songId=${id}&album=${album}&artist=${artist}&length=${length}&title=${title.replace(/&/g, "%38").replace(/#/g, "%35")}`, {
-        responseType: 'blob',
-        signal: Axios_controler.signal,
-        headers: {
-          'Authorization': localStorage.getItem('user_access')
-        }
-      }).then(e => {
-        let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
-        if (cached_url[`${id}`]) {
-          return;
-        }
-        const url = URL.createObjectURL(e.data);
-        cached_url[`${id}`] = url;
-        localStorage.setItem('cached_url', JSON.stringify(cached_url));
-        console.log(title, "loaded");
-      }).catch(e => {
-        console.log(e.message, title);
-      })
-      // Axios_controler.abort();
-    }
+  const getMusicUrl = async (id) => {
+    await axios.get(`/api/get_video?songId=${id}`, {
+      responseType: 'blob',
+      signal: Axios_controler.signal,
+      headers: {
+        'Authorization': access
+      }
+    }).then(e => {
+      let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
+      if (cached_url[`${id}`]) {
+        return;
+      }
+      const url = URL.createObjectURL(e.data);
+      cached_url[`${id}`] = url;
+      localStorage.setItem('cached_url', JSON.stringify(cached_url));
+      console.log(id, "loaded");
+    }).catch(e => {
+      console.log(e.message, id);
+    })
+    // Axios_controler.abort();
   }
   const recommendTracks = async e => {
     const recentTrack = localStorage.getItem('recent_track_list').split(',').slice(-2);
@@ -117,7 +115,7 @@ export default function Player() {
         audio.current.src = url
         setSrc(url)
       } else {
-        await getMusicUrl(music_data?.artists[0]?.name, music_data?.name, music_data?.album?.name, music_data.album.total_tracks, id).then(() => {
+        await getMusicUrl(id).then(() => {
           let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
           let new_src = cached_url[`${id}`]
           audio.current.src = new_src;
@@ -173,7 +171,7 @@ export default function Player() {
       if (url) {
         return;
       }
-      getMusicUrl(next_data?.artists[0]?.name, next_data?.name, next_data?.album?.name, next_data.album.total_tracks, list[index + 1]);
+      getMusicUrl(list[index + 1]);
     } catch (e) {
       console.log(e)
     }

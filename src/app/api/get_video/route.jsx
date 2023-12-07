@@ -1,22 +1,34 @@
 import ytdl from "ytdl-core";
 import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
+import axios from "axios";
+
+async function getInfo(id, access) {
+  return await axios.get(`https://api.spotify.com/v1/tracks/${id}`,
+    { headers: { Authorization: `Bearer ${access}` } })
+    .then(async e => {
+      return e.data;
+    }).catch(e => {
+      console.log(e);
+    });
+}
 
 export async function GET(req, res) {
-  // const Auth = jwt.verify(req.headers.get('Authorization'), process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET);
+  const access = req.headers.get('Authorization')
+  // jwt.verify(req.headers.get('Authorization'), process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET);
   // if (Auth['exp'] < new Date().getTime()) {
   //   return NextResponse.json({ msg: 'Token is expired.' }, { status: 403 })
   // }
   const q = new URLSearchParams(new URL(req?.url).search)
-  let album = q.get('album');
   let songId = q.get('songId');
-  let artist = q.get('artist');
-  let length = q.get('length');
-  let title = q.get('title');
-  album = decodeURIComponent(album);
-  title = decodeURIComponent(title);
-  artist = decodeURIComponent(artist)
-  title = decodeURIComponent(title).replace(/%20/g, " ")
+  const info = await getInfo(songId, access);
+  let album = info?.album?.name
+  let artist = info?.artists[0].name;
+  let length = info.album.total_tracks;
+  let title = info?.name;
+  // album = decodeURIComponent(album);
+  // title = decodeURIComponent(title);
+  title = decodeURIComponent(title)
     .replace(/%27/g, "'")
     .replace(/%38/g, "&")
     .replace(/\(/g, "")
@@ -24,8 +36,9 @@ export async function GET(req, res) {
     .replace(/-/g, "")
     .replace(/ /g, "")
     .toLowerCase()
-  console.log(title, artist)
   artist = artist.replace(/%20/g, " ");
+  artist = decodeURIComponent(artist)
+  console.log(title, artist)
   //앨범 검색=> 트랙찾기
   let list = (await youtubesearchapi.GetListByKeyword(`${album} album`, true, 20)).items;
   list = list.filter(item => item.type === "playlist" && item.length >= length && item)
