@@ -9,12 +9,13 @@ export async function GET(req, response) { //전체 플레이리스트 조회
   const id = q.get('id');
   const { user_id } = Auth
   if (id) {
-    return SearchId(user_id);
+    return SearchId(id, user_id);
   } else {
-    return SearchAll();
+    return SearchAll(user_id);
   }
 }
-async function SearchId(id) {
+async function SearchId(id, user_id) {
+  console.log(id)
   const { err, res } = await useQuery(`select distinct playlist_id, case when (select count(*) from playlist p2 where song_id='${id}' and p1.playlist_id = p2.playlist_id)>0 then 1 else 0 end as exist from playlist p1 where user_id = ${user_id}`);
   if (err !== null) {
     return NextResponse.json({ err: err }, { status: 500 });
@@ -22,8 +23,8 @@ async function SearchId(id) {
   return NextResponse.json({ res });
 }
 
-async function SearchAll() {
-  const { err, res } = await useQuery(`select distinct playlist_id from playlist`)
+async function SearchAll(user_id) {
+  const { err, res } = await useQuery(`select distinct playlist_id from playlist where user_id = ${user_id}`)
   if (err !== null) {
     return NextResponse.json({ err: err }, { status: 500 })
   }

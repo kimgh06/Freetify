@@ -24,7 +24,7 @@ export async function GET(req, response) {
   const q = new URLSearchParams(new URL(req?.url).search)
   let songId = q.get('songId');
   const user_id = user_access?.user_id
-  let { err, res } = await useQuery(`insert into song_stat values('${songId}', ${user_id || -1},0,false)`)
+  let { err, res } = await useQuery(`insert into song_stat values('${songId}', ${user_id || -1},1,false)`)
   if (err?.errno === 1062) {
     let { err, res } = await useQuery(`update song_stat set count = count+1 where song_id = '${songId}' and user_id = ${user_id || -1}`)
   }
