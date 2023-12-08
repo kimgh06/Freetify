@@ -15,6 +15,10 @@ async function getInfo(id, access) {
     });
 }
 
+async function addsongStat(songId, user_id) {
+  return await useQuery(`update song_stat set count = count+1 where song_id = '${songId}' and user_id = ${user_id || -1}`)
+}
+
 export async function GET(req, response) {
   const access = req.headers.get('Authorization')
   const user_access = req.headers.get('user_access') ? jwt.verify(req.headers.get('user_access'), process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET) : null;
@@ -26,7 +30,7 @@ export async function GET(req, response) {
   const user_id = user_access?.user_id
   let { err, res } = await useQuery(`insert into song_stat values('${songId}', ${user_id || -1},1,false)`)
   if (err?.errno === 1062) {
-    let { err, res } = await useQuery(`update song_stat set count = count+1 where song_id = '${songId}' and user_id = ${user_id || -1}`)
+    const { err, res } = await addsongStat(songId, user_id);
   }
   const info = await getInfo(songId, access);
   let album = info?.album?.name
