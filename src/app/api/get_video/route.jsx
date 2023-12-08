@@ -15,7 +15,7 @@ async function getInfo(id, access) {
     });
 }
 
-async function addsongStat(songId, user_id) {
+async function AddsongStat(songId, user_id) {
   return await useQuery(`update song_stat set count = count+1 where song_id = '${songId}' and user_id = ${user_id || -1}`)
 }
 
@@ -30,7 +30,7 @@ export async function GET(req, response) {
   const user_id = user_access?.user_id
   let { err, res } = await useQuery(`insert into song_stat values('${songId}', ${user_id || -1},1,false)`)
   if (err?.errno === 1062) {
-    const { err, res } = await addsongStat(songId, user_id);
+    const { err, res } = await AddsongStat(songId, user_id);
   }
   const info = await getInfo(songId, access);
   let album = info?.album?.name
