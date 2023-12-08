@@ -32,7 +32,7 @@ async function SearchAll(user_id) {
 }
 
 export async function POST(req, response) { //특정 플레이리스트 목록 조회
-  const Auth = jwt.verify(req.headers.get('Authorization'), secret);
+  // const Auth = jwt.verify(req.headers.get('Authorization'), secret);
   const { nickname, playlist } = await req.json();
   const { err, res } = await useQuery(`select song_id from playlist where user_id = (select user_id from user_info where nickname = '${nickname}') and playlist_id = '${playlist}' order by play_index`)
   if (err !== null) {
