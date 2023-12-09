@@ -215,6 +215,7 @@ export default function Player() {
       audio.current.pause();
       return;
     }
+    document.querySelector('.play').focus()
     if (play) {
       let promise = audio.current.play();
       promise.catch(err => { console.log(err); setPlay(false) });
