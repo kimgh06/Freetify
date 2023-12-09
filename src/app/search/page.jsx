@@ -22,12 +22,13 @@ function InnerContent() {
   const [artist, setArtist] = useState([]);
   const [tracks, setTracks] = useState([]);
   const [access, setAccess] = useRecoilState(AccessToken);
-  const searchItems = async e => {
+  const searchItems = async q => {
     await axios.get(`${url}/search?q=${q}&type=album,track,artist&limit=5`, { headers: { Authorization: "Bearer " + access } }).then(e => {
       const data = e.data;
       let artists = data.artists.items.slice(0, 5);
       console.log("album", data.albums.items, "artists", artists, "tracks", data.tracks.items);
       document.title = q;
+      window.history.pushState('', '', `?q=${q}`)
       setAlbums(data.albums.items);
       setTracks(data.tracks.items);
       setArtist(artists);
@@ -37,13 +38,18 @@ function InnerContent() {
   }
   useEffect(e => {
     document.title = "search";
+    const q = new URLSearchParams(window.location.search).get('q');
+    console.log(q)
+    if (q) {
+      searchItems(q)
+    }
   }, []);
   return <>
     <Navi />
     <S.Search>
       <form onSubmit={e => {
         e.preventDefault();
-        searchItems();
+        searchItems(q);
       }}>
         <input onChange={e => setQ(e.target.value)} value={q} className="search" />
         <button>검색</button>

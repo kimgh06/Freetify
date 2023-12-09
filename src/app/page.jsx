@@ -62,10 +62,12 @@ function InnerComponent() {
       });
     }
     let tr = await getTrackinfos(ids);
-
+    if (!tr) {
+      return;
+    }
     setTracks(tr);
     let TrackList = [];
-    tr.forEach(items => {
+    tr?.forEach(items => {
       if (TrackList.indexOf(items.id) === -1) {
         TrackList.push(items.id);
       }
