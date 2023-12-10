@@ -164,10 +164,10 @@ export default function Player() {
         return;
       }
       localStorage.setItem('now_index_in_tracks', index);
-      const next_data = await getTrackinfos(list[index + 1]);
-      if (!next_data) {
-        return;
-      }
+      // const next_data = await getTrackinfos(list[index + 1]);
+      // if (!next_data) {
+      //   return;
+      // }
       url = cached_url[list[index + 1]];
       if (url) {
         return;
