@@ -49,6 +49,7 @@ function PlaylistPage(props) {
     }
   }
   useEffect(e => {
+    document.title = props.searchParams['playlist']
     getPlaylistAtoms()
   }, [props])
   return <S.Playlist>

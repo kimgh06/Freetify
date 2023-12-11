@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useRecoilState } from 'recoil';
 import { AccessToken, AudioSrc, NowPlayingId, PlayingCurrentTime, Volume } from '@/app/recoilStates';
 import Link from 'next/link';
+import Lyric from '../lyric';
 
 export default function Player() {
   const audio = useRef(null);
@@ -270,6 +271,7 @@ export default function Player() {
               }}>{'>'}</button>
             </div>
           </div>
+          {info && <Lyric isrc={info?.external_ids?.isrc} />}
         </> : <S.Main_smaller>
           <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
             onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
