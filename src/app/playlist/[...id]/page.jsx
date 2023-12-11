@@ -4,7 +4,7 @@ import * as S from './style';
 import { useEffect, useState } from "react";
 import { RecoilRoot, useRecoilState } from "recoil";
 import axios from "axios";
-import { AccessToken } from "@/app/recoilStates";
+import { AccessToken, AddbuttonIndex } from "@/app/recoilStates";
 import PlaylistAtom from "@/components/playlistAtom";
 
 export default function App(props) {
@@ -16,6 +16,9 @@ export default function App(props) {
 function PlaylistPage(props) {
   const [tracks, setTracks] = useState([]);
   const [access, setAccess] = useRecoilState(AccessToken);
+  const [add, setAdd] = useRecoilState(AddbuttonIndex);
+  const [holding, setHolding] = useState(false);
+  const [clientY, setClientY] = useState(0);
   const getPlaylistAtoms = async e => {
     await axios.post(`/api/playlist`, { nickname: props.params['id'][0], playlist: props.searchParams['playlist'] },
       { headers: { 'Authorization': localStorage.getItem('user_access') } })
@@ -51,22 +54,32 @@ function PlaylistPage(props) {
   useEffect(e => {
     document.title = props.searchParams['playlist']
     getPlaylistAtoms()
-  }, [props])
+  }, [props, add])
   return <S.Playlist>
     <Navi />
     <main>
       <h1>
         {props.params['id'][0]} - {props.searchParams['playlist']}
       </h1>
-      {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i?.album.images[2].url} type={i?.type}
-        id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {
-          let list = [];
-          list = JSON.parse(localStorage.getItem('list'));
-          if (list === null) {
-            list = [];
+      {tracks?.length !== 0 && tracks?.map((i, n) => <div className="box" style={holding === i ? {
+        position: 'absolute',
+        top: clientY - 50
+      } : {}} key={n}>
+        <div className="hold" onMouseDown={e => setHolding(i)} onMouseUp={e => setHolding(false)} onMouseMove={e => {
+          if (holding) {
+            setClientY(e.clientY)
           }
-          return list.find(a => a === i?.id)
-        }} />)}
+        }}> </div>
+        <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i?.album.images[2].url} type={i?.type}
+          id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {
+            let list = [];
+            list = JSON.parse(localStorage.getItem('list'));
+            if (list === null) {
+              list = [];
+            }
+            return list.find(a => a === i?.id)
+          }} />
+      </div>)}
     </main>
     <S.PaddingBox />
   </S.Playlist>

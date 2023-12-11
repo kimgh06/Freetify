@@ -14,6 +14,22 @@ export const Playlist = styled.div`
       margin: auto;
       text-align: center;
     }
+    .box{
+      display: flex;
+      align-items: center;
+      .hold{
+        height: 70px;
+        padding-left: 100px;
+        margin-left: -100px;
+        margin-top: 10px;
+        border-right: 5px solid black;
+        margin-right: 10px;
+        cursor: pointer;
+        &:active{
+          cursor: grabbing;
+        }
+      }
+    }
   }
 `
 

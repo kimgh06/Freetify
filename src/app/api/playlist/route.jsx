@@ -15,7 +15,6 @@ export async function GET(req, response) { //전체 플레이리스트 조회
   }
 }
 async function SearchId(id, user_id) {
-  console.log(id)
   const { err, res } = await useQuery(`select distinct playlist_id, case when (select count(*) from playlist p2 where song_id='${id}' and p1.playlist_id = p2.playlist_id)>0 then 1 else 0 end as exist from playlist p1 where user_id = ${user_id}`);
   if (err !== null) {
     return NextResponse.json({ err: err }, { status: 500 });
@@ -48,7 +47,6 @@ export async function PUT(req, response) {
   if (new Date().getTime() > Auth['exp']) {
     return NextResponse.json({ msg: "Need to refresh" }, { status: 403 })
   }
-  console.log(res)
   if (err !== null) {
     console.log(err)
     if (err['errno'] === 1062) {
