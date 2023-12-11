@@ -56,19 +56,23 @@ function PlaylistPage(props) {
     getPlaylistAtoms()
     document.addEventListener('mouseup', e => setHolding(false))
     document.addEventListener('mousemove', e => setClientY(e.pageY))
-  }, [props, add])
+  }, [props])
+  useEffect(e => {
+    holding && console.log(holding)
+  }, [holding])
   return <S.Playlist>
     <Navi />
     <main>
       <h1>
         {props.params['id'][0]} - {props.searchParams['playlist']}
       </h1>
-      {tracks?.length !== 0 && tracks?.map((i, n) => <div className="box" style={holding === i ? {
-        position: 'absolute',
-        top: clientY - 40
+      {tracks?.length !== 0 && tracks?.map((i, n) => <div className={`box ${n}`} style={holding === i ? {
+        visibility: 'hidden'
       } : {}} key={n}>
         <div className="hold" onMouseDown={e => setHolding(i)}> </div>
-        <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i?.album.images[2].url} type={i?.type}
+        <PlaylistAtom style={holding === i ? {
+          display: 'none'
+        } : {}} index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i?.album.images[2].url} type={i?.type}
           id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {
             let list = [];
             list = JSON.parse(localStorage.getItem('list'));
@@ -78,6 +82,24 @@ function PlaylistPage(props) {
             return list.find(a => a === i?.id)
           }} />
       </div>)}
+      {holding &&
+        <div className={`box floating`} style={{
+          position: 'absolute',
+          top: clientY - 40
+        }}>
+          <div className="hold" > </div>
+          <PlaylistAtom preview={holding?.preview_url} album={holding?.album} playingtime={holding?.duration_ms} img={holding?.album.images[2].url} type={holding?.type}
+            id={holding?.id} title={holding?.name} artist={holding?.artists} artistId={holding?.artists[0].id} isInPlay={e => {
+              let list = [];
+              list = JSON.parse(localStorage.getItem('list'));
+              if (list === null) {
+                list = [];
+              }
+              return list.find(a => a === holding?.id)
+            }} />
+        </div>
+
+      }
     </main>
     <S.PaddingBox />
   </S.Playlist>
