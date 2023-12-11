@@ -4,7 +4,7 @@ import * as S from './style';
 import { useEffect, useState } from "react";
 import { RecoilRoot, useRecoilState } from "recoil";
 import axios from "axios";
-import { AccessToken, AddbuttonIndex } from "@/app/recoilStates";
+import { AccessToken } from "@/app/recoilStates";
 import PlaylistAtom from "@/components/playlistAtom";
 
 export default function App(props) {
@@ -16,7 +16,6 @@ export default function App(props) {
 function PlaylistPage(props) {
   const [tracks, setTracks] = useState([]);
   const [access, setAccess] = useRecoilState(AccessToken);
-  const [add, setAdd] = useRecoilState(AddbuttonIndex);
   const [holding, setHolding] = useState(false);
   const [clientY, setClientY] = useState(0);
   const getPlaylistAtoms = async e => {
@@ -58,7 +57,14 @@ function PlaylistPage(props) {
     document.addEventListener('mousemove', e => setClientY(e.pageY))
   }, [props])
   useEffect(e => {
-    holding && console.log(holding)
+    if (holding) {
+      console.log(holding)
+      const boxs = document.querySelectorAll(`.box`)
+      for (let i = 0; i < tracks.length; i++) {
+        const target = boxs[i]
+        console.log(target)
+      }
+    }
   }, [holding])
   return <S.Playlist>
     <Navi />
@@ -98,7 +104,6 @@ function PlaylistPage(props) {
               return list.find(a => a === holding?.id)
             }} />
         </div>
-
       }
     </main>
     <S.PaddingBox />

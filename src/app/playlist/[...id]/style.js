@@ -23,12 +23,17 @@ export const Playlist = styled.div`
         padding-left: 70px;
         margin-left: -70px;
         margin-top: 10px;
-        border-right: 5px solid black;
+        border-right: 5px solid white;
         margin-right: 10px;
         cursor: pointer;
         &:active{
           cursor: grabbing;
         }
+      }
+    }
+    .floating{
+      .hold{
+        border-right: 5px solid red;
       }
     }
   }

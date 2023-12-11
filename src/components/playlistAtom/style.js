@@ -1,7 +1,6 @@
 import { styled } from "styled-components";
 
 export const PlayAtom = styled.div`
-  user-select: none;
   margin: auto;
   margin-top: 10px;
   text-align: left;
