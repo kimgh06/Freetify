@@ -10,7 +10,7 @@ export const useQuery = query =>
       database: process.env.NEXT_PUBLIC_SQL_DATABASE
     })
 
-    const result = Connection.query(query, (err, res, fields) => {
+    Connection.query(query, (err, res, fields) => {
       resolve({ err, res, fields })
       Connection.end()
     })
