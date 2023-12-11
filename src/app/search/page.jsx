@@ -41,6 +41,7 @@ function InnerContent() {
     const q = new URLSearchParams(window.location.search).get('q');
     console.log(q)
     if (q) {
+      setQ(q);
       searchItems(q)
     }
   }, []);

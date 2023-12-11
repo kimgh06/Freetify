@@ -13,7 +13,6 @@ export async function POST(req, res) {
 
 const getTrackCommonId = async isrc => {
   return await axios.get(`${baseURL}/track.get?track_isrc=${isrc}&apikey=${api}`).then(e => {
-    // console.log(e.data)
     return e.data.message.body.track.track_id;
   }).catch(e => {
     return e
@@ -21,7 +20,7 @@ const getTrackCommonId = async isrc => {
 }
 const getLyrics = async id => {
   return await axios.get(`${baseURL}/track.lyrics.get?track_id=${id}&apikey=${api}`).then(e => {
-    return e.data
+    return e.data.message.body.lyrics.lyrics_body
   }).catch(e => {
     return e;
   })
@@ -29,7 +28,7 @@ const getLyrics = async id => {
 
 const getSync = async id => {
   return await axios.get(`${baseURL}/track.richsync.get?track_id=${id}&apikey=${api}`).then(e => {
-    return e.data
+    return e.data.message
   }).catch(e => {
     return e;
   })

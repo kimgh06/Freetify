@@ -182,7 +182,7 @@ export default function Player() {
     if (url) {
       await fetch(url).then(e => {
         audio.current.src = url;
-        audio.current.currentTime = currentT
+        audio.current.currentTime = currentT + 0.3
         setPlay(false);
       }).catch(e => {
         audio.current.src = null;
