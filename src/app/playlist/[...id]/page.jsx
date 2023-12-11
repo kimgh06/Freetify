@@ -54,6 +54,8 @@ function PlaylistPage(props) {
   useEffect(e => {
     document.title = props.searchParams['playlist']
     getPlaylistAtoms()
+    document.addEventListener('mouseup', e => setHolding(false))
+    document.addEventListener('mousemove', e => setClientY(e.pageY))
   }, [props, add])
   return <S.Playlist>
     <Navi />
@@ -63,13 +65,9 @@ function PlaylistPage(props) {
       </h1>
       {tracks?.length !== 0 && tracks?.map((i, n) => <div className="box" style={holding === i ? {
         position: 'absolute',
-        top: clientY - 50
+        top: clientY - 40
       } : {}} key={n}>
-        <div className="hold" onMouseDown={e => setHolding(i)} onMouseUp={e => setHolding(false)} onMouseMove={e => {
-          if (holding) {
-            setClientY(e.clientY)
-          }
-        }}> </div>
+        <div className="hold" onMouseDown={e => setHolding(i)}> </div>
         <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i?.album.images[2].url} type={i?.type}
           id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {
             let list = [];

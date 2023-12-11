@@ -19,8 +19,9 @@ export const Playlist = styled.div`
       align-items: center;
       .hold{
         height: 70px;
-        padding-left: 100px;
-        margin-left: -100px;
+        user-select: none;
+        padding-left: 70px;
+        margin-left: -70px;
         margin-top: 10px;
         border-right: 5px solid black;
         margin-right: 10px;
