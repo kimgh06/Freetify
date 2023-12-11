@@ -44,10 +44,11 @@ export async function POST(req, response) { //특정 플레이리스트 목록 �
 export async function PUT(req, response) {
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);
   const { song_id, playlist } = await req.json();
-  const { err, res } = await useQuery(`insert into playlist values('${playlist}', ${Auth['user_id']}, '${song_id}', (select mx from (select max(play_index) mx from playlist where playlist_id = '${playlist}' and user_id = ${Auth['user_id']}) sub))`)
+  const { err, res } = await useQuery(`insert into playlist values('${playlist}', ${Auth['user_id']}, '${song_id}', (select mx + 1 from (select max(play_index) mx from playlist where playlist_id = '${playlist}' and user_id = ${Auth['user_id']}) sub))`)
   if (new Date().getTime() > Auth['exp']) {
     return NextResponse.json({ msg: "Need to refresh" }, { status: 403 })
   }
+  console.log(res)
   if (err !== null) {
     console.log(err)
     if (err['errno'] === 1062) {
