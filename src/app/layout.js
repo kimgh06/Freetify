@@ -12,7 +12,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      {/* <Script src="https://www.googletagmanager.com/gtag/js?id=GTM-5N5SR26M" />
+      <Script src="https://www.googletagmanager.com/gtag/js?id=GTM-5N5SR26M" />
       <Script id="google-analytics">
         {`
         window.dataLayer = window.dataLayer || [];
@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
         gtag('js', new Date());
 
         gtag('config', 'GA_MEASUREMENT_ID');
-      `}</Script> */}
+      `}</Script>
       <body>
         {children}
       </body>
