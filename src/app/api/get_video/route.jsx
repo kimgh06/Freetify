@@ -42,7 +42,7 @@ export async function GET(req, response) {
   console.log(title, artist)
   //앨범 검색=> 트랙찾기
   let list = (await youtubesearchapi.GetListByKeyword(`${album} album`, true, 20)).items;
-  list = list.filter(item => item.type === "playlist" && item.length >= length && item)
+  list = list.filter(item => item.type === "playlist" && item.length >= length && item.length <= 2 * length && item)
   let url;
   if (list.length != 0) {
     let playlist = await youtubesearchapi.GetPlaylistData(list[0].id, 100);

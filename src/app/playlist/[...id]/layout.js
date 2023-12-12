@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
   }
   metadata = {
     title: JSON.parse(data)?.playlist,
-    description: 'playlist'
+    description: 'playlist from freetify'
   }
   return (
     <html lang="en">
