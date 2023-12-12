@@ -22,6 +22,9 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
   const Axios_controler = new AbortController();
   const getMusicUrl = async (id) => {
+    if (!id) {
+      return;
+    }
     await axios.get(`/api/get_video?songId=${id}`, {
       responseType: 'blob',
       signal: Axios_controler.signal,

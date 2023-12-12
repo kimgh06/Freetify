@@ -52,7 +52,7 @@ function PlaylistPage(props) {
     }
   }
   useEffect(e => {
-    document.title = props.searchParams['playlist']
+    // document.title = props.searchParams['playlist']
     getPlaylistAtoms()
     document.addEventListener('mouseup', e => {
       setHolding(false);
