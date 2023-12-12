@@ -58,6 +58,13 @@ function PlaylistPage(props) {
       setHolding(false);
     })
     document.addEventListener('mousemove', e => setClientY(e.pageY))
+    document.addEventListener('touchend', e => {
+      setHolding(false);
+    })
+    document.addEventListener('touchmove', e => {
+      holding && e.preventDefault();
+      setClientY(e.changedTouches[0].pageY)
+    })
   }, [props])
   useEffect(e => {
     if (holding) {
@@ -97,7 +104,11 @@ function PlaylistPage(props) {
       } : {}} key={n}>
         <div className="hold" onMouseDown={e => {
           setHolding(i); setIndex(n);
-        }}> </div>
+        }}
+          onTouchStart={e => {
+            setHolding(i); setIndex(n);
+          }}
+        > </div>
         <PlaylistAtom style={holding === i ? {
           display: 'none'
         } : {}} index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i?.album.images[2].url} type={i?.type}

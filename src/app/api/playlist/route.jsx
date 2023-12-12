@@ -70,3 +70,8 @@ export async function DELETE(req, response) {
   }
   return NextResponse.json({ msg: 'deleted' });
 }
+
+export async function PATCH(req, response) {
+  const Auth = jwt.verify(req.headers.get('Authorization'), secret);
+
+}
