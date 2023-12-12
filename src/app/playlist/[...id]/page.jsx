@@ -56,7 +56,6 @@ function PlaylistPage(props) {
     getPlaylistAtoms()
     document.addEventListener('mouseup', e => {
       setHolding(false);
-      setIndex(0)
     })
     document.addEventListener('mousemove', e => setClientY(e.pageY))
   }, [props])
@@ -64,17 +63,20 @@ function PlaylistPage(props) {
     if (holding) {
       const boxs = document.querySelectorAll(`.box`)
       let max = index;
-      for (let i = 0; i < tracks.length; i++) {
-        if (index === i) {
-          // continue;
-        }
+      let tempTrList = [...tracks];
+      for (let i = 0; i < tempTrList.length; i++) {
         const target = boxs[i]
-        const location = target.getBoundingClientRect().top
+        const location = target.getBoundingClientRect().top + window.pageYOffset
         if (clientY > location) {
-          max = i + 1
+          max = i
         }
       }
+      const t = tempTrList[index];
+      tempTrList[index] = tempTrList[max]
+      tempTrList[max] = t;
       console.log(max)
+      setIndex(max)
+      setTracks(tempTrList)
     }
   }, [holding, clientY])
   return <S.Playlist>
