@@ -2,9 +2,9 @@
 
 // const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
+export let metadata = {
   title: 'Freetify',
-  description: 'Free online music player for you',
+  description: 'playlist',
 }
 
 export default function RootLayout({ children }) {
@@ -12,10 +12,11 @@ export default function RootLayout({ children }) {
   if (!data) {
     return;
   }
-  const title = JSON.parse(data)?.playlist
+  metadata = {
+    title: JSON.parse(data)?.playlist
+  }
   return (
     <html lang="en">
-      <title>{title}</title>
       <body>
         {children}
       </body>
