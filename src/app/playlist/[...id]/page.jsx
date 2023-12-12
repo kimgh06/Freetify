@@ -17,6 +17,7 @@ function PlaylistPage(props) {
   const [tracks, setTracks] = useState([]);
   const [access, setAccess] = useRecoilState(AccessToken);
   const [holding, setHolding] = useState(false);
+  const [index, setIndex] = useState(false);
   const [clientY, setClientY] = useState(0);
   const getPlaylistAtoms = async e => {
     await axios.post(`/api/playlist`, { nickname: props.params['id'][0], playlist: props.searchParams['playlist'] },
@@ -53,19 +54,29 @@ function PlaylistPage(props) {
   useEffect(e => {
     document.title = props.searchParams['playlist']
     getPlaylistAtoms()
-    document.addEventListener('mouseup', e => setHolding(false))
+    document.addEventListener('mouseup', e => {
+      setHolding(false);
+      setIndex(0)
+    })
     document.addEventListener('mousemove', e => setClientY(e.pageY))
   }, [props])
   useEffect(e => {
     if (holding) {
-      console.log(holding)
       const boxs = document.querySelectorAll(`.box`)
+      let max = index;
       for (let i = 0; i < tracks.length; i++) {
+        if (index === i) {
+          // continue;
+        }
         const target = boxs[i]
-        console.log(target)
+        const location = target.getBoundingClientRect().top
+        if (clientY > location) {
+          max = i + 1
+        }
       }
+      console.log(max)
     }
-  }, [holding])
+  }, [holding, clientY])
   return <S.Playlist>
     <Navi />
     <main>
@@ -75,7 +86,9 @@ function PlaylistPage(props) {
       {tracks?.length !== 0 && tracks?.map((i, n) => <div className={`box ${n}`} style={holding === i ? {
         visibility: 'hidden'
       } : {}} key={n}>
-        <div className="hold" onMouseDown={e => setHolding(i)}> </div>
+        <div className="hold" onMouseDown={e => {
+          setHolding(i); setIndex(n);
+        }}> </div>
         <PlaylistAtom style={holding === i ? {
           display: 'none'
         } : {}} index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i?.album.images[2].url} type={i?.type}
