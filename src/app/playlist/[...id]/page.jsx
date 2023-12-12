@@ -74,9 +74,16 @@ function PlaylistPage(props) {
       const t = tempTrList[index];
       tempTrList[index] = tempTrList[max]
       tempTrList[max] = t;
-      console.log(max)
       setIndex(max)
       setTracks(tempTrList)
+
+      let news = []
+      tempTrList.forEach(items => {
+        if (news.indexOf(items.id) === -1) {
+          news.push(items.id);
+        }
+      });
+      localStorage.setItem('TrackList', `${news}`);
     }
   }, [holding, clientY])
   return <S.Playlist>
