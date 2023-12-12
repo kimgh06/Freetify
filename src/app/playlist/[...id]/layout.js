@@ -13,7 +13,8 @@ export default function RootLayout({ children }) {
     return;
   }
   metadata = {
-    title: JSON.parse(data)?.playlist
+    title: JSON.parse(data)?.playlist,
+    description: 'playlist'
   }
   return (
     <html lang="en">
