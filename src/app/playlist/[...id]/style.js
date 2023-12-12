@@ -21,7 +21,7 @@ export const Playlist = styled.div`
         height: 70px;
         user-select: none;
         padding-left: 70px;
-        margin-left: -70px;
+        margin-left: -85px;
         margin-top: 10px;
         border-right: 5px solid white;
         margin-right: 10px;
