@@ -65,12 +65,12 @@ function PlaylistPage(props) {
   }
   useEffect(e => {
     if (holding) {
+      document.body.style.overflow = 'hidden';
       const boxs = document.querySelectorAll(`.box`)
       let max = index;
       let tempTrList = [...tracks];
       for (let i = 0; i < tempTrList.length; i++) {
-        const target = boxs[i]
-        const location = target.getBoundingClientRect().top + window.pageYOffset
+        const location = boxs[i].getBoundingClientRect().top + window.pageYOffset
         if (clientY > location) {
           max = i
         }
@@ -80,19 +80,14 @@ function PlaylistPage(props) {
       tempTrList[max] = t;
       setIndex(max)
       setTracks(tempTrList)
-
-      let news = []
-      tempTrList.forEach(items => {
-        if (news.indexOf(items.id) === -1) {
-          news.push(items.id);
-        }
-      });
-      localStorage.setItem('TrackList', `${news}`);
       return;
     }
+    document.body.style.overflow = 'auto';
     if (clientY !== false) {
       return;
     }
+
+    //initialization
     getPlaylistAtoms()
     document.addEventListener('mouseup', e => {
       setHolding(false);
@@ -109,6 +104,13 @@ function PlaylistPage(props) {
     if (holding) {
       return;
     }
+    let news = []
+    tracks.forEach(items => {
+      if (news.indexOf(items.id) === -1) {
+        news.push(items.id);
+      }
+    });
+    localStorage.setItem('TrackList', `${news}`);
     patchItems();
   }, [holding])
   return <S.Playlist>

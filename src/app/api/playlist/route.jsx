@@ -86,7 +86,7 @@ export async function PATCH(req, response) {
 async function LoopUpdate(items, playlist_id) {
   let err;
   for (let i = 0; i < items.length; i++) {
-    await useQuery(`update playlist set play_index = ${i} where song_id = '${items[i]}' and playlist_id = '${playlist_id}'`).catch(e => {
+    await ExcuteUpdate(`update playlist set play_index = ${i} where song_id = '${items[i]}' and playlist_id = '${playlist_id}'`).catch(e => {
       err = e;
     })
   }
@@ -94,4 +94,8 @@ async function LoopUpdate(items, playlist_id) {
     return NextResponse.json({ msg: err }, { status: 500 })
   }
   return NextResponse.json({ msg: 'succeed' });
+}
+
+async function ExcuteUpdate(query) {
+  return await useQuery(query)
 }
