@@ -67,7 +67,6 @@ function PlaylistPage(props) {
   }
   useEffect(e => {
     if (holding) {
-      document.body.style.overflow = 'hidden';
       const boxs = document.querySelectorAll(`.box`)
       let max = index;
       let tempTrList = [...tracks];
@@ -84,7 +83,6 @@ function PlaylistPage(props) {
       setTracks(tempTrList)
       return;
     }
-    document.body.style.overflow = 'auto';
     if (clientY !== false) {
       return;
     }
@@ -98,17 +96,20 @@ function PlaylistPage(props) {
     document.addEventListener('touchend', e => {
       setHolding(false);
     })
-    document.addEventListener('touchmove', e => {
-      setClientY(e.changedTouches[0].pageY)
-    })
   }, [clientY, props])
   useEffect(e => {
+    const func = e => {
+      holding && e.preventDefault()
+      setClientY(e.changedTouches[0].pageY)
+    }
+
+    document.addEventListener('touchmove', func, { passive: false })
     if (holding || !clientY) {
-      return;
+      return e => document.removeEventListener('touchmove', func);
     }
     if (JSON.stringify(tracks) === JSON.stringify(originList)) { //nothing change
       console.log('nothing change')
-      return;
+      return e => document.removeEventListener('touchmove', func);
     }
     setOriginList(tracks);
     let news = []
@@ -119,6 +120,7 @@ function PlaylistPage(props) {
     });
     localStorage.setItem('TrackList', `${news}`);
     patchItems();
+    return e => document.removeEventListener('touchmove', func)
   }, [holding])
   return <S.Playlist>
     <Navi />
@@ -133,7 +135,7 @@ function PlaylistPage(props) {
           setHolding(i); setIndex(n);
         }}
           onTouchStart={e => {
-            setHolding(i); setIndex(n);
+            setHolding(i); setIndex(n); setClientY(e.changedTouches[0].pageY)
           }}
         > </div>
         <PlaylistAtom style={holding === i ? {
