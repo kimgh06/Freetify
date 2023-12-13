@@ -101,7 +101,7 @@ function PlaylistPage(props) {
     })
   }, [clientY, props])
   useEffect(e => {
-    if (holding) {
+    if (holding || !clientY) {
       return;
     }
     let news = []
