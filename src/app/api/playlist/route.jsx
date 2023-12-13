@@ -73,5 +73,7 @@ export async function DELETE(req, response) {
 
 export async function PATCH(req, response) {
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);
-
+  const { user_id, exp } = Auth;
+  console.log(user_id, new Date().getTime() > exp)
+  return NextResponse.json({ msg: 'ok' })
 }

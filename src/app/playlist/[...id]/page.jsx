@@ -51,9 +51,18 @@ function PlaylistPage(props) {
       });
     }
   }
-  useEffect(e => {
-    // document.title = props.searchParams['playlist']
-  }, [props])
+  const patchItems = async e => {
+    await axios.patch('/api/playlist', { items: localStorage.getItem('TrackList').split(',') },
+      {
+        headers: {
+          'Authorization': localStorage.getItem('user_access')
+        }
+      }).then(e => {
+        console.log(e.data)
+      }).catch(e => {
+        console.log(e)
+      })
+  }
   useEffect(e => {
     if (holding) {
       const boxs = document.querySelectorAll(`.box`)
@@ -100,8 +109,7 @@ function PlaylistPage(props) {
     if (holding) {
       return;
     }
-    const list = localStorage.getItem('TrackList').split(',');
-    console.log(list)
+    patchItems();
   }, [holding])
   return <S.Playlist>
     <Navi />
