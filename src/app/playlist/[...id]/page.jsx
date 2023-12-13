@@ -106,7 +106,7 @@ function PlaylistPage(props) {
     if (holding || !clientY) {
       return;
     }
-    if (tracks === originList) { //nothing change
+    if (JSON.stringify(tracks) === JSON.stringify(originList)) { //nothing change
       console.log('nothing change')
       return;
     }
