@@ -7,6 +7,7 @@ import './globals.css'
 export const metadata = {
   title: 'Freetify',
   description: 'Free online music player for you',
+  keywords: "freetify, free, player",
   icons: {
     icon: "/favicon.ico"
   }

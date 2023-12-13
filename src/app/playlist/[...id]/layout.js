@@ -12,12 +12,16 @@ export default function RootLayout({ children }) {
   if (!data) {
     return;
   }
-  metadata = {
-    title: JSON.parse(data)?.playlist,
-    description: 'playlist from freetify'
-  }
+  // metadata = {
+  //   title: JSON.parse(data)?.playlist,
+  //   description: 'playlist from freetify'
+  // }
   return (
     <html lang="en">
+      <head>
+        <title>{JSON.parse(data)?.playlist}</title>
+        <meta name="description" content="playlist from freetify" />
+      </head>
       <body>
         {children}
       </body>
