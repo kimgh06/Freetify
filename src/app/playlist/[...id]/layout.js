@@ -2,7 +2,7 @@
 
 // const inter = Inter({ subsets: ['latin'] })
 
-export let metadata = {
+export const metadata = {
   title: 'Freetify',
   description: 'playlist',
 }
@@ -12,15 +12,12 @@ export default function RootLayout({ children }) {
   if (!data) {
     return;
   }
-  // metadata = {
-  //   title: JSON.parse(data)?.playlist,
-  //   description: 'playlist from freetify'
-  // }
   return (
     <html lang="en">
       <head>
         <title>{JSON.parse(data)?.playlist}</title>
         <meta name="description" content="playlist from freetify" />
+        <meta name="og:image" content="/apple-icon.png" />
       </head>
       <body>
         {children}
