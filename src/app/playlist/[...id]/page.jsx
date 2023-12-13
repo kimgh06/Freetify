@@ -15,6 +15,7 @@ export default function App(props) {
 
 function PlaylistPage(props) {
   const [tracks, setTracks] = useState([]);
+  const [originList, setOriginList] = useState([])
   const [access, setAccess] = useRecoilState(AccessToken);
   const [holding, setHolding] = useState(false);
   const [index, setIndex] = useState(false);
@@ -31,6 +32,7 @@ function PlaylistPage(props) {
 
         let tr = await getTrackinfos(ids);
         setTracks(tr);
+        setOriginList(tr)
         let TrackList = [];
         tr.forEach(items => {
           if (TrackList.indexOf(items.id) === -1) {
@@ -104,6 +106,11 @@ function PlaylistPage(props) {
     if (holding || !clientY) {
       return;
     }
+    if (tracks === originList) { //nothing change
+      console.log('nothing change')
+      return;
+    }
+    setOriginList(tracks);
     let news = []
     tracks.forEach(items => {
       if (news.indexOf(items.id) === -1) {
