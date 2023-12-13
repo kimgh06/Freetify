@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <head>
         <title>{JSON.parse(data)?.playlist}</title>
         <meta name="description" content="playlist from freetify" />
-        <meta name="og:image" content="/apple-icon.png" />
+        <meta property="og:image" content="/apple-icon.png" />
       </head>
       <body>
         {children}
