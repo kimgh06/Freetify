@@ -52,7 +52,7 @@ function PlaylistPage(props) {
     }
   }
   const patchItems = async e => {
-    await axios.patch('/api/playlist', { items: localStorage.getItem('TrackList').split(',') },
+    await axios.patch('/api/playlist', { items: localStorage.getItem('TrackList').split(','), playlist_id: props.searchParams['playlist'] },
       {
         headers: {
           'Authorization': localStorage.getItem('user_access')
@@ -113,7 +113,7 @@ function PlaylistPage(props) {
   }, [holding])
   return <S.Playlist>
     <Navi />
-    <main style={holding ? { position: 'fixed' } : {}}>
+    <main>
       <h1>
         {props.params['id'][0]} - {props.searchParams['playlist']}
       </h1>
