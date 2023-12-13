@@ -7,9 +7,9 @@ export const PlayAtom = styled.div`
   display: flex;
   color: black;
   width: 35vw;
-  min-width: 360px;
+  min-width: 320px;
   border: 4px solid lightgray;
-  padding: 5px 20px;
+  padding: 5px 15px;
   color: #ffffff;
   border-radius: 5px;
   justify-content: space-between;
@@ -29,7 +29,7 @@ export const PlayAtom = styled.div`
     display: flex;
     justify-content: space-between;
     width: calc(32vw - 105px);
-    min-width: 220px;
+    min-width: 200px;
     .title{
       cursor: pointer;
       display: flex;
