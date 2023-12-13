@@ -7,6 +7,9 @@ import './globals.css'
 export const metadata = {
   title: 'Freetify',
   description: 'Free online music player for you',
+  icons: {
+    icon: "/favicon.ico"
+  }
 }
 
 export default function RootLayout({ children }) {
@@ -21,6 +24,7 @@ export default function RootLayout({ children }) {
 
         gtag('config', 'GA_MEASUREMENT_ID');
       `}</Script>
+      <link rel='icon' href='/favicon.ico' />
       <body>
         {children}
       </body>
