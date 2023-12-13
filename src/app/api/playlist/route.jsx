@@ -80,10 +80,10 @@ export async function PATCH(req, response) {
   if (err !== null && res.length !== 1) {
     return NextResponse.json({ msg: 'err' }, { status: 500 })
   }
-  return loopUpdate(items, playlist_id);
+  return LoopUpdate(items, playlist_id);
 }
 
-async function loopUpdate(items, playlist_id) {
+async function LoopUpdate(items, playlist_id) {
   let err;
   for (let i = 0; i < items.length; i++) {
     await useQuery(`update playlist set play_index = ${i} where song_id = '${items[i]}' and playlist_id = '${playlist_id}'`).catch(e => {
