@@ -62,7 +62,6 @@ function PlaylistPage(props) {
       setHolding(false);
     })
     document.addEventListener('touchmove', e => {
-      holding && e.preventDefault();
       setClientY(e.changedTouches[0].pageY)
     })
   }, [props])
@@ -95,7 +94,7 @@ function PlaylistPage(props) {
   }, [holding, clientY])
   return <S.Playlist>
     <Navi />
-    <main>
+    <main style={holding ? { position: 'fixed' } : {}}>
       <h1>
         {props.params['id'][0]} - {props.searchParams['playlist']}
       </h1>
