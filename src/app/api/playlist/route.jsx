@@ -74,6 +74,24 @@ export async function DELETE(req, response) {
 export async function PATCH(req, response) {
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);
   const { user_id, exp } = Auth;
-  console.log(user_id, new Date().getTime() > exp)
-  return NextResponse.json({ msg: 'ok' })
+  const { items, playlist_id } = await req.json()
+  console.log(user_id, new Date().getTime() > exp, items.length, playlist_id)
+  let { err, res } = await useQuery(`select count(playlist_id) as ex from playlist where user_id = ${user_id} and playlist_id = '${playlist_id}' group by playlist_id`);
+  if (err !== null && res.length !== 1) {
+    return NextResponse.json({ msg: 'err' }, { status: 500 })
+  }
+  return loopUpdate(items, playlist_id);
+}
+
+async function loopUpdate(items, playlist_id) {
+  let err;
+  for (let i = 0; i < items.length; i++) {
+    await useQuery(`update playlist set play_index = ${i} where song_id = '${items[i]}' and playlist_id = '${playlist_id}'`).catch(e => {
+      err = e;
+    })
+  }
+  if (err) {
+    return NextResponse.json({ msg: err }, { status: 500 })
+  }
+  return NextResponse.json({ msg: 'succeed' });
 }
