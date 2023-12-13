@@ -18,7 +18,7 @@ function PlaylistPage(props) {
   const [access, setAccess] = useRecoilState(AccessToken);
   const [holding, setHolding] = useState(false);
   const [index, setIndex] = useState(false);
-  const [clientY, setClientY] = useState(0);
+  const [clientY, setClientY] = useState(false);
   const getPlaylistAtoms = async e => {
     await axios.post(`/api/playlist`, { nickname: props.params['id'][0], playlist: props.searchParams['playlist'] },
       { headers: { 'Authorization': localStorage.getItem('user_access') } })
@@ -53,17 +53,6 @@ function PlaylistPage(props) {
   }
   useEffect(e => {
     // document.title = props.searchParams['playlist']
-    getPlaylistAtoms()
-    document.addEventListener('mouseup', e => {
-      setHolding(false);
-    })
-    document.addEventListener('mousemove', e => setClientY(e.pageY))
-    document.addEventListener('touchend', e => {
-      setHolding(false);
-    })
-    document.addEventListener('touchmove', e => {
-      setClientY(e.changedTouches[0].pageY)
-    })
   }, [props])
   useEffect(e => {
     if (holding) {
@@ -90,8 +79,30 @@ function PlaylistPage(props) {
         }
       });
       localStorage.setItem('TrackList', `${news}`);
+      return;
     }
-  }, [holding, clientY])
+    if (clientY !== false) {
+      return;
+    }
+    getPlaylistAtoms()
+    document.addEventListener('mouseup', e => {
+      setHolding(false);
+    })
+    document.addEventListener('mousemove', e => setClientY(e.pageY))
+    document.addEventListener('touchend', e => {
+      setHolding(false);
+    })
+    document.addEventListener('touchmove', e => {
+      setClientY(e.changedTouches[0].pageY)
+    })
+  }, [clientY, props])
+  useEffect(e => {
+    if (holding) {
+      return;
+    }
+    const list = localStorage.getItem('TrackList').split(',');
+    console.log(list)
+  }, [holding])
   return <S.Playlist>
     <Navi />
     <main style={holding ? { position: 'fixed' } : {}}>
