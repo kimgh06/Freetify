@@ -29,8 +29,10 @@ function PlaylistPage(props) {
           ids.push(e.song_id)
         })
         ids = ids.join(',');
-
         let tr = await getTrackinfos(ids);
+        if (!tr) {
+          return;
+        }
         setTracks(tr);
         setOriginList(tr)
         let TrackList = [];
@@ -86,7 +88,8 @@ function PlaylistPage(props) {
     if (clientY !== false) {
       return;
     }
-
+  }, [clientY])
+  useEffect(e => {
     //initialization
     getPlaylistAtoms()
     document.addEventListener('mouseup', e => {
@@ -96,7 +99,7 @@ function PlaylistPage(props) {
     document.addEventListener('touchend', e => {
       setHolding(false);
     })
-  }, [clientY, props])
+  }, [access, props])
   useEffect(e => {
     const func = e => {
       holding && e.preventDefault()

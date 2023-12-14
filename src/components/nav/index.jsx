@@ -52,7 +52,7 @@ export default function Navi() {
     }
     const timer = setInterval(e => {
       refreshAll();
-    }, 20 * 1000);
+    }, 2 * 1000);
   }, [access]);
   return <>
     <S.Nav>
