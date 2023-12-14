@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
         gtag('config', 'GA_MEASUREMENT_ID');
       `}</Script>
       <link rel='icon' href='/favicon.ico' />
+      <meta property="og:image" content="/apple-icon.png" />
       <body>
         {children}
       </body>
