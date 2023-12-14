@@ -27,6 +27,8 @@ export default function RootLayout({ children }) {
       `}</Script>
       <link rel='icon' href='/favicon.ico' />
       <meta property="og:image" content="/apple-icon.png" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
       <body>
         {children}
       </body>
