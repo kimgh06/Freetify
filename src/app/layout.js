@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
         gtag('config', 'GA_MEASUREMENT_ID');
       `}</Script>
       <link rel='icon' href='/favicon.ico' />
-      <meta property="og:image" content="https://ia.media-imdb.com/images/rock.jpg" />
+      <meta property="og:image" content="/opengraph-image.png" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <body>
