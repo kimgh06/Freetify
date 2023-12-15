@@ -16,6 +16,11 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link rel='icon' href='/favicon.ico' />
+        <meta property="og:image" content="/opengraph-image.png" />
+        <meta name="google-site-verification" content="IPRCBVzFxONYtT9nHVw5VkeUpOqn86rJSQUfTiu1vRc" />
+      </head>
       <Script src="https://www.googletagmanager.com/gtag/js?id=GTM-5N5SR26M" />
       <Script id="google-analytics">
         {`
@@ -25,9 +30,6 @@ export default function RootLayout({ children }) {
 
         gtag('config', 'GA_MEASUREMENT_ID');
       `}</Script>
-      <link rel='icon' href='/favicon.ico' />
-      <meta property="og:image" content="/opengraph-image.png" />
-      <meta name="google-site-verification" content="IPRCBVzFxONYtT9nHVw5VkeUpOqn86rJSQUfTiu1vRc" />
       <body>
         {children}
       </body>
