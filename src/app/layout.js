@@ -27,6 +27,7 @@ export default function RootLayout({ children }) {
       `}</Script>
       <link rel='icon' href='/favicon.ico' />
       <meta property="og:image" content="/opengraph-image.png" />
+      <meta name="google-site-verification" content="IPRCBVzFxONYtT9nHVw5VkeUpOqn86rJSQUfTiu1vRc" />
       <body>
         {children}
       </body>
