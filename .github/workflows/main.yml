@@ -11,5 +11,7 @@ jobs:
     steps:
       - run: ls -al
       - uses: actions/checkout@v4
+        with: 
+          path: our-source
       - run: ls -al
       - run: cat .github/workflows/main.yml
