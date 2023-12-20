@@ -13,4 +13,4 @@ jobs:
       - uses: actions/checkout@v4
         with: 
           fetch-depth: 3
-      - run: git log --pretty=online
+      - run: git log --pretty=oneline
