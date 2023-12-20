@@ -14,4 +14,4 @@ jobs:
         with: 
           path: our-source
       - run: ls -al our-source
-      - run: cat .github/workflows/main.yml
+      - run: cat our-source/.github/workflows/main.yml
