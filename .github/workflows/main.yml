@@ -13,3 +13,4 @@ jobs:
         run: pwd
       - name: list all
         run: ls -al
+      - uses: actions/checkout@v4
