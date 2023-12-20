@@ -12,6 +12,5 @@ jobs:
       - run: ls -al
       - uses: actions/checkout@v4
         with: 
-          path: our-source
-      - run: ls -al our-source
-      - run: cat our-source/.github/workflows/main.yml
+          fetch-depth: 3
+      - run: git log --pretty=online
