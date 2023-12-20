@@ -9,8 +9,7 @@ jobs:
     name: PWD & LS
     runs-on: ubuntu-latest
     steps:
-      - name: print working directory
-        run: pwd
-      - name: list all
-        run: ls -al
+      - run: ls -al
       - uses: actions/checkout@v4
+      - run: ls -al
+      - run: cat .github/workflows/main.yml
