@@ -102,7 +102,7 @@ export default function Player() {
   }
   const getCurrentMusicURL = async e => {
     try {
-      if (!id || localStorage.getItem('now_playing_id') === id) {//지금 재생 아이디와 동일하면 되돌리기
+      if (!id) {
         return;
       }
       const music_data = await getTrackinfos(id);
@@ -116,6 +116,9 @@ export default function Player() {
       let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
       let url = cached_url[`${id}`];
       if (url) {
+        if (localStorage.getItem('now_playing_id') === id) {
+          return;
+        }
         setPlay(false)
         audio.current.src = url
         setSrc(url)
