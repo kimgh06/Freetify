@@ -9,7 +9,8 @@ jobs:
     name: PWD & LS
     runs-on: ubuntu-latest
     steps:
-      - name: print working directory
-        run: pwd
-      - name: list all
-        run: ls -al
+      - run: ls -al
+      - uses: actions/checkout@v4
+        with: 
+          fetch-depth: 3
+      - run: git log --pretty=oneline
