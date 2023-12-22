@@ -116,14 +116,15 @@ export default function Player() {
       let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
       let url = cached_url[`${id}`];
       if (url) {
-        if (localStorage.getItem('now_playing_id') === id) {
-          return;
-        }
         setPlay(false)
         audio.current.src = url
         setSrc(url)
       } else {
         await getMusicUrl(id).then(() => {
+          // if (localStorage.getItem('now_playing_id') === id) {
+          //   setPlay(true)
+          //   return;
+          // }
           let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
           let new_src = cached_url[`${id}`]
           audio.current.src = new_src;
@@ -173,10 +174,6 @@ export default function Player() {
         return;
       }
       localStorage.setItem('now_index_in_tracks', index);
-      // const next_data = await getTrackinfos(list[index + 1]);
-      // if (!next_data) {
-      //   return;
-      // }
       url = cached_url[list[index + 1]];
       if (url) {
         return;
@@ -188,31 +185,46 @@ export default function Player() {
   }
   const CheckExpiredBlobUrl = async url => {
     if (url) {
-      await fetch(url).then(e => {
+      try {
         audio.current.src = url;
         audio.current.currentTime = currentT + 0.3
         setPlay(false);
-      }).catch(e => {
+      }
+      // await fetch(url).then(e => {
+      catch (e) {
         audio.current.src = null;
         setSrc(null);
         localStorage.setItem("cached_url", JSON.stringify({}));
         console.log("expired", e.toString())
-      });
+      };
     }
   }
-  useEffect(e => {
-    if (!id && src) {
-      setId(localStorage.getItem('now_playing_id'));
+  const SameId = async e => {
+    const music_data = await getTrackinfos(id);
+    if (!music_data) {
       return;
     }
-    setPlay(false)
-    getCurrentMusicURL();
+    setInfo(music_data);
+    setDurationT(music_data.duration_ms)
+    setPlay(true)
+  }
+  useEffect(e => {
+    if (localStorage.getItem('now_playing_id') === id) {
+      SameId()
+      return;
+    }
     navigator.mediaSession.setActionHandler("nexttrack", e => {
       NextTrack()
     })
     navigator.mediaSession.setActionHandler("previoustrack", e => {
       PreviousTrack()
     })
+    if (!id && src) {
+      setId(localStorage.getItem('now_playing_id'));
+      return;
+    }
+    setPlay(false)
+    getCurrentMusicURL();
   }, [id, access]);
   useEffect(e => {
     if (!audio.current.src) {
