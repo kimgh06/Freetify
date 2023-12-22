@@ -102,7 +102,7 @@ export default function Player() {
   }
   const getCurrentMusicURL = async e => {
     try {
-      if (!id) {
+      if (!id || localStorage.getItem('now_playing_id') === id) {//지금 재생 아이디와 동일하면 되돌리기
         return;
       }
       const music_data = await getTrackinfos(id);
@@ -115,8 +115,8 @@ export default function Player() {
       audio.current.src = null;
       let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
       let url = cached_url[`${id}`];
-
       if (url) {
+        setPlay(false)
         audio.current.src = url
         setSrc(url)
       } else {
@@ -128,6 +128,8 @@ export default function Player() {
           setPlay(false)
         });
       }
+
+      localStorage.setItem('now_playing_id', id);
 
       navigator.mediaSession.metadata = new MediaMetadata({
         title: music_data.name,
@@ -201,7 +203,6 @@ export default function Player() {
       return;
     }
     setPlay(false)
-    localStorage.setItem('now_playing_id', id);
     getCurrentMusicURL();
     navigator.mediaSession.setActionHandler("nexttrack", e => {
       NextTrack()
