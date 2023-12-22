@@ -209,16 +209,16 @@ export default function Player() {
     setPlay(true)
   }
   useEffect(e => {
-    if (localStorage.getItem('now_playing_id') === id) {
-      SameId()
-      return;
-    }
     navigator.mediaSession.setActionHandler("nexttrack", e => {
       NextTrack()
     })
     navigator.mediaSession.setActionHandler("previoustrack", e => {
       PreviousTrack()
     })
+    if (localStorage.getItem('now_playing_id') === id) {
+      SameId()
+      return;
+    }
     if (!id && src) {
       setId(localStorage.getItem('now_playing_id'));
       return;
