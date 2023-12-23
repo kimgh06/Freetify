@@ -394,15 +394,20 @@ export default function Player() {
         <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
         <span>{Math.round(volume * 100)}%</span>
         <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
-        {/* <button className='addplaylist' onClick={e => clicked !== 'playlist' ? setClicked('playlist') : setClicked('')}>
+        <button className='addplaylist' onClick={e => clicked !== 'playlist' ? setClicked('playlist') : setClicked('')}>
           <div className='dot' />
           <div className='dot' />
           <div className='dot' />
-        </button> */}
+        </button>
       </div> : <S.Main_smaller>
         <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
         <span>{Math.round(volume * 100)}%</span>
         <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
+        <button className='addplaylist' onClick={e => clicked !== 'playlist' ? setClicked('playlist') : setClicked('')}>
+          <div className='dot' />
+          <div className='dot' />
+          <div className='dot' />
+        </button>
         <div className='title'>
           <span>{info?.name}</span>
         </div>

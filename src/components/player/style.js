@@ -24,8 +24,6 @@ export const Player = styled.div`
     }
     position: absolute;
     text-align: center;
-    /* margin-left: -320px; */
-    /* margin-top: 800px; */
     max-height: 100px;
     right: 10px;
     bottom: 25vh;
@@ -221,13 +219,13 @@ export const Player = styled.div`
       .addplaylist{
         font-size: 20px;
         width: 30px;
-        /* margin-top: ; */
         height: 30px;
         transition: all ease 0.1s;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: space-around;
+        margin-left: 20px;
         .dot{
           width: 5px;
           height: 5px;
@@ -316,6 +314,21 @@ export const Main_smaller = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
+  .addplaylist{
+    font-size: 20px;
+    transition: all ease 0.1s;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding:10px;
+    .dot{
+      width: 5px;
+      height: 5px;
+      background-color: white;
+      border-radius: 20px;
+    }
+  }
   .play{
     text-align: center;
     width: 70px;
