@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as S from './style';
 import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import { AccessToken, AudioSrc, NowPlayingId, PlayingCurrentTime, Volume } from '@/app/recoilStates';
+import { AccessToken, AddbuttonIndex, AudioSrc, NowPlayingId, PlayingCurrentTime, Volume } from '@/app/recoilStates';
 import Link from 'next/link';
 import Lyric from '../lyric';
 
@@ -20,7 +20,45 @@ export default function Player() {
   const [durationT, setDurationT] = useState(`0:00`);
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
+
+  const [clicked, setClicked] = useRecoilState(AddbuttonIndex);
+  const [input, setInput] = useState(false)
+  const [allList, setAllList] = useState([{}]);
+
   const Axios_controler = new AbortController();
+  const putPlaylist = async playlist => {
+    await axios.put('/api/playlist/', { playlist: playlist, song_id: id },
+      { headers: { 'Authorization': localStorage.getItem('user_access') } })
+      .then(e => {
+        console.log(e.data);
+        getAllPlaylist();
+      }).catch(e => {
+        console.log(e)
+      })
+  }
+  const deletePlaylist = async playlist => {
+    await axios.delete('/api/playlist/', {
+      headers: { 'Authorization': localStorage.getItem('user_access') },
+      data: {
+        playlist: playlist,
+        song_id: id
+      }
+    })
+      .then(e => {
+        console.log(e.data);
+        getAllPlaylist()
+      }).catch(e => {
+        console.log(e)
+      })
+  }
+  const getAllPlaylist = async e => {
+    await axios.get(`/api/playlist?id=${id}`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
+      .then(e => {
+        setAllList(e.data.res);
+      }).catch(e => {
+        console.log(e);
+      })
+  }
   const getMusicUrl = async (id) => {
     if (!id) {
       return;
@@ -238,6 +276,13 @@ export default function Player() {
       })
     }
   }, []);
+
+  useEffect(e => {
+    if (clicked === 'playlist') {
+      getAllPlaylist();
+    }
+    setInput(false)
+  }, [clicked])
   useEffect(e => {
     audio.current.volume = volume;
   }, [id, volume]);
@@ -349,6 +394,11 @@ export default function Player() {
         <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
         <span>{Math.round(volume * 100)}%</span>
         <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
+        {/* <button className='addplaylist' onClick={e => clicked !== 'playlist' ? setClicked('playlist') : setClicked('')}>
+          <div className='dot' />
+          <div className='dot' />
+          <div className='dot' />
+        </button> */}
       </div> : <S.Main_smaller>
         <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
         <span>{Math.round(volume * 100)}%</span>
@@ -370,6 +420,33 @@ export default function Player() {
       onLoadedData={e => setPlay(true)}
       onPause={e => !modify && setPlay(false)}
       onPlay={e => setPlay(true)} />
+    {clicked === 'playlist' && <div className='floating'>
+      <div>
+        <span onClick={e => {
+          if (input === false) {
+            setInput('')
+          }
+        }}>{input === false ? '+' : <>
+          <input onChange={e => setInput(e.target.value)} value={input} autoFocus />
+          <button onClick={e => {
+            if (!input) {
+              return;
+            }
+            putPlaylist(input);
+            setInput(false);
+          }}>+</button>
+        </>}</span>
+      </div>
+      {allList?.map((i, n) => <div key={n}>
+        <Link href={`/playlist/${localStorage.getItem('user_nickname')}?playlist=${i['playlist_id']}`}>{i['playlist_id']}</Link>
+        <p onClick={e => {
+          if (!i['exist']) {
+            putPlaylist(i['playlist_id']);
+          } else {
+            deletePlaylist(i['playlist_id'])
+          }
+        }}>{!i['exist'] ? '+' : '-'}</p></div>)}
+    </div>}
   </S.Player>;
 }
 

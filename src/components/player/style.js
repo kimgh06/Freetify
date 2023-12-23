@@ -8,7 +8,54 @@ export const Player = styled.div`
   left: 1vw;
   bottom: 8px;
   width: 98vw;
+  transition: all ease 0.1s;
   border-radius: 10px;
+  .floating{
+    font-size: 18px;
+    @keyframes init {
+      0%{
+        max-height: 0;
+        margin-left: 0;
+      }
+      10%{
+        max-height: 0px;
+        margin-left: -300px;
+      }
+    }
+    position: absolute;
+    text-align: center;
+    /* margin-left: -320px; */
+    /* margin-top: 800px; */
+    max-height: 100px;
+    right: 10px;
+    bottom: 25vh;
+    overflow-y: scroll;
+    overflow-x:hidden;
+    animation: init 0.1s linear;
+    div{
+      width: 230px;
+      border-radius: 10px;
+      padding:2px 10px;
+      color: black;
+      background-color: #ffffff;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      p{
+        max-width: 10px;
+        min-width: 10px;
+        width: 10px;
+        margin: 0;
+        border: none;
+      }
+    }
+    &::-webkit-scrollbar{
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb{
+      background-color: #ffffff;
+    }
+  }
   @media screen and (min-width: 1200px) {  
     display: flex;
     justify-content: center;
@@ -23,6 +70,7 @@ export const Player = styled.div`
   background-color: gray;
   .audio{
     .extention{
+      transition: all ease 0.1s;
       display: flex;
       position: absolute;
       align-items: end;
@@ -166,6 +214,26 @@ export const Player = styled.div`
         height: 30px;
         transition: all ease 0.1s;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
+      .addplaylist{
+        font-size: 20px;
+        width: 30px;
+        /* margin-top: ; */
+        height: 30px;
+        transition: all ease 0.1s;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        .dot{
+          width: 5px;
+          height: 5px;
+          background-color: white;
+          border-radius: 20px;
+        }
       }
     }
   }
