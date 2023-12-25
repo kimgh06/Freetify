@@ -76,7 +76,9 @@ export default function Player() {
         return;
       }
       const url = URL.createObjectURL(e.data);
-      const caching = new Audio(url).preload = 'auto'
+      const caching = new Audio(url)
+      caching.preload = 'auto'
+
       cached_url[`${id}`] = url;
       localStorage.setItem('cached_url', JSON.stringify(cached_url));
       console.log(id, "loaded");
@@ -289,10 +291,10 @@ export default function Player() {
   }, [id, volume]);
   return <S.Player style={{
     width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
-      innerWidth < 1200 ? '98vw' : '30vw'}`
+      innerWidth < 1200 ? '98vw' : '400px'}`
   }} >
     <div className='audio'>
-      {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '28vw'}` }}
+      {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '370px'}` }}
         onClick={e => setExtenstionMode(a => !a)}>
         <div className='___' />
         <div className='___' />
