@@ -237,6 +237,7 @@ export default function Player() {
       });
     }
   }
+
   useEffect(e => {
     navigator.mediaSession.setActionHandler("nexttrack", e => {
       NextTrack()
@@ -269,6 +270,7 @@ export default function Player() {
     }
     audio.current.pause();
   }, [play, modify]);
+
   useEffect(e => {
     if (typeof window !== undefined) {
       CheckExpiredBlobUrl(src);
@@ -288,6 +290,9 @@ export default function Player() {
   }, [clicked])
   useEffect(e => {
     audio.current.volume = volume;
+    if (clicked === 'playlist') {
+      setClicked('')
+    }
   }, [id, volume]);
   return <S.Player style={{
     width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
