@@ -45,6 +45,7 @@ export const Player = styled.div`
         width: 10px;
         margin: 0;
         border: none;
+        cursor: pointer;
       }
     }
     &::-webkit-scrollbar{

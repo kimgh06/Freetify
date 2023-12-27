@@ -37,7 +37,7 @@ export async function GET(req, response) {
   let artist = info?.artists[0].name;
   let length = info.album.total_tracks;
   let title = info?.name;
-  artist = artist.replace(/%20/g, " ");
+  artist = artist.replace(/&/g, 'and').replace(/%20/g, " ");
   artist = decodeURIComponent(artist)
   console.log(title, artist)
   //앨범 검색=> 트랙찾기
@@ -72,7 +72,7 @@ export async function GET(req, response) {
   }
   if (!url) {
     //싱글 앨범일 경우거나 못 찾았거나
-    list = (await youtubesearchapi.GetListByKeyword(`${artist} ${title} lyrics`)).items;
+    list = (await youtubesearchapi.GetListByKeyword(`${artist} ${title} lyrics`)).items.filter(e => e.type !== 'channel');
     console.log(list[0])
     url = list[0].id
   }

@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <link rel='icon' href='/favicon.ico' />
-        <meta property="og:image" content="/opengraph-image.png" />
+        <meta property="og:image" content="/favicon.ico" />
         <meta name="google-site-verification" content="q9McqJBLT8ZooTZpbEQYsi_Mr13MbveBtl4j77XLtrc" />      </head>
       <Script src="https://www.googletagmanager.com/gtag/js?id=GTM-5N5SR26M" />
       <Script id="google-analytics">
