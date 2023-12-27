@@ -204,7 +204,7 @@ export const Player = styled.div`
       align-items: center;
       span{
         text-align: center;
-        width: 10vw;
+        width: calc(5vw + 30px);
       }
       button{
         font-size: 20px;
@@ -238,7 +238,7 @@ export const Player = styled.div`
 `
 
 export const ExtensionMode_mobile = styled.div`
-  width: auto;
+  /* width: auto; */
   .extenstion{
     cursor: pointer;
     .___{
@@ -258,7 +258,7 @@ export const ExtensionMode_mobile = styled.div`
     flex-wrap: wrap;
     align-items: end;
     img{
-      /* width: 200px; */
+      width: 250px;
     }
     .texts{
       .links{
