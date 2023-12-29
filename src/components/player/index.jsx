@@ -101,7 +101,7 @@ export default function Player() {
         tracks.forEach(track => { list.push(track.id) });
         localStorage.setItem("recommendation", list);
         localStorage.setItem("TrackList", tracklist);
-        NextTrack()
+        // NextTrack()
       }).catch(e => {
         console.log("err: ", e);
       })
@@ -125,7 +125,7 @@ export default function Player() {
         setId(list[index + 1]);
       }
       else { //트랙 추천
-        recommendTracks();
+        recommendTracks().then(e => NextTrack());
       }
     }
   }
@@ -248,6 +248,14 @@ export default function Player() {
     }
     getCurrentMusicURL();
     setPlay(false)
+
+    const path = window.location.pathname
+    const tracklist = localStorage.getItem("TrackList").split(',')
+    if (path === '/search' && tracklist.findIndex(e => e === id) === 0) {
+      localStorage.setItem("TrackList", id);
+      recommendTracks()
+    }
+
   }, [id, access]);
 
   useEffect(e => {

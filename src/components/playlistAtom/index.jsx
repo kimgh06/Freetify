@@ -97,6 +97,11 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
     {type === 'track' && <div className='audio'>
       <button onClick={e => {
         setNow_playing_id(id);
+        const path = window.location.pathname;
+        if (path === '/search') {
+          localStorage.setItem('now_index_in_tracks', 0);
+          return;
+        }
         localStorage.setItem('now_index_in_tracks', index);
       }}>{now_playing_id === id ? '⏸' : '▶'}</button>
       {type === "track" && <div className='isInPlay'>
