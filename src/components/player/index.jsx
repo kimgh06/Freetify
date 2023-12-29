@@ -25,7 +25,6 @@ export default function Player() {
   const [input, setInput] = useState(false)
   const [allList, setAllList] = useState([{}]);
 
-  const Axios_controler = new AbortController();
   const putPlaylist = async playlist => {
     await axios.put('/api/playlist/', { playlist: playlist, song_id: id },
       { headers: { 'Authorization': localStorage.getItem('user_access') } })
@@ -65,7 +64,6 @@ export default function Player() {
     }
     await axios.get(`/api/get_video?songId=${id}`, {
       responseType: 'blob',
-      signal: Axios_controler.signal,
       headers: {
         'Authorization': access,
         'user_access': localStorage.getItem('user_access') || null
@@ -85,7 +83,6 @@ export default function Player() {
     }).catch(e => {
       console.log(e.message, id);
     })
-    // Axios_controler.abort();
   }
   const recommendTracks = async e => {
     const recentTrack = localStorage.getItem('recent_track_list').split(',').slice(-2);

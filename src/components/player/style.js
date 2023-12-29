@@ -239,7 +239,6 @@ export const Player = styled.div`
 `
 
 export const ExtensionMode_mobile = styled.div`
-  /* width: auto; */
   .extenstion{
     cursor: pointer;
     .___{
@@ -360,7 +359,5 @@ export const Main_smaller = styled.div`
   .title{
     writing-mode: vertical-lr;
     height: 20vh;
-    /* margin-left: 30px;
-    margin-top: 10px; */
   }
 `
