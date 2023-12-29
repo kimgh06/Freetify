@@ -12,6 +12,7 @@ export default function App() {
   const [pw, setPw] = useState('');
   const [repw, setRepw] = useState('');
   useEffect(e => {
+    document.title = 'login'
     setVerified(false);
   }, [email]);
   return <>

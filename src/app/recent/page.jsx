@@ -45,6 +45,7 @@ function InnerComponent() {
     localStorage.setItem('TrackList', `${TrackList}`);
   }
   useEffect(e => {
+    document.title = 'Recent Tracks'
     if (access) {
       GettingInfos();
     }
