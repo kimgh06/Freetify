@@ -176,7 +176,8 @@ export const Player = styled.div`
         border-radius: 20px;
       }
       .bar_cursor{
-        -webkit-appearance: none;
+        -webkit-appearance: none;    
+        appearance: none;
         cursor: pointer;
         z-index: 10;
         width:300px;
