@@ -17,7 +17,7 @@ export const Nav = styled.nav`
     height: 100vh;
     width: 250px;
     padding-top: 60px;
-    z-index: 2;
+    z-index: 3;
     @media screen and (max-width: 500px) {  
       left: auto;
       right: 0;
@@ -37,7 +37,7 @@ export const Nav = styled.nav`
     position: fixed;
     border-radius: 10px;
     text-align: center;
-    z-index: 3;
+    z-index: 4;
     font-size: 30px;
     width: 50px;
     height: 50px;
