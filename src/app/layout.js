@@ -5,9 +5,9 @@ import './globals.css'
 // const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Freetify',
+  title: 'Freetify: Free online music player for you',
   description: 'Free online music player for you',
-  keywords: "freetify, free, player",
+  keywords: "freetify, free, player, music, songs",
   icons: {
     icon: "/favicon.ico"
   }
@@ -17,8 +17,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Freetify: free online music player for you" />
         <link rel='icon' href='/favicon.ico' />
         <meta property="og:image" content="/favicon.ico" />
+        <meta property="og:url" content="https://freetify.vercel.app/" />
         <meta name="google-site-verification" content="q9McqJBLT8ZooTZpbEQYsi_Mr13MbveBtl4j77XLtrc" />      </head>
       <Script src="https://www.googletagmanager.com/gtag/js?id=GTM-5N5SR26M" />
       <Script id="google-analytics">
