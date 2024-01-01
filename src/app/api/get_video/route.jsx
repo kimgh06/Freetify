@@ -4,9 +4,10 @@ import youtubesearchapi from 'youtube-search-api';
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import { useQuery } from "@/app/useQuery";
+import e from "express";
 
 async function getInfo(id, access) {
-  return await axios.get(`https://api.spotify.com/v1/tracks/${id}`,
+  return await axios.get(`https://api.spotify.com/v1/tracks/${id}?market=KR`,
     { headers: { Authorization: `Bearer ${access}` } })
     .then(async e => {
       return e.data;
@@ -33,6 +34,8 @@ export async function GET(req, response) {
     const { err, res } = await AddsongStat(songId, user_id);
   }
   const info = await getInfo(songId, access);
+  const playingtime = info?.duration_ms
+  let release = info?.album.release_date?.substr(0, 4);
   let album = info?.album?.name
   let artist = info?.artists[0].name;
   let length = info.album.total_tracks;
@@ -41,17 +44,20 @@ export async function GET(req, response) {
   artist = decodeURIComponent(artist)
   console.log(title, artist)
   //앨범 검색=> 트랙찾기
-  let list = (await youtubesearchapi.GetListByKeyword(`${album} album`, true, 20)).items;
+  let list = (await youtubesearchapi.GetListByKeyword(`${artist} ${album} album`, true, 20)).items;
   list = list.filter(item => item.type === "playlist" && item.length >= length && item.length <= 2 * length && item)
   let url;
   if (list.length != 0) {
     let playlist = await youtubesearchapi.GetPlaylistData(list[0].id, 100);
-    const newTitle = title
+    let newTitle = title
       .replace(/\(/g, "")
       .replace(/\)/g, "")
       .replace(/-/g, "")
       .replace(/ /g, "")
-      .toLowerCase();
+      .toLowerCase()
+    if (newTitle.indexOf('remastered') !== -1) {
+      newTitle = newTitle.substr(0, newTitle.indexOf('remastered'))
+    }
     for (let i = 0; i < playlist.items.length; i++) {
       const item = playlist.items[i];
       let asdf = item.title
@@ -64,7 +70,7 @@ export async function GET(req, response) {
       if (asdf.indexOf(newTitle) !== -1 ||
         newTitle.indexOf(asdf) !== -1 ||
         asdf.indexOf(newTitle.replace(/8/g, '&')) !== -1) {
-        console.log(title, "found")
+        console.log("found", item.title)
         url = item.id;
         break;
       }
@@ -72,8 +78,8 @@ export async function GET(req, response) {
   }
   if (!url) {
     //싱글 앨범일 경우거나 못 찾았거나
-    list = (await youtubesearchapi.GetListByKeyword(`${artist} ${title} lyrics`)).items.filter(e => e.type !== 'channel');
-    console.log(list[0])
+    list = (await youtubesearchapi.GetListByKeyword(`${artist} ${title} lyrics`)).items.filter(e => e.type !== 'channel' && (parseInt(e.length.simpleText.split(':')[0]) * 60000 + parseInt(e.length.simpleText.split(':')[1] * 1000)) < playingtime + 1000);
+    console.log("can't found on album", list[0].title)
     url = list[0].id
   }
 
