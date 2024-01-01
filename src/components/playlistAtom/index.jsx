@@ -87,7 +87,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
     }} />
     <div>
       <div className='hea'>
-        <Link className="title" href={album ? `/album/${album?.id}` : (type === 'playlist' ? `/playlist/${artist}?playlist=${id}` : '#')} >{title}</Link>&nbsp;
+        <Link id={title} className="title" href={album ? `/album/${album?.id}` : (type === 'playlist' ? `/playlist/${artist}?playlist=${id}` : `#${title}`)} >{title}</Link>&nbsp;
         {playingtime && <div className="playingtime">{durationT}</div>}
       </div>
       <div className='foo'>
