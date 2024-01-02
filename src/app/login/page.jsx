@@ -26,7 +26,6 @@ export default function App() {
               return;
             }
             await axios.post('/api/verifyingemail', { email }).then(e => {
-              // console.log(e.data);
               setVerified(e.data.code)
             }).catch(e => {
               console.log(e)

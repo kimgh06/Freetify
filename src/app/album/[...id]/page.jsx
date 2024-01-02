@@ -45,7 +45,8 @@ function InnerContent({ id }) {
       getAlbumInfos();
     }
   }, [access]);
-  return <>  <Navi />
+  return <>
+    <Navi />
     <S.AlbumInfos>
       <div className='header'>
         <img src={albumInfo?.images[1].url} alt='img' />
@@ -70,9 +71,7 @@ function InnerContent({ id }) {
             return list.find(a => a === i?.id)
           }} />)}
       </div>
-      <div className='end'>
-        {/* <h3>End</h3> */}
-      </div>
+      <div className='end' />
     </S.AlbumInfos>
   </>
 }

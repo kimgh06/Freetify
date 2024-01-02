@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Freetify: free online music player for you" />
+        <meta property="og:title" content="Freetify - free online music player for you" />
         <link rel='icon' href='/favicon.ico' />
         <meta property="og:image" content="/favicon.ico" />
         <meta property="og:url" content="https://freetify.vercel.app/" />
