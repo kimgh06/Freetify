@@ -42,13 +42,12 @@ export default function Player() {
         playlist: playlist,
         song_id: id
       }
+    }).then(e => {
+      console.log(e.data);
+      getAllPlaylist()
+    }).catch(e => {
+      console.log(e)
     })
-      .then(e => {
-        console.log(e.data);
-        getAllPlaylist()
-      }).catch(e => {
-        console.log(e)
-      })
   }
   const getAllPlaylist = async e => {
     await axios.get(`/api/playlist?id=${id}`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
@@ -188,15 +187,12 @@ export default function Player() {
       if (recentList != 'null' && recentArtists != 'null') {
         //최근 트랙
         recentList = recentList.split(',');
-        recentArtists = recentArtists.split(',');
-        recentList = recentList.filter(element => element !== id && element)
-
-        recentList.push(id);
+        recentList = recentList.filter(element => element !== id && element).push(id);
         localStorage.setItem('recent_track_list', recentList);
 
         //최근 아티스트
-        recentArtists = recentArtists.filter(element => element !== music_data.artists[0].id && element)
-        recentArtists.push(music_data.artists[0].id);
+        recentArtists = recentArtists.split(',');
+        recentArtists = recentArtists.filter(element => element !== music_data.artists[0].id && element).push(music_data.artists[0].id);
         localStorage.setItem('recent_artists_list', recentArtists);
 
       } else {
@@ -224,16 +220,17 @@ export default function Player() {
     }
   }
   const CheckExpiredBlobUrl = async url => {
-    if (url) {
-      await fetch(url).then(e => {
-        audio.current.src = url;
-        audio.current.currentTime = currentT + 0.2
-        setPlay(false);
-      }).catch(e => {
-        localStorage.setItem("cached_url", JSON.stringify({}));
-        console.log("expired", e.toString())
-      });
+    if (!url) {
+      return;
     }
+    await fetch(url).then(e => {
+      audio.current.src = url;
+      audio.current.currentTime = currentT + 0.2
+      setPlay(false);
+    }).catch(e => {
+      localStorage.setItem("cached_url", JSON.stringify({}));
+      console.log("expired", e.toString())
+    });
   }
 
   useEffect(e => {
@@ -256,7 +253,6 @@ export default function Player() {
       localStorage.setItem("TrackList", id);
       recommendTracks()
     }
-
   }, [id, access]);
 
   useEffect(e => {

@@ -18,6 +18,7 @@ export async function POST(req, response) {
     subject: "VERIFY EMAIL FROM FREETIFY",
     html: `<div>
       VERIFY CODE: ${verfifycode}
+      if you did not request code, you can ignore this.
     </div>`
   }
   await transporter.sendMail(mailOption, (err, info) => {

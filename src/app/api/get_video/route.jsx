@@ -4,7 +4,6 @@ import youtubesearchapi from 'youtube-search-api';
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import { useQuery } from "@/app/useQuery";
-import e from "express";
 
 async function getInfo(id, access) {
   return await axios.get(`https://api.spotify.com/v1/tracks/${id}?market=KR`,
