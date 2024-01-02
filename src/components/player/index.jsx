@@ -75,7 +75,8 @@ export default function Player() {
       }
       const url = URL.createObjectURL(e.data);
       const caching = new Audio(url)
-      caching.preload = 'auto'
+      caching.play()
+        .then(e => caching.pause())
 
       cached_url[`${id}`] = url;
       localStorage.setItem('cached_url', JSON.stringify(cached_url));
