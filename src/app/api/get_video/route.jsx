@@ -22,9 +22,6 @@ async function AddsongStat(songId, user_id) {
 export async function GET(req, response) {
   const access = req.headers.get('Authorization')
   const user_access = req.headers.get('user_access') ? jwt.verify(req.headers.get('user_access'), process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET) : null;
-  // if (Auth['exp'] < new Date().getTime()) {
-  //   return NextResponse.json({ msg: 'Token is expired.' }, { status: 403 })
-  // }
   const q = new URLSearchParams(new URL(req?.url).search)
   let songId = q.get('songId');
   const user_id = user_access?.user_id

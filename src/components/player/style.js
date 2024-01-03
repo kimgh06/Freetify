@@ -1,15 +1,26 @@
 import { styled } from "styled-components";
 
 export const Player = styled.div`
-  position: fixed;
+  position: fixed; 
+  color: white;
+  @media screen and (max-width: 1200px){
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
   padding: 8px 10px;
   z-index: 2;
   //모바일용
   left: 1vw;
-  bottom: 8px;
+  bottom: 1vw;
   width: 98vw;
   transition: all ease 0.1s;
   border-radius: 10px;
+  button{
+    background-color: #00000000;
+  }
   .floating{
     font-size: 18px;
     @keyframes init {
@@ -66,8 +77,15 @@ export const Player = styled.div`
     width: 30vw;
   }
   //변하지 않는 것
-  background-color: gray;
+  background-color: #04001a;
   .audio{
+    /* @media screen and (max-width:1200px) { */
+      height: 650px;
+      display: flex;
+      flex-direction: column;
+      /* align-items: center; */
+      justify-content: space-between;
+    /* } */
     .extention{
       transition: all ease 0.1s;
       display: flex;
@@ -77,7 +95,7 @@ export const Player = styled.div`
       cursor: pointer;
       .___{
         height: 100px;
-        border: 1px solid black;
+        border: 1px solid white;
         margin-right: 5px;
       }
     }
@@ -86,6 +104,7 @@ export const Player = styled.div`
         img{
           border-radius: 8px;
         }
+        margin-top: 50px;
         width: 300px;
       }
       @media screen and (max-width: 1200px) {  
@@ -97,7 +116,7 @@ export const Player = styled.div`
             border: 1px solid black;
             border-radius: 100px;
             height: 3px;
-            background-color: black;
+            background-color: white;
             margin: auto;
             margin-bottom: 3px;
             width: 50px;
@@ -108,8 +127,9 @@ export const Player = styled.div`
           align-items: center;
           justify-content: space-between;
           width: 100%;
+          margin-bottom: 20px;
           .between{
-            width: calc(92vw - 136px);
+            width: calc(80vw - 136px);
             .title{
               text-overflow: ellipsis;
               white-space: nowrap;
@@ -117,7 +137,7 @@ export const Player = styled.div`
             }
           }
           img{
-            border-radius: 0;
+            border-radius: 5px;
           }
         }
       }
@@ -139,8 +159,9 @@ export const Player = styled.div`
           height: 30px;
           text-align: center;
           border: none;
+          background-color: #00000000;
           &:hover{
-            background-color: #868686;
+            /* background-color: #868686; */
           }
         }
       }
@@ -154,20 +175,18 @@ export const Player = styled.div`
         border:none;
         font-size: 30px;
         text-align: center;
-        &:hover{
-          background-color: #868686;
-        }
+        background-color: #00000000;
       }
     }
     .bar_div{
       display: flex;
       align-items: center;
       border-radius: 30px;
-      margin-top: 10px;
+      margin: 0 auto;
       background-color: white;
       height: 4.8px;
       @media screen and (max-width: 1199px) {  
-        width: calc(98vw - 20px);
+        width: calc(88vw - 20px);
       }
       .bar{
         position: static;
@@ -207,12 +226,17 @@ export const Player = styled.div`
       span{
         text-align: center;
         width: calc(5vw + 30px);
+        @media screen and (max-width:1200px) {
+          width: calc(25vw + 30px);
+        }
       }
       button{
-        font-size: 20px;
-        width: 30px;
-        height: 30px;
+        font-size: 25px;
+        width: 40px;
+        height: 40px;
         transition: all ease 0.1s;
+        background-color: #00000000;
+        border: none;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -220,8 +244,8 @@ export const Player = styled.div`
       }
       .addplaylist{
         font-size: 20px;
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
         transition: all ease 0.1s;
         cursor: pointer;
         display: flex;
@@ -229,8 +253,8 @@ export const Player = styled.div`
         justify-content: space-around;
         margin-left: 20px;
         .dot{
-          width: 5px;
-          height: 5px;
+          width: 6px;
+          height: 6px;
           background-color: white;
           border-radius: 20px;
         }
@@ -253,15 +277,14 @@ export const ExtensionMode_mobile = styled.div`
     }
   }
   .contents{
+    margin-top: 50px;
     width: 100%;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
     align-items: end;
-    img{
-      width: 250px;
-    }
     .texts{
+      margin-top: 20px;
       .links{
         width: 280px;
         margin: auto;
@@ -275,36 +298,34 @@ export const ExtensionMode_mobile = styled.div`
         }
       }
       .playbutton{
+        margin-top: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
         .left , .right{
-          margin: 0 2vw;
+          margin: 0 9vw;
           cursor: pointer;
           font-size: 20px;
-          width: 30px;
-          height: 30px;
+          background-color: #00000000;
+          width: 50px;
+          height: 50px;
           text-align: center;
           border: none;
-          &:hover{
-            background-color: #868686;
-          }
+          border-radius: 300px;
         }
       }
     }
     .play{
       text-align: center;
-      width: 70px;
-      height: 70px;
+      width: 90px;
+      height: 90px;
       border-radius: 100px;
       transition: all ease 0.1s;
       cursor: pointer;
-      border:none;
-      font-size: 30px;
+      border:none;         
+      background-color: #00000000;
+      font-size: 33px;
       text-align: center;
-      &:hover{
-        background-color: #868686;
-      }
     }
   }
 `
@@ -340,9 +361,7 @@ export const Main_smaller = styled.div`
     border:none;
     font-size: 30px;
     text-align: center;
-    &:hover{
-      background-color: #868686;
-    }
+    background-color: #00000000;
   }
   button{
     margin: 2vh 0;

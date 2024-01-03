@@ -298,7 +298,8 @@ export default function Player() {
   }, [id, volume]);
   return <S.Player style={{
     width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
-      innerWidth < 1200 ? '98vw' : '400px'}`
+      innerWidth < 1200 ? '98vw' : '400px'}`,
+    height: `${(innerWidth > 1200 || extensionMode) ? '99vh' : '190px'}`
   }} >
     <div className='audio'>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '370px'}` }}
@@ -322,12 +323,12 @@ export default function Player() {
             <div className='playbutton'>
               <button className='left' onClick={e => {
                 PreviousTrack();
-              }}>{'<'}</button>
+              }}>{'◀'}</button>
               <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
                 onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
               <button className='right' onClick={e => {
                 NextTrack();
-              }}>{'>'}</button>
+              }}>{'▶'}</button>
             </div>
           </div>
           {info && <Lyric isrc={info?.external_ids?.isrc} />}
@@ -336,10 +337,10 @@ export default function Player() {
             onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           <button className='left' onClick={e => {
             PreviousTrack();
-          }}>{'<'}</button>
+          }}>{'◀'}</button>
           <button className='right' onClick={e => {
             NextTrack();
-          }}>{'>'}</button>
+          }}>{'▶'}</button>
         </S.Main_smaller>)
           : (!extensionMode ? <>
             <div className='extenstion' onClick={e => setExtenstionMode(true)}>
@@ -378,11 +379,11 @@ export default function Player() {
                 <div className='playbutton'>
                   <button className='left' onClick={e => {
                     PreviousTrack();
-                  }}>{'<'}</button>
+                  }}>{'◀'}</button>
                   <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
                   <button className='right' onClick={e => {
                     NextTrack();
-                  }}>{'>'}</button>
+                  }}>{'▶'}</button>
                 </div>
               </div>
             </div>
@@ -392,7 +393,7 @@ export default function Player() {
       <div className='bar_div' style={{ width: innerWidth >= 1200 ? (!extensionMode ? '80px' : '300px') : '' }} >
         <div className='bar' style={{ width: `${currentT * 1000 / durationT * 100}%` }} />
         <input className='bar_cursor' type='range'
-          style={{ width: innerWidth >= 1200 ? (extensionMode ? '300px' : '80px') : 'calc(98vw - 20px)' }}
+          style={{ width: innerWidth >= 1200 ? (extensionMode ? '300px' : '80px') : 'calc(88vw - 20px)' }}
           onChange={e => {
             setCurrentT(e.target.value / 1000)
             audio.current.currentTime = e.target.value / 1000;
