@@ -101,6 +101,7 @@ export default function Player() {
         tracks.forEach(track => { list.push(track.id) });
         localStorage.setItem("recommendation", list);
         localStorage.setItem("TrackList", tracklist);
+        console.log('get recommendations')
         // NextTrack()
       }).catch(e => {
         console.log("err: ", e);
@@ -187,12 +188,14 @@ export default function Player() {
       if (recentList != 'null' && recentArtists != 'null') {
         //최근 트랙
         recentList = recentList.split(',');
-        recentList = recentList.filter(element => element !== id && element).push(id);
+        recentList = recentList.filter(element => element !== id && element)
+        recentList.push(id);
         localStorage.setItem('recent_track_list', recentList);
 
         //최근 아티스트
         recentArtists = recentArtists.split(',');
-        recentArtists = recentArtists.filter(element => element !== music_data.artists[0].id && element).push(music_data.artists[0].id);
+        recentArtists = recentArtists.filter(element => element !== music_data.artists[0].id && element)
+        recentArtists.push(music_data.artists[0].id);
         localStorage.setItem('recent_artists_list', recentArtists);
 
       } else {
@@ -249,7 +252,7 @@ export default function Player() {
 
     const path = window.location.pathname
     const tracklist = localStorage.getItem("TrackList").split(',')
-    if (path === '/search' && tracklist.findIndex(e => e === id) === 0) {
+    if (path === '/search' && tracklist.findIndex(e => e === id) <= 0) {
       localStorage.setItem("TrackList", id);
       recommendTracks()
     }
