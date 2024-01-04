@@ -16,7 +16,7 @@ export const Player = styled.div`
   left: 1vw;
   bottom: 1vw;
   width: 98vw;
-  transition: all ease 0.1s;
+  transition: all ease 0.3s;
   border-radius: 10px;
   button{
     background-color: #00000000;
