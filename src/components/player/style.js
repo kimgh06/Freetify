@@ -20,6 +20,7 @@ export const Player = styled.div`
   border-radius: 10px;
   button{
     background-color: #00000000;
+    color: white;
   }
   .floating{
     font-size: 18px;
@@ -79,14 +80,13 @@ export const Player = styled.div`
   //변하지 않는 것
   background-color: #04001a;
   .audio{
-    /* @media screen and (max-width:1200px) { */
-      height: 650px;
-      display: flex;
-      flex-direction: column;
-      /* align-items: center; */
-      justify-content: space-between;
-    /* } */
-    width: 95%;
+    height: 650px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    @media screen and (max-width:1200px) {
+      width: 95%;
+    }
     .extention{
       transition: all ease 0.3s;
       display: flex;
@@ -137,6 +137,27 @@ export const Player = styled.div`
               overflow: hidden;
             }
           }
+          .play{  
+            text-align: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 100px;
+            cursor: pointer;
+            border:none;
+            font-size: 30px;
+            text-align: center;
+            background-color: #00000000;
+          }
+          .right{
+            margin: 0 2vw;
+            cursor: pointer;
+            font-size: 20px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            border: none;
+            background-color: #00000000;
+          }
           img{
             border-radius: 5px;
           }
@@ -161,9 +182,6 @@ export const Player = styled.div`
           text-align: center;
           border: none;
           background-color: #00000000;
-          &:hover{
-            /* background-color: #868686; */
-          }
         }
       }
       .play{
@@ -171,11 +189,9 @@ export const Player = styled.div`
         width: 70px;
         height: 70px;
         border-radius: 100px;
-        /* transition: all ease 0.3s; */
         cursor: pointer;
         border:none;
         font-size: 30px;
-        color: white;
         text-align: center;
         background-color: #00000000;
       }
@@ -320,10 +336,8 @@ export const ExtensionMode_mobile = styled.div`
     .play{
       text-align: center;
       width: 90px;
-      color: white;
       height: 90px;
       border-radius: 100px;
-      /* transition: all ease 0.3s; */
       cursor: pointer;
       border:none;         
       background-color: #00000000;
@@ -360,7 +374,6 @@ export const Main_smaller = styled.div`
     color:white;
     height: 70px;
     border-radius: 100px;
-    /* transition: all ease 0.1s; */
     cursor: pointer;
     border:none;
     font-size: 30px;

@@ -53,6 +53,9 @@ export default function Navi() {
     const timer = setInterval(e => {
       refreshAll();
     }, 2 * 1000);
+    if (typeof window !== undefined) {
+      setActivating(window.innerWidth >= 1200 ? true : false)
+    }
   }, [access]);
   return <>
     <S.Nav>

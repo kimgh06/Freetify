@@ -181,7 +181,6 @@ export default function Player() {
         album: music_data.album.name,
         artwork: [{ src: music_data.album.images[0].url }]
       })
-      console.log(navigator.mediaSession.metadata)
       let recentList = JSON.stringify(localStorage.getItem('recent_track_list'))
         .replace(/\\/g, '').replace(/"/g, '');
       let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list'))
@@ -303,7 +302,7 @@ export default function Player() {
   return <S.Player style={{
     width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
       innerWidth < 1200 ? '98vw' : '400px'}`,
-    height: `${(innerWidth > 1200 || extensionMode) ? '99vh' : '120px'}`
+    height: `${(innerWidth > 1200 || extensionMode) ? '90vh' : '120px'}`
   }} >
     <div className='audio'>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '370px'}` }}
@@ -355,13 +354,16 @@ export default function Player() {
             <div className='content'>
               <img src={info?.album?.images[2]?.url} alt='img' />
               <div className='between'>
-                <div className='title' href={`/album/${info?.album?.id} `}>{info?.name?.length >= 20 ? info?.name.substr(0, 20) + '..' : info?.name}</div><br />
+                <div className='title' href={`/album/${info?.album?.id} `}>{info?.name?.length >= 15 ? info?.name.substr(0, 15) + '..' : info?.name}</div><br />
                 <div href={`/artist/${info?.artists && info?.artists[0]?.id} `}>
                   {info?.artists && (info?.artists[0]?.name?.length >= 15 ? info?.artists[0]?.name.substr(0, 15) + '...' : info?.artists[0]?.name)}
                 </div>
               </div>
               <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
                 onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+              <button className='right' onClick={e => {
+                NextTrack();
+              }}>{'▶'}</button>
             </div>
           </> : <S.ExtensionMode_mobile>
             <div className='extenstion' onClick={e => setExtenstionMode(false)}>
