@@ -86,6 +86,7 @@ export const Player = styled.div`
       /* align-items: center; */
       justify-content: space-between;
     /* } */
+    width: 95%;
     .extention{
       transition: all ease 0.3s;
       display: flex;
@@ -174,6 +175,7 @@ export const Player = styled.div`
         cursor: pointer;
         border:none;
         font-size: 30px;
+        color: white;
         text-align: center;
         background-color: #00000000;
       }
@@ -318,6 +320,7 @@ export const ExtensionMode_mobile = styled.div`
     .play{
       text-align: center;
       width: 90px;
+      color: white;
       height: 90px;
       border-radius: 100px;
       /* transition: all ease 0.3s; */
@@ -354,6 +357,7 @@ export const Main_smaller = styled.div`
   .play{
     text-align: center;
     width: 70px;
+    color:white;
     height: 70px;
     border-radius: 100px;
     /* transition: all ease 0.1s; */

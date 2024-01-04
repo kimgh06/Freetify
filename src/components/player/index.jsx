@@ -181,6 +181,7 @@ export default function Player() {
         album: music_data.album.name,
         artwork: [{ src: music_data.album.images[0].url }]
       })
+      console.log(navigator.mediaSession.metadata)
       let recentList = JSON.stringify(localStorage.getItem('recent_track_list'))
         .replace(/\\/g, '').replace(/"/g, '');
       let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list'))
@@ -302,7 +303,7 @@ export default function Player() {
   return <S.Player style={{
     width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
       innerWidth < 1200 ? '98vw' : '400px'}`,
-    height: `${(innerWidth > 1200 || extensionMode) ? '99vh' : '165px'}`
+    height: `${(innerWidth > 1200 || extensionMode) ? '99vh' : '120px'}`
   }} >
     <div className='audio'>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '370px'}` }}
@@ -393,7 +394,7 @@ export default function Player() {
           </S.ExtensionMode_mobile>)
         }
       </div>
-      <div className='bar_div' style={{ width: innerWidth >= 1200 ? (!extensionMode ? '80px' : '300px') : '' }} >
+      {(innerWidth >= 1200 || extensionMode) && <div className='bar_div' style={{ width: innerWidth >= 1200 ? (!extensionMode ? '80px' : '300px') : '' }} >
         <div className='bar' style={{ width: `${currentT * 1000 / durationT * 100}%` }} />
         <input className='bar_cursor' type='range'
           style={{ width: innerWidth >= 1200 ? (extensionMode ? '300px' : '80px') : 'calc(88vw - 20px)' }}
@@ -401,24 +402,25 @@ export default function Player() {
             setCurrentT(e.target.value / 1000)
             audio.current.currentTime = e.target.value / 1000;
           }} value={currentT * 1000} min={0} max={durationT} />
-      </div>
+      </div>}
       {!(innerWidth >= 1200 && !extensionMode) &&
         <span>
           {(currentT - currentT % 60) / 60}
-          :{((currentT % 60 - (currentT % 60) % 1) / 1).toString().padStart(2, '0')}
-          / {(durationT - durationT % 60000) / 60000}
+          :{((currentT % 60 - (currentT % 60) % 1) / 1).toString().padStart(2, '0')} / {(durationT - durationT % 60000) / 60000}
           :{((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}
         </span>}
-      {!(innerWidth >= 1200 && !extensionMode) ? <div className='volume'>
-        <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
-        <span>{Math.round(volume * 100)}%</span>
-        <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
-        <button className='addplaylist' onClick={e => clicked !== 'playlist' ? setClicked('playlist') : setClicked('')}>
-          <div className='dot' />
-          <div className='dot' />
-          <div className='dot' />
-        </button>
-      </div> : <S.Main_smaller>
+      {!(innerWidth >= 1200 && !extensionMode) ? <>
+        {extensionMode && <div className='volume'>
+          <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
+          <span>{Math.round(volume * 100)}%</span>
+          <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
+          <button className='addplaylist' onClick={e => clicked !== 'playlist' ? setClicked('playlist') : setClicked('')}>
+            <div className='dot' />
+            <div className='dot' />
+            <div className='dot' />
+          </button>
+        </div>}
+      </> : <S.Main_smaller>
         <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
         <span>{Math.round(volume * 100)}%</span>
         <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
