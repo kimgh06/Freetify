@@ -87,7 +87,7 @@ export const Player = styled.div`
       justify-content: space-between;
     /* } */
     .extention{
-      transition: all ease 0.1s;
+      transition: all ease 0.3s;
       display: flex;
       position: absolute;
       align-items: end;
@@ -170,7 +170,7 @@ export const Player = styled.div`
         width: 70px;
         height: 70px;
         border-radius: 100px;
-        transition: all ease 0.1s;
+        transition: all ease 0.3s;
         cursor: pointer;
         border:none;
         font-size: 30px;
@@ -234,7 +234,7 @@ export const Player = styled.div`
         font-size: 25px;
         width: 40px;
         height: 40px;
-        transition: all ease 0.1s;
+        transition: all ease 0.3s;
         background-color: #00000000;
         border: none;
         cursor: pointer;
@@ -246,7 +246,7 @@ export const Player = styled.div`
         font-size: 20px;
         width: 40px;
         height: 40px;
-        transition: all ease 0.1s;
+        transition: all ease 0.3s;
         cursor: pointer;
         display: flex;
         align-items: center;
@@ -320,7 +320,7 @@ export const ExtensionMode_mobile = styled.div`
       width: 90px;
       height: 90px;
       border-radius: 100px;
-      transition: all ease 0.1s;
+      transition: all ease 0.3s;
       cursor: pointer;
       border:none;         
       background-color: #00000000;
@@ -338,7 +338,7 @@ export const Main_smaller = styled.div`
   justify-content: space-between;
   .addplaylist{
     font-size: 20px;
-    transition: all ease 0.1s;
+    transition: all ease 0.3s;
     cursor: pointer;
     display: flex;
     align-items: center;
