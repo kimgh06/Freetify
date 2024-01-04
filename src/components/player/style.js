@@ -170,7 +170,7 @@ export const Player = styled.div`
         width: 70px;
         height: 70px;
         border-radius: 100px;
-        transition: all ease 0.3s;
+        /* transition: all ease 0.3s; */
         cursor: pointer;
         border:none;
         font-size: 30px;
@@ -320,7 +320,7 @@ export const ExtensionMode_mobile = styled.div`
       width: 90px;
       height: 90px;
       border-radius: 100px;
-      transition: all ease 0.3s;
+      /* transition: all ease 0.3s; */
       cursor: pointer;
       border:none;         
       background-color: #00000000;
@@ -356,7 +356,7 @@ export const Main_smaller = styled.div`
     width: 70px;
     height: 70px;
     border-radius: 100px;
-    transition: all ease 0.1s;
+    /* transition: all ease 0.1s; */
     cursor: pointer;
     border:none;
     font-size: 30px;
