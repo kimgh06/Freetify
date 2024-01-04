@@ -127,7 +127,7 @@ export const Player = styled.div`
           align-items: center;
           justify-content: space-between;
           width: 100%;
-          margin-bottom: 20px;
+          /* margin-bottom: 20px; */
           .between{
             width: calc(80vw - 136px);
             .title{

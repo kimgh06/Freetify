@@ -302,7 +302,7 @@ export default function Player() {
   return <S.Player style={{
     width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
       innerWidth < 1200 ? '98vw' : '400px'}`,
-    height: `${(innerWidth > 1200 || extensionMode) ? '99vh' : '190px'}`
+    height: `${(innerWidth > 1200 || extensionMode) ? '99vh' : '165px'}`
   }} >
     <div className='audio'>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '370px'}` }}
@@ -354,9 +354,9 @@ export default function Player() {
             <div className='content'>
               <img src={info?.album?.images[2]?.url} alt='img' />
               <div className='between'>
-                <div className='title' href={`/album/${info?.album?.id} `}>{info?.name}</div><br />
+                <div className='title' href={`/album/${info?.album?.id} `}>{info?.name?.length >= 20 ? info?.name.substr(0, 20) + '..' : info?.name}</div><br />
                 <div href={`/artist/${info?.artists && info?.artists[0]?.id} `}>
-                  {info?.artists && info?.artists[0]?.name}
+                  {info?.artists && (info?.artists[0]?.name?.length >= 15 ? info?.artists[0]?.name.substr(0, 15) + '...' : info?.artists[0]?.name)}
                 </div>
               </div>
               <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
@@ -403,7 +403,12 @@ export default function Player() {
           }} value={currentT * 1000} min={0} max={durationT} />
       </div>
       {!(innerWidth >= 1200 && !extensionMode) &&
-        `${(currentT - currentT % 60) / 60}:${((currentT % 60 - (currentT % 60) % 1) / 1).toString().padStart(2, '0')} / ${(durationT - durationT % 60000) / 60000}:${((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}
+        <span>
+          {(currentT - currentT % 60) / 60}
+          :{((currentT % 60 - (currentT % 60) % 1) / 1).toString().padStart(2, '0')}
+          / {(durationT - durationT % 60000) / 60000}
+          :{((durationT % 60000 - (durationT % 60000) % 1000) / 1000).toString().padStart(2, '0')}
+        </span>}
       {!(innerWidth >= 1200 && !extensionMode) ? <div className='volume'>
         <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
         <span>{Math.round(volume * 100)}%</span>
