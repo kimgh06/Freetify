@@ -302,7 +302,7 @@ export default function Player() {
   return <S.Player style={{
     width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
       innerWidth < 1200 ? '98vw' : '400px'}`,
-    height: `${(innerWidth > 1200 || extensionMode) ? '90vh' : '120px'}`
+    height: `${(innerWidth <= 1200 && extensionMode) ? '90vh' : innerWidth > 1200 ? '99vh' : '120px'}`
   }} >
     <div className='audio'>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '370px'}` }}
