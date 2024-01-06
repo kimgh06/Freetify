@@ -71,18 +71,20 @@ function InnerComponent() {
       }
     }
   }, [access]);
-  return <S.App>
+  return <>
     <Navi />
-    <h1>My tracks</h1>
-    {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i.album.images[2].url} type={i?.type}
-      id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {
-        let list = [];
-        list = JSON.parse(localStorage.getItem('list'));
-        if (list === null) {
-          list = [];
-        }
-        return list.find(a => a === i?.id)
-      }} />)}
-    <S.PaddingBox />
-  </S.App>;
+    <S.App>
+      <h1>My tracks</h1>
+      {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i.album.images[2].url} type={i?.type}
+        id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {
+          let list = [];
+          list = JSON.parse(localStorage.getItem('list'));
+          if (list === null) {
+            list = [];
+          }
+          return list.find(a => a === i?.id)
+        }} />)}
+      <S.PaddingBox />
+    </S.App>
+  </>;
 }

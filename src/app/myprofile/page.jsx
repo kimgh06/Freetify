@@ -34,24 +34,26 @@ function InnerComponent() {
     getAllPlaylist();
   }, []);
 
-  return <S.Profile>
+  return <>
     <Navi />
-    <main>
-      <h1>
-        {nickname}
-      </h1>
-      <h1>
-        playlists
-      </h1>
-      {playlists?.map((i, n) => <PlaylistAtom
-        key={n}
-        index={n}
-        artist={localStorage.getItem('user_nickname')}
-        title={i.playlist_id}
-        type='playlist'
-        id={i.playlist_id}
-      ></PlaylistAtom>)}
-    </main>
-    <S.PaddingBox />
-  </S.Profile>
+    <S.Profile>
+      <main>
+        <h1>
+          {nickname}
+        </h1>
+        <h1>
+          playlists
+        </h1>
+        {playlists?.map((i, n) => <PlaylistAtom
+          key={n}
+          index={n}
+          artist={localStorage.getItem('user_nickname')}
+          title={i.playlist_id}
+          type='playlist'
+          id={i.playlist_id}
+        ></PlaylistAtom>)}
+      </main>
+      <S.PaddingBox />
+    </S.Profile>
+  </>
 }

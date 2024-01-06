@@ -55,7 +55,7 @@ function InnerContent() {
         <input onChange={e => setQ(e.target.value)} value={q} className="search" />
         <button>검색</button>
       </form>
-      <div className="results">
+      <main className="results">
         <div className="result">
           <p>
             Tracks
@@ -82,6 +82,6 @@ function InnerContent() {
           {artist?.length !== 0 && artist?.map((i, n) => <AritstProfile key={n} followers={i?.followers.total}
             id={i?.id} img={i?.images[2]} name={i?.name} popularity={i?.popularity} />)}
         </div>
-      </div>
+      </main>
     </S.Search></>
 }

@@ -62,29 +62,33 @@ function InnerContent({ id }) {
       getArtistAlbums();
     }
   }, [access])
-  return <><S.PaddingBox />
+  return <>
     <Navi />
-    {info && <>
-      <AritstProfile id={info?.id} img={info?.images[1]} name={info?.name} popularity={info?.popularity} followers={info?.followers.total} />
-      <S.Genres>
-        {info?.genres?.map((i, n) => <Tag genre={i} key={n} />)}
-      </S.Genres>
-      <S.TracksHeader>Top Albums</S.TracksHeader>
-      {topAlbums?.map((i, n) => <PlaylistAtom album={i} key={n} img={i?.images[2]?.url} type={i?.type}
-        id={i?.id} title={i.name} artist={i?.artists} artistId={i?.artists[0].id} />
-      )}
-      <S.TracksHeader>Top Tracks</S.TracksHeader>
-      {topTracks !== 0 && <>
-        {topTracks?.map((i, n) => <PlaylistAtom album={i?.album} index={n} preview={i?.preview_url} key={n} artist={i?.artists} artistId={id} title={i?.name} id={i?.id}
-          img={i?.album?.images[2]?.url} type={i?.type} isInPlay={e => {
-            let list = [];
-            list = JSON.parse(localStorage.getItem('list'));
-            if (list === null) {
-              list = [];
-            }
-            return list.find(a => a === i?.id)
-          }} playingtime={i?.duration_ms} />)}
+    <S.PaddingBox />
+    <main>
+      {info && <>
+        <AritstProfile id={info?.id} img={info?.images[1]} name={info?.name} popularity={info?.popularity} followers={info?.followers.total} />
+        <S.Genres>
+          {info?.genres?.map((i, n) => <Tag genre={i} key={n} />)}
+        </S.Genres>
+        <S.TracksHeader>Top Albums</S.TracksHeader>
+        {topAlbums?.map((i, n) => <PlaylistAtom album={i} key={n} img={i?.images[2]?.url} type={i?.type}
+          id={i?.id} title={i.name} artist={i?.artists} artistId={i?.artists[0].id} />
+        )}
+        <S.TracksHeader>Top Tracks</S.TracksHeader>
+        {topTracks !== 0 && <>
+          {topTracks?.map((i, n) => <PlaylistAtom album={i?.album} index={n} preview={i?.preview_url} key={n} artist={i?.artists} artistId={id} title={i?.name} id={i?.id}
+            img={i?.album?.images[2]?.url} type={i?.type} isInPlay={e => {
+              let list = [];
+              list = JSON.parse(localStorage.getItem('list'));
+              if (list === null) {
+                list = [];
+              }
+              return list.find(a => a === i?.id)
+            }} playingtime={i?.duration_ms} />)}
+        </>}
+        <S.End />
       </>}
-      <S.End />
-    </>}</>
+    </main>
+  </>
 }

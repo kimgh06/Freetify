@@ -5,11 +5,15 @@ import './globals.css'
 // const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Freetify: Free online music player for you',
-  description: 'Free online music player for you',
-  keywords: "freetify, free, player, music, songs",
-  icons: {
-    icon: "/favicon.ico"
+  OpenGraph: {
+    title: 'Freetify',
+    author: 'kimgh06',
+    siteName: 'Freetify',
+    url: 'https://freetify.vercel.app',
+    keywords: "freetify, free, player, music, songs",
+    icons: {
+      icon: "/favicon.ico"
+    }
   }
 }
 
@@ -18,10 +22,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Freetify - free online music player for you" />
+        <meta property="og:title" content="Freetify" />
         <link rel='icon' href='/favicon.ico' />
         <meta property="og:image" content="/opengraph-image.png" />
-        <meta property="og:url" content="https://freetify.vercel.app/" />
+        <meta property='og:site_name' content='Freetify' />
         <meta name="google-site-verification" content="q9McqJBLT8ZooTZpbEQYsi_Mr13MbveBtl4j77XLtrc" />      </head>
       <Script src="https://www.googletagmanager.com/gtag/js?id=GTM-5N5SR26M" />
       <Script id="google-analytics">

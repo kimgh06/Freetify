@@ -60,7 +60,7 @@ function InnerContent({ id }) {
           </div>
         </div>
       </div>
-      <div className='tracks'>
+      <main className='tracks'>
         {tracks?.map((i, n) => <PlaylistAtom img={albumInfo?.images[2].url} index={n} preview={i?.preview_url} playingtime={i?.duration_ms} key={n} album={i?.album} type={i?.type}
           id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0]?.id} isInPlay={e => {
             let list = [];
@@ -70,7 +70,7 @@ function InnerContent({ id }) {
             }
             return list.find(a => a === i?.id)
           }} />)}
-      </div>
+      </main>
       <div className='end' />
     </S.AlbumInfos>
   </>
