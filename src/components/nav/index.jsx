@@ -32,7 +32,12 @@ export default function Navi() {
         localStorage.setItem('user_refresh', data['RefreshToken'])
         localStorage.setItem('user_exp', data['exp'])
       }).catch(e => {
-        console.log(e)
+        if (e.response.status === 403) {
+          localStorage.removeItem('user_exp')
+          localStorage.removeItem('user_access')
+          localStorage.removeItem('user_nickname')
+          localStorage.removeItem('user_refresh')
+        }
       })
   }
   const refreshAll = e => {
