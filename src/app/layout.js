@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
         <meta property="og:title" content="Freetify" />
         <link rel='icon' href='/favicon.ico' />
         <meta property="og:image" content="/opengraph-image.png" />
-        <meta property='og:url' content='https://freetify.vercel.app' />
+        {/* <meta property='og:url' content='https://freetify.vercel.app' /> */}
         <meta property='og:description' content='A free online music player' />
         <meta property='og:site_name' content='Freetify' />
         <meta name="google-site-verification" content="q9McqJBLT8ZooTZpbEQYsi_Mr13MbveBtl4j77XLtrc" />      </head>
