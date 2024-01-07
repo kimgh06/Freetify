@@ -3,6 +3,17 @@ import axios from 'axios';
 import * as S from './style';
 import { useEffect, useState } from "react";
 
+export async function generateMetadata({ params }) {
+  return {
+    title: 'login',
+    description: "You can make playlist if you're loged in",
+    OpenGraph: {
+      title: 'login',
+      description: "You can make playlist if you're loged in"
+    }
+  }
+}
+
 export default function App() {
   const [mode, setMode] = useState('login');
   const [verified, setVerified] = useState(false);
