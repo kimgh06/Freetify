@@ -21,8 +21,7 @@ function PlaylistPage(props) {
   const [index, setIndex] = useState(false);
   const [clientY, setClientY] = useState(false);
   const getPlaylistAtoms = async e => {
-    await axios.post(`/api/playlist`, { nickname: props.params['id'][0], playlist: props.searchParams['playlist'] },
-      { headers: { 'Authorization': localStorage.getItem('user_access') } })
+    await axios.post(`/api/playlist`, { nickname: props.params['id'][0], playlist: props.searchParams['playlist'] })
       .then(async e => {
         let ids = [];
         e.data.res.forEach(e => {
