@@ -70,7 +70,6 @@ export default function Navi() {
         <div className='bar' />
       </div>
       {activating && <div className='nav'>
-        {/* <p><Link href={'/myprofile'}>프로필</Link></p> */}
         <p><Link href={'/'}>Recommendations</Link></p>
         <p><Link href={'/search'}>Search</Link></p>
         <p><Link href={'/recent'}>Recent Tracks</Link></p>
