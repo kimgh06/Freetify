@@ -7,7 +7,7 @@ export const metadata = {
   description: 'playlist',
 }
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, params }) {
   const data = children?.props?.childProp?.segment?.split('?')[1]
   if (!data) {
     return;
@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <title>{JSON.parse(data)?.playlist}</title>
-        <meta name="description" content="playlist from freetify" />
+        <meta name="og:description" content={`playlist by ${params?.id[0]}`} />
       </head>
       <body>
         {children}
