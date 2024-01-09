@@ -1,11 +1,15 @@
+import axios from "axios";
 import { PlaylistPage } from "./playlistpage";
 
 export async function generateMetadata({ params, searchParams }) {
-  console.log(params['id'][0], searchParams['playlist'])
-  // getPlaylistAtoms()
+  const info = await getPlaylistAtoms(params['id'][0], searchParams['playlist']);
+  const description = info.map((i, n) => `${i.name} release at ${i.album.release_date}, artist ${JSON.stringify(i.artists.map((i, n) => i.name).join(', ')).replace(/"/g, "")}, ${(i.duration_ms - i.duration_ms % 60000) / 60000}:${((i.duration_ms % 60000 - (i.duration_ms % 60000) % 1000) / 1000).toString().padStart(2, '0')} `)
   return {
-    title: searchParams['playlist'] || 'playlist',
-    description: params['id'][0] || 'description'
+    metadataBase: new URL(process.env.NEXT_PUBLIC_AUTH_URL),
+    openGraph: {
+      title: `${searchParams['playlist']}, made by ${params['id'][0]}` || 'playlist',
+      description: description || 'description'
+    }
   }
 }
 
@@ -21,7 +25,7 @@ const getTrackinfos = async ids => {
 }
 
 const getPlaylistAtoms = async (nickname, playlist) => {
-  await axios.post(`/api/playlist`, { nickname: nickname, playlist: playlist })
+  return await axios.post(`${process.env.NEXT_PUBLIC_AUTH_URL}/api/playlist`, { nickname: nickname, playlist: playlist })
     .then(async e => {
       let ids = [];
       e.data.res.forEach(e => {
@@ -32,7 +36,7 @@ const getPlaylistAtoms = async (nickname, playlist) => {
       if (!tr) {
         return;
       }
-      console.log(tr)
+      return tr
     }).catch(e => {
       console.log(e);
     })
@@ -40,14 +44,9 @@ const getPlaylistAtoms = async (nickname, playlist) => {
 
 
 const refresh_token = async e => {
-  return await axios.patch(`/api/refresh_token`,
+  return await axios.patch(`${process.env.NEXT_PUBLIC_AUTH_URL}/api/refresh_token`,
     { refreshToken: process.env.NEXT_PUBLIC_REFRESH_TOKEN }).then(e => {
       const info = e.data;
-      // if (!info?.error) {
-      //   localStorage.setItem('access', info.access_token);
-      //   localStorage.setItem('expire', new Date().getTime() + info.expires_in * 1000);
-      //   setAccess(info.access_token);
-      // }
       return info.access_token;
     }).catch(e => {
       console.log(e);
