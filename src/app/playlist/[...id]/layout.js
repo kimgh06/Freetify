@@ -25,14 +25,14 @@ export default function RootLayout({ children, params }) {
   )
 }
 
-export async function generateMetadata({ params, searchParams }) {
-  // console.log(params, searchParams)
-  // getPlaylistAtoms()
-  return {
-    title: searchParams || 'playlist',
-    description: params || 'description'
-  }
-}
+// export async function generateMetadata({ params, searchParams }) {
+//   // console.log(params, searchParams)
+//   // getPlaylistAtoms()
+//   return {
+//     title: searchParams || 'playlist',
+//     description: params || 'description'
+//   }
+// }
 
 const getTrackinfos = async ids => {
   const access = await refresh_token();
