@@ -26,11 +26,11 @@ export default function RootLayout({ children, params }) {
 }
 
 export async function generateMetadata({ params, searchParams }) {
-  console.log(params, searchParams)
+  // console.log(params, searchParams)
   // getPlaylistAtoms()
   return {
     title: searchParams || 'playlist',
-    description: params
+    description: params || 'description'
   }
 }
 
