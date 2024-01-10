@@ -33,7 +33,6 @@ const getAlbumInfos = async id => {
   const access = await refresh_token();
   return await axios.get(`${url}/albums/${id}`, { headers: { Authorization: `Bearer ${access}` } })
     .then(async e => {
-      console.log(e.data);
       // setAlbumInfo(e.data);
       // setTracks(e.data.tracks.items);
       let TrackList = [];
@@ -49,24 +48,6 @@ const getAlbumInfos = async id => {
       console.log(e);
     });
 }
-
-// const getPlaylistAtoms = async (nickname, playlist) => {
-//   return await axios.post(`${process.env.NEXT_PUBLIC_AUTH_URL}/api/playlist`, { nickname: nickname, playlist: playlist })
-//     .then(async e => {
-//       let ids = [];
-//       e.data.res.forEach(e => {
-//         ids.push(e.song_id)
-//       })
-//       ids = ids.join(',');
-//       let tr = await getTrackinfos(ids);
-//       if (!tr) {
-//         return;
-//       }
-//       return tr
-//     }).catch(e => {
-//       console.log(e);
-//     })
-// }
 
 const refresh_token = async e => {
   return await axios.patch(`${process.env.NEXT_PUBLIC_AUTH_URL}/api/refresh_token`,
