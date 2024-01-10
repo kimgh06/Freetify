@@ -6,7 +6,7 @@ export async function generateMetadata({ params, searchParams }) {
     return
   }
   const info = await getPlaylistAtoms(params['id'][0], searchParams['playlist']);
-  const description = info?.map((i, n) => `${i.name} release at ${i.album.release_date}, artist ${JSON.stringify(i.artists.map((i, n) => i.name).join(', ')).replace(/"/g, "")}, ${(i.duration_ms - i.duration_ms % 60000) / 60000}:${((i.duration_ms % 60000 - (i.duration_ms % 60000) % 1000) / 1000).toString().padStart(2, '0')} `)
+  const description = `${searchParams['playlist']}, playlist, ${info.length} songs`
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_AUTH_URL),
     openGraph: {
