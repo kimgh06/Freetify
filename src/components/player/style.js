@@ -84,6 +84,7 @@ export const Player = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding-bottom: 30px;
     @media screen and (max-width:1200px) {
       width: 95%;
     }
