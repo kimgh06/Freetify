@@ -174,7 +174,7 @@ export const Player = styled.div`
         align-items: center;
         justify-content: center;
         .left , .right{
-          margin: 0 2vw;
+          /* margin: 0 2vw; */
           cursor: pointer;
           font-size: 20px;
           width: 30px;
@@ -182,6 +182,12 @@ export const Player = styled.div`
           text-align: center;
           border: none;
           background-color: #00000000;
+        }
+        .left{
+          margin-right: 2vw;
+        }
+        .right{
+          margin-left: 2vw;
         }
       }
       .play{
@@ -321,7 +327,7 @@ export const ExtensionMode_mobile = styled.div`
         align-items: center;
         justify-content: center;
         .left , .right{
-          margin: 0 9vw;
+          /* margin: 0 9vw; */
           cursor: pointer;
           font-size: 20px;
           background-color: #00000000;
@@ -330,6 +336,12 @@ export const ExtensionMode_mobile = styled.div`
           text-align: center;
           border: none;
           border-radius: 300px;
+        }
+        .left{
+          margin-right: 9vw;
+        }
+        .right{
+          margin-left: 9vw;
         }
       }
     }

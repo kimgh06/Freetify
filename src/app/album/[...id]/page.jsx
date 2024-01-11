@@ -33,8 +33,6 @@ const getAlbumInfos = async id => {
   const access = await refresh_token();
   return await axios.get(`${url}/albums/${id}`, { headers: { Authorization: `Bearer ${access}` } })
     .then(async e => {
-      // setAlbumInfo(e.data);
-      // setTracks(e.data.tracks.items);
       let TrackList = [];
       let sum = 0;
       e.data.tracks.items.forEach(items => {
