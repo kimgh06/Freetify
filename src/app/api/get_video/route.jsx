@@ -35,8 +35,8 @@ export async function GET(req, response) {
   let album = info?.album?.name
   let artist = info?.artists[0].name;
   let length = info.album.total_tracks;
-  let title = info?.name;
-  artist = artist.replace(/&/g, 'and').replace(/%20/g, " ");
+  let title = info?.name.replace(/$/g, 's');
+  artist = artist.replace(/&/g, 'and').replace(/%20/g, " ").replace(/$/g, 's');
   artist = decodeURIComponent(artist)
   console.log(title, artist)
   //앨범 검색=> 트랙찾기

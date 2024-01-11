@@ -4,7 +4,7 @@ import { Album } from './albumpage';
 
 export async function generateMetadata({ params }) {
   if (!params['id'][0]) {
-    return
+    return;
   }
   const { title, tracks, author, duration } = await getAlbumInfos(params['id'][0]);
   const description = `${title} - ${author}, album, ${tracks.length} songs, ${duration}`
