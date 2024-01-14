@@ -3,7 +3,7 @@ import { Album } from './albumpage';
 
 
 export async function generateMetadata({ params }) {
-  if (!params['id'][0]) {
+  if (!params['id'][0] || params['id'][0] === 'null' || params['id'][0] === 'undefined') {
     return;
   }
   const { title, tracks, author, duration } = await getAlbumInfos(params['id'][0]);

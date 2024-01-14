@@ -35,7 +35,7 @@ export async function GET(req, response) {
   let album = info?.album?.name
   let artist = info?.artists[0].name;
   let length = info.album.total_tracks;
-  let title = info?.name.replace(/$/g, 's');
+  let title = info?.name;
   artist = artist.replace(/&/g, 'and').replace(/%20/g, " ").replace(/$/g, 's');
   artist = decodeURIComponent(artist)
   console.log(title, artist)
