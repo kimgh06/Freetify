@@ -11,7 +11,7 @@ async function getInfo(id, access) {
     .then(async e => {
       return e.data;
     }).catch(e => {
-      console.log(e);
+      console.log(e, 'error at getInfo in get_video');
     });
 }
 

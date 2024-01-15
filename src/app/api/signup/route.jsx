@@ -10,6 +10,7 @@ export async function POST(req, response) {
     if (insert.err.errno === 1062) {
       return NextResponse.json({ msg: "Already exists email." }, { status: 400 });
     }
+    console.log(err, 'error at post signup')
   }
   return NextResponse.json({ msg: 'success to regist' })
 }

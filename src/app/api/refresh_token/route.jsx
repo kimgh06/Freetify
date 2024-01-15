@@ -1,7 +1,6 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
 
-const redirect_url = process.env.NEXT_PUBLIC_BACKEND_REDIRECT_URL;
 const SpotifyClientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENTID;
 const SpotifyClientSecret = process.env.NEXT_PUBLIC_SPOTIFY_CLIENTSECRET;
 

@@ -23,7 +23,7 @@ export async function POST(req, response) {
   }
   await transporter.sendMail(mailOption, (err, info) => {
     if (err) {
-      console.log(err);
+      console.log(err, 'error at post verifyingemail');
     }
   })
   return NextResponse.json({ code: verfifycode })

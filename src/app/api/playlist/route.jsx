@@ -47,7 +47,7 @@ export async function PUT(req, response) {
     return NextResponse.json({ msg: "Need to refresh" }, { status: 403 })
   }
   if (err !== null) {
-    console.log(err)
+    console.log(err, 'error at put playlist')
     if (err['errno'] === 1062) {
       return NextResponse.json({ msg: 'Already exists' }, { status: 400 })
     }
@@ -60,7 +60,7 @@ export async function DELETE(req, response) {
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);
   const { song_id, playlist } = await req.json();
   const { err, res } = await useQuery(`delete from playlist where playlist_id = '${playlist}' and user_id = ${Auth['user_id']} and song_id = '${song_id}'`)
-  console.log(err)
+  console.log(err, 'error at delete playlist')
   if (new Date().getTime() > Auth['exp']) {
     return NextResponse.json({ msg: "Need to refresh" }, { status: 403 })
   }
@@ -74,7 +74,7 @@ export async function PATCH(req, response) {
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);
   const { user_id, exp } = Auth;
   const { items, playlist_id } = await req.json()
-  console.log(user_id, new Date().getTime() > exp, items.length, playlist_id)
+  console.log("refresh user token", user_id, new Date().getTime() > exp, items.length, playlist_id)
   let { err, res } = await useQuery(`select count(playlist_id) as ex from playlist where user_id = ${user_id} and playlist_id = '${playlist_id}' group by playlist_id`);
   if (err !== null && res.length !== 1) {
     return NextResponse.json({ msg: 'err' }, { status: 500 })
