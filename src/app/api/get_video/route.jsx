@@ -74,8 +74,15 @@ export async function GET(req, response) {
   }
   if (!url) {
     //싱글 앨범일 경우거나 못 찾았거나
-    list = (await youtubesearchapi.GetListByKeyword(`${artist} ${title} lyrics`)).items.filter(e => e.type !== 'channel' && (parseInt(e.length.simpleText.split(':')[0]) * 60000 + parseInt(e.length.simpleText.split(':')[1] * 1000)) < playingtime + 1000);
-    console.log("can't found on album", list[0].title)
+    list = (await youtubesearchapi.GetListByKeyword(`${artist} ${title} lyrics`))
+      .items.filter(e => {
+        let duration
+        if (e?.length?.simpleText) {
+          duration = (parseInt(e.length.simpleText.split(':')[0]) * 60000 + parseInt(e.length.simpleText.split(':')[1] * 1000))
+        }
+        return e.type !== 'channel' && (duration ? duration < playingtime + 1000 : '')
+      });
+    console.log("can't found on playlists", list[0].title)
     url = list[0].id
   }
 
@@ -85,6 +92,7 @@ export async function GET(req, response) {
       const response = new Response(stream);
       response.headers.set('content-type', 'audio/mp3')
       response.headers.set('connection', 'keep-alive');
+      console.log('complete to send datas')
       return response
     }
     throw "no datas"
