@@ -2,17 +2,19 @@ import axios from 'axios';
 import { Album } from './albumpage';
 
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({ params }, parent) {
   if (!params['id'][0] || params['id'][0] === 'null' || params['id'][0] === 'undefined') {
     return;
   }
-  const { title, tracks, author, duration } = await getAlbumInfos(params['id'][0]);
+  const { img, title, tracks, author, duration } = await getAlbumInfos(params['id'][0]);
   const description = `${title} - ${author}, album, ${tracks.length} songs, ${duration}`
+  const previousImg = (await parent)?.openGraph?.images || []
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_AUTH_URL),
     openGraph: {
       title: `${title} - ${author}` || 'playlist',
-      description: description || 'description'
+      description: description || 'description',
+      images: [img, ...previousImg]
     }
   }
 }
@@ -41,7 +43,7 @@ const getAlbumInfos = async id => {
       });
       let tr = await getTrackinfos(TrackList, access);
       sum = `${Math.floor(sum / 60 / 1000)}m ${((sum % 60000 - (sum % 60000) % 1000) / 1000).toString().padStart(2, '0')}s`;
-      return { title: e.data.name, author: e.data.artists.map((i, n) => i.name).join(' & '), tracks: tr, duration: sum };
+      return { img: e.data?.images[0].url, title: e.data.name, author: e.data.artists.map((i, n) => i.name).join(' & '), tracks: tr, duration: sum };
     }).catch(e => {
       console.log(e);
     });
