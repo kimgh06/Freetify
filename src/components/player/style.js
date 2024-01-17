@@ -22,7 +22,7 @@ export const Player = styled.div`
     background-color: #00000000;
     color: white;
   }
-  .floating{
+  .playlist_popup{
     font-size: 18px;
     @keyframes init {
       0%{
@@ -38,7 +38,7 @@ export const Player = styled.div`
     text-align: center;
     max-height: 100px;
     right: 10px;
-    bottom: 25vh;
+    bottom: 10vh;
     overflow-y: scroll;
     overflow-x:hidden;
     animation: init 0.1s linear;
@@ -149,7 +149,7 @@ export const Player = styled.div`
             text-align: center;
             background-color: #00000000;
           }
-          .right{
+          .left,.right{
             margin: 0 2vw;
             cursor: pointer;
             font-size: 20px;
@@ -192,6 +192,7 @@ export const Player = styled.div`
         }
       }
       .play{
+        margin-top: 5px;
         text-align: center;
         width: 70px;
         height: 70px;

@@ -21,7 +21,7 @@ export default function Player() {
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
 
-  const [clicked, setClicked] = useRecoilState(AddbuttonIndex);
+  const [popup, setPopup] = useRecoilState(AddbuttonIndex);
   const [input, setInput] = useState(false)
   const [allList, setAllList] = useState([{}]);
 
@@ -288,15 +288,15 @@ export default function Player() {
   }, []);
 
   useEffect(e => {
-    if (clicked === 'playlist') {
+    if (popup === 'playlist') {
       getAllPlaylist();
     }
     setInput(false)
-  }, [clicked])
+  }, [popup])
   useEffect(e => {
     audio.current.volume = volume;
-    if (clicked === 'playlist') {
-      setClicked('')
+    if (popup === 'playlist') {
+      setPopup('')
     }
   }, [id, volume]);
   return <S.Player style={{
@@ -336,6 +336,9 @@ export default function Player() {
           </div>
           {info && <Lyric isrc={info?.external_ids?.isrc} />}
         </> : <S.Main_smaller>
+          <button className='left' onClick={e => {
+            NextTrack();
+          }}>{'◀'}</button>
           <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
             onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           <button className='left' onClick={e => {
@@ -359,6 +362,9 @@ export default function Player() {
                   {info?.artists && (info?.artists[0]?.name?.length >= 15 ? info?.artists[0]?.name.substr(0, 15) + '...' : info?.artists[0]?.name)}
                 </div>
               </div>
+              <button className='left' onClick={e => {
+                NextTrack();
+              }}>{'◀'}</button>
               <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
                 onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
               <button className='right' onClick={e => {
@@ -416,7 +422,7 @@ export default function Player() {
           <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
           <span>{Math.round(volume * 100)}%</span>
           <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
-          <button className='addplaylist' onClick={e => clicked !== 'playlist' ? setClicked('playlist') : setClicked('')}>
+          <button className='addplaylist' onClick={e => popup !== 'playlist' ? setPopup('playlist') : setPopup('')}>
             <div className='dot' />
             <div className='dot' />
             <div className='dot' />
@@ -426,7 +432,7 @@ export default function Player() {
         <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
         <span>{Math.round(volume * 100)}%</span>
         <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
-        <button className='addplaylist' onClick={e => clicked !== 'playlist' ? setClicked('playlist') : setClicked('')}>
+        <button className='addplaylist' onClick={e => popup !== 'playlist' ? setPopup('playlist') : setPopup('')}>
           <div className='dot' />
           <div className='dot' />
           <div className='dot' />
@@ -448,7 +454,7 @@ export default function Player() {
       onLoadedData={e => setPlay(true)}
       onPause={e => !modify && setPlay(false)}
       onPlay={e => setPlay(true)} />
-    {clicked === 'playlist' && <div className='floating'>
+    {popup === 'playlist' && <div className='playlist_popup'>
       <div>
         <span onClick={e => {
           if (input === false) {
