@@ -420,8 +420,8 @@ export const MenuComponent = styled.div`
   width: 300px;
   border: 1px solid white;
   border-radius: 20px;
-  right: 10px;
-  bottom: 15vh;
+  /* right: 10px; */
+  bottom: 13vh;
   overflow-x:hidden;
   .button{
     padding: 5px 0;

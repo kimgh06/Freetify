@@ -6,7 +6,7 @@ export const PlayAtom = styled.div`
   text-align: left;
   display: flex;
   color: black;
-  width: 35vw;
+  width: 36vw;
   min-width: 320px;
   border: 4px solid lightgray;
   padding: 5px 15px;
