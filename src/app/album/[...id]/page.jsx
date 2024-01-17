@@ -14,7 +14,7 @@ export async function generateMetadata({ params }, parent) {
     openGraph: {
       title: `${title} - ${author}` || 'playlist',
       description: description || 'description',
-      images: [img, ...previousImg]
+      images: [img]
     }
   }
 }
