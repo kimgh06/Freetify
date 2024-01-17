@@ -412,3 +412,23 @@ export const Main_smaller = styled.div`
     height: 20vh;
   }
 `
+
+export const MenuComponent = styled.div`
+  position: absolute;
+  z-index: 11;
+  background-color: black;
+  width: 300px;
+  border: 1px solid white;
+  border-radius: 20px;
+  right: 10px;
+  bottom: 15vh;
+  overflow-x:hidden;
+  .button{
+    padding-left: 20px;
+    font-size: 20px;
+    cursor: pointer;
+    &+.button{
+      border-top: 1px solid white;
+    }
+  }
+`

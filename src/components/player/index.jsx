@@ -22,41 +22,6 @@ export default function Player() {
   const [innerWidth, setInnerWidth] = useState(null);
 
   const [popup, setPopup] = useRecoilState(AddbuttonIndex);
-  const [input, setInput] = useState(false)
-  const [allList, setAllList] = useState([{}]);
-
-  const putPlaylist = async playlist => {
-    await axios.put('/api/playlist/', { playlist: playlist, song_id: id },
-      { headers: { 'Authorization': localStorage.getItem('user_access') } })
-      .then(e => {
-        console.log(e.data);
-        getAllPlaylist();
-      }).catch(e => {
-        console.log(e)
-      })
-  }
-  const deletePlaylist = async playlist => {
-    await axios.delete('/api/playlist/', {
-      headers: { 'Authorization': localStorage.getItem('user_access') },
-      data: {
-        playlist: playlist,
-        song_id: id
-      }
-    }).then(e => {
-      console.log(e.data);
-      getAllPlaylist()
-    }).catch(e => {
-      console.log(e)
-    })
-  }
-  const getAllPlaylist = async e => {
-    await axios.get(`/api/playlist?id=${id}`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
-      .then(e => {
-        setAllList(e.data.res);
-      }).catch(e => {
-        console.log(e);
-      })
-  }
   const getMusicUrl = async (id) => {
     if (!id) {
       return;
@@ -288,14 +253,8 @@ export default function Player() {
   }, []);
 
   useEffect(e => {
-    if (popup === 'playlist') {
-      getAllPlaylist();
-    }
-    setInput(false)
-  }, [popup])
-  useEffect(e => {
     audio.current.volume = volume;
-    if (popup === 'playlist') {
+    if (popup === 'popup') {
       setPopup('')
     }
   }, [id, volume]);
@@ -422,7 +381,7 @@ export default function Player() {
           <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
           <span>{Math.round(volume * 100)}%</span>
           <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
-          <button className='addplaylist' onClick={e => popup !== 'playlist' ? setPopup('playlist') : setPopup('')}>
+          <button className='addplaylist' onClick={e => popup !== 'popup' ? setPopup('popup') : setPopup('')}>
             <div className='dot' />
             <div className='dot' />
             <div className='dot' />
@@ -432,7 +391,7 @@ export default function Player() {
         <button onClick={e => setVolume(a => a + 0.1 > 1 ? a : a + 0.1)}>+</button>
         <span>{Math.round(volume * 100)}%</span>
         <button onClick={e => setVolume(a => a - 0.1 < 0.1 ? a : a - 0.1)}>-</button>
-        <button className='addplaylist' onClick={e => popup !== 'playlist' ? setPopup('playlist') : setPopup('')}>
+        <button className='addplaylist' onClick={e => popup !== 'popup' ? setPopup('popup') : setPopup('')}>
           <div className='dot' />
           <div className='dot' />
           <div className='dot' />
@@ -454,33 +413,91 @@ export default function Player() {
       onLoadedData={e => setPlay(true)}
       onPause={e => !modify && setPlay(false)}
       onPlay={e => setPlay(true)} />
-    {popup === 'playlist' && <div className='playlist_popup'>
-      <div>
-        <span onClick={e => {
-          if (input === false) {
-            setInput('')
-          }
-        }}>{input === false ? '+' : <>
-          <input onChange={e => setInput(e.target.value)} value={input} autoFocus />
-          <button onClick={e => {
-            if (!input) {
-              return;
-            }
-            putPlaylist(input);
-            setInput(false);
-          }}>+</button>
-        </>}</span>
-      </div>
-      {allList?.map((i, n) => <div key={n}>
-        <Link href={`/playlist/${localStorage.getItem('user_nickname')}?playlist=${i['playlist_id']}`}>{i['playlist_id']}</Link>
-        <p onClick={e => {
-          if (!i['exist']) {
-            putPlaylist(i['playlist_id']);
-          } else {
-            deletePlaylist(i['playlist_id'])
-          }
-        }}>{!i['exist'] ? '+' : '-'}</p></div>)}
-    </div>}
+    {popup === 'popup' && <MenuComponent albumId={info?.album?.id} />}
   </S.Player>;
 }
 
+function MenuComponent({ albumId }) {
+  const [mode, setMode] = useState('');
+  const [_, setPopup] = useRecoilState(AddbuttonIndex);
+  return <>
+    {mode === '' && <S.MenuComponent>
+      <div className='button' onClick={e => {
+        navigator.clipboard.writeText(`https://freetify.vercel.app/album/${albumId}`)
+        alert('Copied.')
+        setPopup('')
+      }}>Copy the Url!</div>
+      <div className='button' onClick={e => setMode('playlist')}>Setting Playlists</div>
+    </S.MenuComponent>}
+    {mode === 'playlist' && <ShowPlaylists />}
+  </>
+}
+
+function ShowPlaylists() {
+  const [id, setId] = useRecoilState(NowPlayingId);
+  const [input, setInput] = useState(false)
+  const [allList, setAllList] = useState([{}]);
+
+  const putPlaylist = async playlist => {
+    await axios.put('/api/playlist/', { playlist: playlist, song_id: id },
+      { headers: { 'Authorization': localStorage.getItem('user_access') } })
+      .then(e => {
+        console.log(e.data);
+        getAllPlaylist();
+      }).catch(e => {
+        console.log(e)
+      })
+  }
+  const deletePlaylist = async playlist => {
+    await axios.delete('/api/playlist/', {
+      headers: { 'Authorization': localStorage.getItem('user_access') },
+      data: {
+        playlist: playlist,
+        song_id: id
+      }
+    }).then(e => {
+      console.log(e.data);
+      getAllPlaylist()
+    }).catch(e => {
+      console.log(e)
+    })
+  }
+  const getAllPlaylist = async e => {
+    await axios.get(`/api/playlist?id=${id}`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
+      .then(e => {
+        setAllList(e.data.res);
+      }).catch(e => {
+        console.log(e);
+      })
+  }
+  useEffect(e => {
+    getAllPlaylist();
+  }, [])
+  return <div className='playlist_popup'>
+    <div>
+      <span onClick={e => {
+        if (input === false) {
+          setInput('')
+        }
+      }}>{input === false ? '+' : <>
+        <input onChange={e => setInput(e.target.value)} value={input} autoFocus />
+        <button onClick={e => {
+          if (!input) {
+            return;
+          }
+          putPlaylist(input);
+          setInput(false);
+        }}>+</button>
+      </>}</span>
+    </div>
+    {allList?.map((i, n) => <div key={n}>
+      <Link href={`/playlist/${localStorage.getItem('user_nickname')}?playlist=${i['playlist_id']}`}>{i['playlist_id']}</Link>
+      <p onClick={e => {
+        if (!i['exist']) {
+          putPlaylist(i['playlist_id']);
+        } else {
+          deletePlaylist(i['playlist_id'])
+        }
+      }}>{!i['exist'] ? '+' : '-'}</p></div>)}
+  </div>
+}
