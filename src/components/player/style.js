@@ -424,11 +424,15 @@ export const MenuComponent = styled.div`
   bottom: 15vh;
   overflow-x:hidden;
   .button{
+    padding: 5px 0;
     padding-left: 20px;
-    font-size: 20px;
+    font-size: 18px;
     cursor: pointer;
     &+.button{
       border-top: 1px solid white;
+    }
+    &:hover{
+      text-decoration: underline;
     }
   }
 `
