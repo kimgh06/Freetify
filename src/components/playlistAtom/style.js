@@ -42,7 +42,9 @@ export const PlayAtom = styled.div`
   }
   .foo{
     display: flex;
+    justify-content: space-between;
     margin-top: 15px;
+    padding-right: 2vw;
     .artist{
       display: block;
       cursor: pointer;
@@ -50,13 +52,23 @@ export const PlayAtom = styled.div`
         text-decoration-line: underline;
       }
     }
-  }
-  .audio{
-    text-align: right;
     button{
+      margin-top: -5px;
       cursor: pointer;
       width: 25px;
       height: 25px;
+    }
+  }
+  .audio{
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    button{
+      cursor: pointer;
+      min-width: 25px;
+      min-height: 25px;
     }
     .isInPlay{
       margin: 5px 0;

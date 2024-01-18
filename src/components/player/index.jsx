@@ -413,18 +413,18 @@ export default function Player() {
       onLoadedData={e => setPlay(true)}
       onPause={e => !modify && setPlay(false)}
       onPlay={e => setPlay(true)} />
-    {popup === 'popup' && <MenuComponent albumId={info?.album?.id} />}
+    {popup === 'popup' && <MenuComponent albumId={info?.album?.id} title={info?.name} />}
   </S.Player>;
 }
 
-function MenuComponent({ albumId }) {
+function MenuComponent({ albumId, title }) {
   const [mode, setMode] = useState('');
   const [_, setPopup] = useRecoilState(AddbuttonIndex);
   return <>
     {mode === '' && <S.MenuComponent>
       <div className='button' onClick={e => {
-        navigator.clipboard.writeText(`https://freetify.vercel.app/album/${albumId}`)
-        alert('Copied.')
+        navigator.clipboard.writeText(`https://freetify.vercel.app/album/${albumId}#${title}`)
+        alert(title + ' Copied.')
         setPopup('')
       }}>Copy the Url!</div>
       <div className='button' onClick={e => setMode('playlist')}>Setting Playlists</div>

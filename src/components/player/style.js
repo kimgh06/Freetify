@@ -416,9 +416,10 @@ export const Main_smaller = styled.div`
 export const MenuComponent = styled.div`
   position: absolute;
   z-index: 11;
-  background-color: black;
+  background-color: white;
+  color: black;
   width: 300px;
-  border: 1px solid white;
+  /* border: 1px solid black; */
   border-radius: 20px;
   /* right: 10px; */
   bottom: 13vh;
@@ -429,7 +430,7 @@ export const MenuComponent = styled.div`
     font-size: 18px;
     cursor: pointer;
     &+.button{
-      border-top: 1px solid white;
+      border-top: 1px solid black;
     }
     &:hover{
       text-decoration: underline;

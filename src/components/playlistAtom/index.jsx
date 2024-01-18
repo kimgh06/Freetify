@@ -14,7 +14,6 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
   const [input, setInput] = useState(false);
   const [allList, setAllList] = useState([{}]);
   const [now_playing_id, setNow_playing_id] = useRecoilState(NowPlayingId);
-  const [durationT, setDurationT] = useState(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
   const getMusicAnalsisData = async e => {
     await axios.get(`${url}/audio-analysis/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
       console.log(e.data);
@@ -71,11 +70,6 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
       })
   }
   useEffect(e => {
-    if (id && type === 'track') {
-      setDurationT(`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`);
-    }
-  }, [id]);
-  useEffect(e => {
     if (clicked === index) {
       getAllPlaylist();
     }
@@ -87,11 +81,15 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
     }} />
     <div>
       <div className='hea'>
-        <Link id={title} className="title" href={album ? `/album/${album?.id}` : (type === 'playlist' ? `/playlist/${artist}?playlist=${id}` : `#${title}`)} >{title}</Link>&nbsp;
-        {playingtime && <div className="playingtime">{durationT}</div>}
+        <Link id={title} className="title" href={album ? `/album/${album?.id}#${title}` : (type === 'playlist' ? `/playlist/${artist}?playlist=${id}` : `#${title}`)} >{title}</Link>&nbsp;
+        {playingtime && <div className="playingtime">{`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}</div>}
       </div>
       <div className='foo'>
         <Link className="artist" href={type === 'playlist' ? '#' : `/artist/${artistId}`}>{type === 'playlist' ? artist : artist[0].name}{type === 'track' && artist.length > 1 && `+${artist.length - 1}`}</Link>
+        <button onClick={e => {
+          navigator.clipboard.writeText(`https://freetify.vercel.app/album/${album?.id}#${title}`);
+          alert(title + ' Copied');
+        }}>C</button>
       </div>
     </div>
     {type === 'track' && <div className='audio'>
