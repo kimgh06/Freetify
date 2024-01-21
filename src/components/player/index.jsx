@@ -295,9 +295,6 @@ export default function Player() {
           </div>
           {info && <Lyric isrc={info?.external_ids?.isrc} />}
         </> : <S.Main_smaller>
-          <button className='left' onClick={e => {
-            NextTrack();
-          }}>{'◀'}</button>
           <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
             onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
           <button className='left' onClick={e => {
@@ -322,7 +319,7 @@ export default function Player() {
                 </div>
               </div>
               <button className='left' onClick={e => {
-                NextTrack();
+                PreviousTrack();
               }}>{'◀'}</button>
               <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
                 onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
