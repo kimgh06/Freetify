@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import AritstProfile from "@/components/artistprofile";
 import { RecoilRoot, useRecoilState } from "recoil";
 import { AccessToken } from "../recoilStates";
+import { useRouter } from "next/navigation";
 
 const url = 'https://api.spotify.com/v1';
 
@@ -22,13 +23,14 @@ function InnerContent() {
   const [artist, setArtist] = useState([]);
   const [tracks, setTracks] = useState([]);
   const [access, setAccess] = useRecoilState(AccessToken);
+  const navigate = useRouter();
   const searchItems = async q => {
     await axios.get(`${url}/search?q=${q}&type=album,track,artist&limit=5`, { headers: { Authorization: "Bearer " + access } }).then(e => {
       const data = e.data;
       let artists = data.artists.items.slice(0, 5);
       console.log("album", data.albums.items, "artists", artists, "tracks", data.tracks.items);
       document.title = q;
-      window.history.pushState('', '', `?q=${q}`)
+      navigate.push(`${window.location.pathname}?q=${q}`)
       setAlbums(data.albums.items);
       setTracks(data.tracks.items);
       setArtist(artists);
