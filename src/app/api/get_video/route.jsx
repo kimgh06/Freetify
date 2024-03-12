@@ -28,15 +28,6 @@ async function getInfo(id, access) {
     });
 }
 
-async function AddsongStat(songId, user_id) {
-  const query = `update song_stat set count = count+1 where song_id = '${songId}' and user_id = ${user_id || -1}`;
-  return await Connection.query(query);
-}
-
-async function InsertSongStat(query) {
-  return await Connection.query(query);
-}
-
 export async function GET(req, response) {
   const access = req.headers.get('Authorization')
   const user_access = req.headers.get('user_access') ? jwt.verify(req.headers.get('user_access'), process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET) : null;
@@ -44,16 +35,17 @@ export async function GET(req, response) {
   let songId = q.get('songId');
   const user_id = user_access?.user_id || -1;
   try {
-    // const query = `insert into song_stat values('${songId}', ${user_id},1,false)`;
-    // await Connection.query(query);
-    // await InsertSongStat(query).then(e => {
-    //   console.log(e)
-    // }).catch(e => {
-    //   console.log(e)
-    // })
-    // if (err?.errno !== 1062) {
-    //   const { err, res } = await AddsongStat(songId, user_id);
-    // }
+    const query = `insert into song_stat values('${songId}', ${user_id},1,false)`;
+    await Connection.query(query).then(e => {
+      console.log('asdf')
+    }).catch(async e => {
+      if (e?.errno === 1062) {
+        const query = `update song_stat set counts = counts+1 where song_id = '${songId}' and user_id = ${user_id || -1}`;
+        await Connection.query(query).catch(e => {
+          console.log(e)
+        });
+      }
+    });
   } catch (e) {
     console.log(e);
   }
@@ -70,7 +62,7 @@ export async function GET(req, response) {
   //앨범 검색=> 트랙찾기
   let list = (await youtubesearchapi.GetListByKeyword(`${artist} ${album} album`, true, 20)).items;
   list = list.filter(item => item.type === "playlist" && item);
-  console.log(list)
+  // console.log(list)
   let url;
   if (list.length != 0) {
     let playlist = await youtubesearchapi.GetPlaylistData(list[0].id, 100);
