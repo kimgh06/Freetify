@@ -4,6 +4,19 @@ import youtubesearchapi from 'youtube-search-api';
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import { useQuery } from "@/app/useQuery";
+import mysql2 from 'mysql2/promise';
+
+const Connection = mysql2.createPool({
+  host: process.env.NEXT_PUBLIC_SQL_HOST,
+  port: '3306',
+  user: process.env.NEXT_PUBLIC_SQL_USR,
+  password: process.env.NEXT_PUBLIC_SQL_PWD,
+  database: process.env.NEXT_PUBLIC_SQL_DATABASE
+})
+
+// Connection.query(query, (err, res, fields) => {
+//   Connection.end()
+// })
 
 async function getInfo(id, access) {
   return await axios.get(`https://api.spotify.com/v1/tracks/${id}?market=KR`,
@@ -16,7 +29,12 @@ async function getInfo(id, access) {
 }
 
 async function AddsongStat(songId, user_id) {
-  return await useQuery(`update song_stat set count = count+1 where song_id = '${songId}' and user_id = ${user_id || -1}`)
+  const query = `update song_stat set count = count+1 where song_id = '${songId}' and user_id = ${user_id || -1}`;
+  return await Connection.query(query);
+}
+
+async function InsertSongStat(query) {
+  return await Connection.query(query);
 }
 
 export async function GET(req, response) {
@@ -24,10 +42,20 @@ export async function GET(req, response) {
   const user_access = req.headers.get('user_access') ? jwt.verify(req.headers.get('user_access'), process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET) : null;
   const q = new URLSearchParams(new URL(req?.url).search)
   let songId = q.get('songId');
-  const user_id = user_access?.user_id
-  let { err, res } = await useQuery(`insert into song_stat values('${songId}', ${user_id || -1},1,false)`)
-  if (err?.errno === 1062) {
-    const { err, res } = await AddsongStat(songId, user_id);
+  const user_id = user_access?.user_id || -1;
+  try {
+    // const query = `insert into song_stat values('${songId}', ${user_id},1,false)`;
+    // await Connection.query(query);
+    // await InsertSongStat(query).then(e => {
+    //   console.log(e)
+    // }).catch(e => {
+    //   console.log(e)
+    // })
+    // if (err?.errno !== 1062) {
+    //   const { err, res } = await AddsongStat(songId, user_id);
+    // }
+  } catch (e) {
+    console.log(e);
   }
   const info = await getInfo(songId, access);
   const playingtime = info?.duration_ms
@@ -41,7 +69,8 @@ export async function GET(req, response) {
   console.log(title, artist)
   //앨범 검색=> 트랙찾기
   let list = (await youtubesearchapi.GetListByKeyword(`${artist} ${album} album`, true, 20)).items;
-  list = list.filter(item => item.type === "playlist" && item.length >= length && item.length <= 2 * length && item)
+  list = list.filter(item => item.type === "playlist" && item);
+  console.log(list)
   let url;
   if (list.length != 0) {
     let playlist = await youtubesearchapi.GetPlaylistData(list[0].id, 100);
