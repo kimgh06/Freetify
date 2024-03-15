@@ -70,8 +70,8 @@ export async function GET(req, response) {
       .replace(/\(/g, "")
       .replace(/\)/g, "")
       .replace(/-/g, "")
-      .replace(/ /g, "")
       .toLowerCase()
+      .replace(/ /g, "")
     if (newTitle.indexOf('remastered') !== -1) {
       newTitle = newTitle.substr(0, newTitle.indexOf('remastered'))
     }
