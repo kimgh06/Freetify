@@ -1,12 +1,28 @@
 // import { useQuery } from "@/app/useQuery";
-const { useQuery } = require('@/app/useQuery');
-// import { NextResponse } from "next/server";
-const { NextResponse } = require("next/server");
+import { NextResponse } from "next/server";
+import mysql2 from 'mysql2/promise';
 import jwt from 'jsonwebtoken';
+
+const Connection = mysql2.createPool({
+  host: process.env.NEXT_PUBLIC_SQL_HOST,
+  port: '3306',
+  user: process.env.NEXT_PUBLIC_SQL_USR,
+  password: process.env.NEXT_PUBLIC_SQL_PWD,
+  database: process.env.NEXT_PUBLIC_SQL_DATABASE
+})
+
 
 export async function POST(req, response) {
   const { email, pw } = await req.json();
-  const { err, res } = await useQuery(`select * from user_info where email = '${email}' and password = '${pw}'`)
+  let query = `select * from user_info where email = '${email}' and password = '${pw}'`;
+  let res, err = null;
+  await Connection.query(query).then(e => {
+    // console.log(e[0])
+    res = e
+  }).catch(e => {
+    // console.log(e)
+    err = e
+  })
 
   if (err !== null) {
     return NextResponse.json({ msg: 'serverError' }, { status: 500 });
