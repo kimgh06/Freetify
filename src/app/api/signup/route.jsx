@@ -1,4 +1,4 @@
-import { useQuery } from "@/app/useQuery";
+// import { useQuery } from "@/app/useQuery";
 import { NextResponse } from "next/server";
 
 import mysql2 from 'mysql2/promise';
