@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import { useQuery } from "@/app/useQuery";
 import mysql2 from 'mysql2/promise';
 
 const Connection = mysql2.createPool({
