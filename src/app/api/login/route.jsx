@@ -1,5 +1,7 @@
-import { useQuery } from "@/app/useQuery";
-import { NextResponse } from "next/server";
+// import { useQuery } from "@/app/useQuery";
+const { useQuery } = require('@/app/useQuery');
+// import { NextResponse } from "next/server";
+const { NextResponse } = require("next/server");
 import jwt from 'jsonwebtoken';
 
 export async function POST(req, response) {
