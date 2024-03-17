@@ -27,7 +27,7 @@ async function getInfo(id, access) {
     });
 }
 
-export async function GET(req, response) {
+export default async function GET(req, response) {
   const access = req.headers.get('Authorization')
   const user_access = req.headers.get('user_access') ? jwt.verify(req.headers.get('user_access'), process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET) : null;
   const q = new URLSearchParams(new URL(req?.url).search)
