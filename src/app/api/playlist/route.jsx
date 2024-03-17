@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 // import { useQuery } from "@/app/useQuery";
-import mysql2 from 'mysql2/promise';
 import jwt from 'jsonwebtoken'
 const secret = process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET;
 
+import mysql2 from 'mysql2/promise';
 const Connection = mysql2.createPool({
   host: process.env.NEXT_PUBLIC_SQL_HOST,
   port: '3306',
