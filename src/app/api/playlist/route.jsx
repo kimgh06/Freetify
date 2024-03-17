@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { useQuery } from "@/app/useQuery";
+// import { useQuery } from "@/app/useQuery";
 import mysql2 from 'mysql2/promise';
 import jwt from 'jsonwebtoken'
 const secret = process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET;
@@ -56,7 +56,7 @@ export async function POST(req, response) { //특정 플레이리스트 목록 �
   const query = `select song_id from playlist where user_id = (select user_id from user_info where nickname = '${nickname}') and playlist_id = '${playlist}' order by play_index`;
   let err = null, res;
   await Connection.query(query).then(e => {
-    console.log(e)
+    // console.log(e)
     res = e[0];
   }).catch(e => {
     err = e;
