@@ -18,7 +18,7 @@ export async function POST(req, response) {
   let res, err = null;
   await Connection.query(query).then(e => {
     // console.log(e[0])
-    res = e
+    res = e[0]
   }).catch(e => {
     // console.log(e)
     err = e
