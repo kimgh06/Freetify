@@ -22,7 +22,7 @@ function InnerContent({ id }) {
   const [info, setInfos] = useState();
   const [topTracks, setTopTracks] = useState([]);
   const [topAlbums, setTopAlbums] = useState([]);
-  const [access, setAccess] = useRecoilState(AccessToken);
+  const [access, _] = useRecoilState(AccessToken);
   async function getArtistTopTracks() {
     await axios.get(`${url}/artists/${id}/top-tracks?market=US`, { headers: { Authorization: `Bearer ${access}` } })
       .then(e => {
