@@ -187,7 +187,7 @@ export default function Player() {
       console.log(e)
     }
   }
-  const CheckExpiredBlobUrl = async url => {
+  const CheckExpiredBlobUrl = async url => { //Blob url 유효성 검사
     if (!url) {
       return;
     }
@@ -212,12 +212,14 @@ export default function Player() {
       setId(localStorage.getItem('now_playing_id'));
       return;
     }
-    getCurrentMusicURL();
-    setPlay(false)
+    if (id !== localStorage.getItem('now_playing_id')) { //access 키 받아올 때 현재랑 같으면 새로 받지 말기
+      getCurrentMusicURL();
+      setPlay(false)
+    }
 
-    const path = window.location.pathname
+    const path = window.location.pathname;
     const tracklist = localStorage.getItem("TrackList").split(',')
-    if (path === '/search' && tracklist.findIndex(e => e === id) <= 0) {
+    if (path === '/search' && tracklist.findIndex(e => e === id) <= 0) { // 검색 창일때 현재 플레이 리스트에서 찾지 못 할 때만 추천 리스트 받아오기
       localStorage.setItem("TrackList", id);
       recommendTracks()
     }
