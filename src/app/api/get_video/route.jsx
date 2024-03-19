@@ -59,9 +59,9 @@ export async function GET(req, response) {
   artist = decodeURIComponent(artist)
   console.log(title, artist)
   //앨범 검색=> 트랙찾기
-  let list = (await youtubesearchapi.GetListByKeyword(`${artist} ${album} album`, true, 30)).items;
+  let list = (await youtubesearchapi.GetListByKeyword(`${artist} ${album} album`, true, 20)).items;
   list = list.filter(item => item.type === "playlist" && item);
-  // console.log(artist, album, list)
+  // console.log(list)
   let url;
   if (list.length != 0) {
     let playlist = await youtubesearchapi.GetPlaylistData(list[0].id, 100);
@@ -103,7 +103,6 @@ export async function GET(req, response) {
         return e.type !== 'channel' && (duration ? duration < playingtime + 1000 : '')
       });
     console.log("can't found on playlists", list[0].title)
-    console.log(list)
     url = list[0].id
   }
 
