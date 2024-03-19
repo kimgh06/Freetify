@@ -115,6 +115,10 @@ export default function Player() {
       }
       setInfo(music_data);
       setDurationT(music_data.duration_ms)
+      if (id === localStorage.getItem('now_playing_id')) { //access 키 받아올 때 현재랑 같으면 새로 받지 말기
+        setPlay(true);
+        return;
+      }
 
       audio.current.src = null;
       let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
@@ -212,10 +216,8 @@ export default function Player() {
       setId(localStorage.getItem('now_playing_id'));
       return;
     }
-    if (id !== localStorage.getItem('now_playing_id')) { //access 키 받아올 때 현재랑 같으면 새로 받지 말기
-      getCurrentMusicURL();
-      setPlay(false)
-    }
+    getCurrentMusicURL();
+    setPlay(false)
 
     const path = window.location.pathname;
     const tracklist = localStorage.getItem("TrackList").split(',')
