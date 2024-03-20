@@ -198,7 +198,6 @@ export default function Player() {
     }
     return await fetch(url).then(e => {
       audio.current.src = url;
-      audio.current.currentTime = currentT + 0.2
       setPlay(false);
       return false;
     }).catch(e => {
@@ -248,14 +247,20 @@ export default function Player() {
     audio.current.pause();
   }, [play, modify]);
 
+  async function InitialFunction() {
+    const expired = await CheckExpiredBlobUrl(src);
+    if (!expired) {
+      audio.current.currentTime = currentT + 0.2
+    }
+    setInnerWidth(window.innerWidth);
+    setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
+    window.addEventListener('resize', e => {
+      setInnerWidth(window.innerWidth);
+    })
+  }
   useEffect(e => {
     if (typeof window !== undefined) {
-      CheckExpiredBlobUrl(src);
-      setInnerWidth(window.innerWidth);
-      setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
-      window.addEventListener('resize', e => {
-        setInnerWidth(window.innerWidth);
-      })
+      InitialFunction()
     }
   }, []);
 

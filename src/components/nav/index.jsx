@@ -85,6 +85,7 @@ export default function Navi() {
             window.location.href = '/';
           }}><Link href='#'>Log out</Link></p>
         </> : <p><Link href={'/login'}>Login / Sign up</Link></p>}
+        <p><Link href={'https://github.com/kimgh06/Freetify'}>View Sources</Link></p>
       </div>}
     </S.Nav >
     {id && <Player />
