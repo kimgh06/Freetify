@@ -115,7 +115,14 @@ export default function Player() {
       }
       setInfo(music_data);
       setDurationT(music_data.duration_ms)
-      if (id === localStorage.getItem('now_playing_id')) { //access 키 받아올 때 현재랑 같으면 새로 받지 말기
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: music_data.name,
+        artist: music_data.artists[0].name,
+        album: music_data.album.name,
+        artwork: [{ src: music_data.album.images[0].url }]
+      })
+      const expired = await CheckExpiredBlobUrl(src); //true 만료됨
+      if (id === localStorage.getItem('now_playing_id') && !expired) { //access 키 받아올 때 현재랑 같으면 새로 받지 말기
         setPlay(true);
         return;
       }
@@ -144,12 +151,6 @@ export default function Player() {
 
       localStorage.setItem('now_playing_id', id);
 
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: music_data.name,
-        artist: music_data.artists[0].name,
-        album: music_data.album.name,
-        artwork: [{ src: music_data.album.images[0].url }]
-      })
       let recentList = JSON.stringify(localStorage.getItem('recent_track_list'))
         .replace(/\\/g, '').replace(/"/g, '');
       let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list'))
@@ -195,13 +196,15 @@ export default function Player() {
     if (!url) {
       return;
     }
-    await fetch(url).then(e => {
+    return await fetch(url).then(e => {
       audio.current.src = url;
       audio.current.currentTime = currentT + 0.2
       setPlay(false);
+      return false;
     }).catch(e => {
       localStorage.setItem("cached_url", JSON.stringify({}));
       console.log("expired", e.toString())
+      return true;
     });
   }
 
