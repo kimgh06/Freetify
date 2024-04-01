@@ -88,7 +88,6 @@ export default function Navi() {
         <p><Link href={'https://github.com/kimgh06/Freetify'}>View Sources</Link></p>
       </div>}
     </S.Nav >
-    {id && <Player />
-    }
+    {id && <Player />}
   </>;
 }

@@ -15,22 +15,24 @@ export default function App() {
 
 function InnerComponent() {
   const [playlists, setPlaylists] = useState([]);
-  const [nickname, setNickname] = useState('');
-  const [access, setAccess] = useRecoilState(AccessToken);
+  let nickname;
+  if (!localStorage.getItem('user_nickname')) {
+    window.location.href = '/'
+    return;
+  }
+  nickname = localStorage?.getItem('user_nickname')
+
   const getAllPlaylist = async e => {
-    await axios.get(`/api/playlist`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
+    return await axios.get(`/api/playlist`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
       .then(e => {
         setPlaylists(e.data.res);
+        return e.data.res;
       }).catch(e => {
         console.log(e);
+        return null
       })
   }
   useEffect(e => {
-    if (!localStorage.getItem('user_nickname')) {
-      window.location.href = '/'
-      return;
-    }
-    setNickname(localStorage?.getItem('user_nickname'))
     getAllPlaylist();
   }, []);
 
