@@ -44,14 +44,14 @@ function InnerComponent() {
         <h1>
           playlists
         </h1>
-        {playlists?.map((i, n) => <PlaylistAtom
+        {playlists.length !== 0 ? playlists?.map((i, n) => <PlaylistAtom
           key={n}
           index={n}
           artist={localStorage.getItem('user_nickname')}
           title={i.playlist_id}
           type='playlist'
           id={i.playlist_id}
-        ></PlaylistAtom>)}
+        ></PlaylistAtom>) : "Loading"}
       </main>
       <S.PaddingBox />
     </S.Profile>
