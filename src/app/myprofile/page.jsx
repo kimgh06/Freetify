@@ -20,6 +20,9 @@ function InnerComponent() {
     window.location.href = '/'
     return;
   }
+  if (!localStorage) {
+    return;
+  }
   nickname = localStorage?.getItem('user_nickname')
 
   const getAllPlaylist = async e => {
