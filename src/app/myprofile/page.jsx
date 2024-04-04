@@ -20,11 +20,12 @@ function InnerComponent() {
     window.location.href = '/'
     return;
   }
-  if (!window?.localStorage) {
-    console.log('undefined')
+
+  if (!(typeof window !== 'undefined' && window.localStorage)) {
+    nickname = localStorage.getItem('user_nickname');
+  } else {
     return;
   }
-  nickname = localStorage?.getItem('user_nickname')
 
   const getAllPlaylist = async e => {
     return await axios.get(`/api/playlist`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
