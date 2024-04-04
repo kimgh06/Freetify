@@ -81,7 +81,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
     }} />
     <div>
       <div className='hea'>
-        <Link id={title} className={`title ${paramId && 'orange'}`} href={album ? `/album/${album?.id}#${title}` : (type === 'playlist' ? `/playlist/${artist}?playlist=${id}` : `#${title}`)} >{title}</Link>&nbsp;
+        <Link id={title} className={`title ${id === now_playing_id && 'active'} ${paramId && 'orange'}`} href={album ? `/album/${album?.id}#${title}` : (type === 'playlist' ? `/playlist/${artist}?playlist=${id}` : `#${title}`)} >{title}</Link>&nbsp;
         {playingtime && <div className="playingtime">{`${(playingtime - playingtime % 60000) / 60000}:${((playingtime % 60000 - (playingtime % 60000) % 1000) / 1000).toString().padStart(2, '0')}`}</div>}
       </div>
       <div className='foo'>

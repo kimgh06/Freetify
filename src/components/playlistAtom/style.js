@@ -42,6 +42,9 @@ export const PlayAtom = styled.div`
     .orange{
       color: orange;
     }
+    .active{
+      color: lightblue;
+    }
   }
   .foo{
     display: flex;
