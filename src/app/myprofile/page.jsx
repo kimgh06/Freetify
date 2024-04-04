@@ -20,7 +20,8 @@ function InnerComponent() {
     window.location.href = '/'
     return;
   }
-  if (!localStorage) {
+  if (!window?.localStorage) {
+    console.log('undefined')
     return;
   }
   nickname = localStorage?.getItem('user_nickname')
