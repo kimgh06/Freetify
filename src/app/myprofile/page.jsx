@@ -21,7 +21,7 @@ function InnerComponent() {
     return;
   }
 
-  if (!(typeof window !== 'undefined' && window.localStorage)) {
+  if (!(typeof window !== 'undefined' && window?.localStorage)) {
     return;
   }
   nickname = localStorage.getItem('user_nickname');
