@@ -16,12 +16,11 @@ export default function App() {
 function InnerComponent() {
   const [playlists, setPlaylists] = useState([]);
   let nickname;
-  if (!localStorage.getItem('user_nickname')) {
-    window.location.href = '/'
+  if (typeof window === 'undefined') {
     return;
   }
-
-  if (!(typeof window !== 'undefined' && window?.localStorage)) {
+  if (!localStorage.getItem('user_nickname')) {
+    window.location.href = '/'
     return;
   }
   nickname = localStorage.getItem('user_nickname');
