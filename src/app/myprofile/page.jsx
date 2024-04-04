@@ -15,7 +15,6 @@ export default function App() {
 
 function InnerComponent() {
   const [playlists, setPlaylists] = useState([]);
-  let nickname;
   if (typeof window === 'undefined') {
     return;
   }
@@ -23,7 +22,7 @@ function InnerComponent() {
     window.location.href = '/'
     return;
   }
-  nickname = localStorage.getItem('user_nickname');
+  const nickname = localStorage.getItem('user_nickname');
 
   const getAllPlaylist = async e => {
     return await axios.get(`/api/playlist`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
