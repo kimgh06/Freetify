@@ -287,7 +287,7 @@ export default function Player() {
           <div className='main_original'>
             <img src={info?.album?.images[1]?.url} alt='img' />
             <div>
-              <Link href={`/album/${info?.album?.id} `}>
+              <Link href={`/album/${info?.album?.id}#${info?.name}`}>
                 <h2>{info?.name}</h2>
               </Link>
               <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>
@@ -325,7 +325,7 @@ export default function Player() {
             <div className='content'>
               <img src={info?.album?.images[2]?.url} alt='img' />
               <div className='between'>
-                <div className='title' href={`/album/${info?.album?.id} `}>{info?.name?.length >= 15 ? info?.name.substr(0, 15) + '..' : info?.name}</div><br />
+                <div className='title' href={`/album/${info?.album?.id}#${info?.name}`}>{info?.name?.length >= 15 ? info?.name.substr(0, 15) + '..' : info?.name}</div><br />
                 <div href={`/artist/${info?.artists && info?.artists[0]?.id} `}>
                   {info?.artists && (info?.artists[0]?.name?.length >= 15 ? info?.artists[0]?.name.substr(0, 15) + '...' : info?.artists[0]?.name)}
                 </div>
@@ -349,7 +349,7 @@ export default function Player() {
               <img src={info?.album?.images[1]?.url} />
               <div className='texts'>
                 <div className='links'>
-                  <Link href={`/album/${info?.album?.id} `}>
+                  <Link href={`/album/${info?.album?.id}#${info?.name}`}>
                     <h2>{info?.name}</h2>
                   </Link>
                   <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>

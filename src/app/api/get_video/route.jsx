@@ -10,12 +10,9 @@ const Connection = mysql2.createPool({
   port: '3306',
   user: process.env.NEXT_PUBLIC_SQL_USR,
   password: process.env.NEXT_PUBLIC_SQL_PWD,
-  database: process.env.NEXT_PUBLIC_SQL_DATABASE
+  database: process.env.NEXT_PUBLIC_SQL_DATABASE,
+  connectTimeout: 3000, // Connection timeout in milliseconds
 })
-
-// Connection.query(query, (err, res, fields) => {
-//   Connection.end()
-// })
 
 async function getInfo(id, access) {
   return await axios.get(`https://api.spotify.com/v1/tracks/${id}?market=KR`,

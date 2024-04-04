@@ -21,6 +21,10 @@ function InnerContent({ id }) {
   const [totalDuration, setTotalDuration] = useState('0');
   const [access, setAccess] = useRecoilState(AccessToken);
   const [tracks, setTracks] = useState([]);
+  if (typeof window === undefined) {
+    return;
+  }
+  const paramId = decodeURIComponent(window.location.href.split('#')[1])
   const getAlbumInfos = async e => {
     await axios.get(`${url}/albums/${id}`, { headers: { Authorization: `Bearer ${access}` } })
       .then(e => {
@@ -41,6 +45,7 @@ function InnerContent({ id }) {
       });
   }
   useEffect(e => {
+    console.log(paramId)
     if (access) {
       getAlbumInfos();
     }
@@ -62,7 +67,7 @@ function InnerContent({ id }) {
       </div>
       <main className='tracks'>
         {tracks?.map((i, n) => <PlaylistAtom img={albumInfo?.images[2].url} index={n} preview={i?.preview_url} playingtime={i?.duration_ms} key={n} album={i?.album} type={i?.type}
-          id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0]?.id} isInPlay={e => {
+          id={i?.id} paramId={paramId === i?.name} title={i?.name} artist={i?.artists} artistId={i?.artists[0]?.id} isInPlay={e => {
             let list = [];
             list = JSON.parse(localStorage.getItem('list'));
             if (!list) {

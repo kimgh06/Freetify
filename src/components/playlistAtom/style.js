@@ -39,6 +39,9 @@ export const PlayAtom = styled.div`
         text-decoration-line: underline;
       }
     }
+    .orange{
+      color: orange;
+    }
   }
   .foo{
     display: flex;
