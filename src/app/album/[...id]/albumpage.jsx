@@ -28,7 +28,6 @@ function InnerContent({ id }) {
   const getAlbumInfos = async e => {
     await axios.get(`${url}/albums/${id}`, { headers: { Authorization: `Bearer ${access}` } })
       .then(e => {
-        console.log(e.data);
         setAlbumInfo(e.data);
         setTracks(e.data.tracks.items);
         let TrackList = [];
@@ -45,7 +44,6 @@ function InnerContent({ id }) {
       });
   }
   useEffect(e => {
-    console.log(paramId)
     if (access) {
       getAlbumInfos();
     }

@@ -23,6 +23,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="google-site-verification" content="q9McqJBLT8ZooTZpbEQYsi_Mr13MbveBtl4j77XLtrc" />
+        <title>Freetify</title>
       </head>
       <link rel='icon' href='/favicon.ico' />
       <Script src="https://www.googletagmanager.com/gtag/js?id=GTM-5N5SR26M" />

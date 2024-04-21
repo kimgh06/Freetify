@@ -81,6 +81,7 @@ export default function Player() {
       }).catch(e => {
         setAccess(localStorage.getItem('access'))
         console.log(e);
+        return null;
       });
   }
   const NextTrack = e => {
@@ -124,6 +125,7 @@ export default function Player() {
       const expired = await CheckExpiredBlobUrl(src); //true 만료됨
       if (id === localStorage.getItem('now_playing_id') && !expired) { //access 키 받아올 때 현재랑 같으면 새로 받지 말기
         setPlay(true);
+        audio.current.play();
         return;
       }
 
@@ -157,14 +159,12 @@ export default function Player() {
         .replace(/\\/g, '').replace(/"/g, '')
       if (recentList != 'null' && recentArtists != 'null') {
         //최근 트랙
-        recentList = recentList.split(',');
-        recentList = recentList.filter(element => element !== id && element)
+        recentList = recentList.split(',').filter(element => element !== id && element);
         recentList.push(id);
         localStorage.setItem('recent_track_list', recentList);
 
         //최근 아티스트
-        recentArtists = recentArtists.split(',');
-        recentArtists = recentArtists.filter(element => element !== music_data.artists[0].id && element)
+        recentArtists = recentArtists.split(',').filter(element => element !== music_data.artists[0].id && element);
         recentArtists.push(music_data.artists[0].id);
         localStorage.setItem('recent_artists_list', recentArtists);
 
@@ -198,7 +198,6 @@ export default function Player() {
     }
     return await fetch(url).then(e => {
       audio.current.src = url;
-      setPlay(false);
       return false;
     }).catch(e => {
       localStorage.setItem("cached_url", JSON.stringify({}));
@@ -247,20 +246,21 @@ export default function Player() {
     audio.current.pause();
   }, [play, modify]);
 
-  async function InitialFunction() {
-    const expired = await CheckExpiredBlobUrl(src);
-    if (!expired) {
-      audio.current.currentTime = currentT + 0.2
-    }
-    setInnerWidth(window.innerWidth);
-    setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
-    window.addEventListener('resize', e => {
-      setInnerWidth(window.innerWidth);
-    })
-  }
   useEffect(e => {
     if (typeof window !== undefined) {
-      InitialFunction()
+      setInnerWidth(window.innerWidth);
+      setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
+      window.addEventListener('resize', e => {
+        setInnerWidth(window.innerWidth);
+      })
+      CheckExpiredBlobUrl(src).then(e => {
+        if (!e) {
+          audio.current.currentTime = parseInt(localStorage.getItem('currentT')) + 0.2;
+          audio.current.play()
+          console.log(audio.current.currentTime)
+          setPlay(true);
+        }
+      });
     }
   }, []);
 
@@ -270,6 +270,10 @@ export default function Player() {
       setPopup('')
     }
   }, [id, volume]);
+
+  useEffect(e => {
+    localStorage.setItem('currentT', currentT);
+  }, [currentT])
   return <S.Player style={{
     width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
       innerWidth < 1200 ? '98vw' : '400px'}`,
