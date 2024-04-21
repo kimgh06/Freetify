@@ -67,6 +67,7 @@ function PlaylistPages(props) {
       })
   }
   useEffect(e => {
+    document.title = `${props.searchParams['playlist']} - ${props.params['id'][0]} }`;
     if (holding) {
       const boxs = document.querySelectorAll(`.box`)
       let max = index;
@@ -128,7 +129,7 @@ function PlaylistPages(props) {
     <Navi />
     <main>
       <h1>
-        {props.params['id'][0]} - {props.searchParams['playlist']}
+        {props.searchParams['playlist']} - {props.params['id'][0]}
       </h1>
       {tracks?.length !== 0 && tracks?.map((i, n) => <div className={`box ${n}`} style={holding === i ? {
         visibility: 'hidden'

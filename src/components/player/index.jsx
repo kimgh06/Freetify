@@ -67,7 +67,6 @@ export default function Player() {
         localStorage.setItem("recommendation", list);
         localStorage.setItem("TrackList", tracklist);
         console.log('get recommendations')
-        // NextTrack()
       }).catch(e => {
         console.log("err: ", e);
       })
@@ -92,7 +91,7 @@ export default function Player() {
         setId(list[index + 1]);
       }
       else { //트랙 추천
-        recommendTracks().then(e => NextTrack());
+        recommendTracks().then(NextTrack);
       }
     }
   }
@@ -124,8 +123,10 @@ export default function Player() {
       })
       const expired = await CheckExpiredBlobUrl(src); //true 만료됨
       if (id === localStorage.getItem('now_playing_id') && !expired) { //access 키 받아올 때 현재랑 같으면 새로 받지 말기
-        setPlay(true);
-        audio.current.play();
+        audio.current.currentTime = currentT + 0.2
+        if (play) {
+          audio.current.play();
+        }
         return;
       }
 
@@ -134,9 +135,7 @@ export default function Player() {
       let url = cached_url[`${id}`];
       if (url) {
         const spl = audio.current.src.split("/")
-        // console.log(spl[spl.length - 1])
         if (spl[spl.length - 1] !== 'null' && localStorage.getItem('now_playing_id') === id) {
-          setPlay(true)
           return;
         }
         audio.current.src = url
@@ -207,12 +206,8 @@ export default function Player() {
   }
 
   useEffect(e => {
-    navigator.mediaSession.setActionHandler("nexttrack", e => {
-      NextTrack()
-    })
-    navigator.mediaSession.setActionHandler("previoustrack", e => {
-      PreviousTrack()
-    })
+    navigator.mediaSession.setActionHandler("nexttrack", NextTrack)
+    navigator.mediaSession.setActionHandler("previoustrack", PreviousTrack)
     if (!id && src) {
       setId(localStorage.getItem('now_playing_id'));
       return;
@@ -230,7 +225,7 @@ export default function Player() {
 
   useEffect(e => {
     if (!audio.current.src) {
-      audio.current.src = src
+      audio.current.src = src;
       return;
     }
     if (modify) {
@@ -255,10 +250,10 @@ export default function Player() {
       })
       CheckExpiredBlobUrl(src).then(e => {
         if (!e) {
-          audio.current.currentTime = parseInt(localStorage.getItem('currentT')) + 0.2;
-          audio.current.play()
-          console.log(audio.current.currentTime)
-          setPlay(true);
+          audio.current.currentTime = currentT + 0.2;
+          if (play) {
+            audio.current.play()
+          }
         }
       });
     }
@@ -277,7 +272,9 @@ export default function Player() {
   return <S.Player style={{
     width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
       innerWidth < 1200 ? '98vw' : '400px'}`,
-    height: `${(innerWidth <= 1200 && extensionMode) ? innerWidth < 651 ? '90vh' : '550px' : innerWidth > 1200 ? '99vh' : '120px'}`
+    height: `${(innerWidth <= 1200 && extensionMode) ?
+      innerWidth < 651 ? '90vh' : '550px' :
+      innerWidth > 1200 ? '99vh' : '120px'}`
   }} >
     <div className='audio'>
       {innerWidth >= 1200 && <div className='extention' style={{ right: `${!extensionMode ? '75px' : '370px'}` }}
@@ -299,26 +296,18 @@ export default function Player() {
               </Link>
             </div>
             <div className='playbutton'>
-              <button className='left' onClick={e => {
-                PreviousTrack();
-              }}>{'◀'}</button>
+              <button className='left' onClick={PreviousTrack}>{'◀'}</button>
               <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
                 onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
-              <button className='right' onClick={e => {
-                NextTrack();
-              }}>{'▶'}</button>
+              <button className='right' onClick={NextTrack}>{'▶'}</button>
             </div>
           </div>
           {info && <Lyric isrc={info?.external_ids?.isrc} />}
         </> : <S.Main_smaller>
           <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
             onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
-          <button className='left' onClick={e => {
-            PreviousTrack();
-          }}>{'◀'}</button>
-          <button className='right' onClick={e => {
-            NextTrack();
-          }}>{'▶'}</button>
+          <button className='left' onClick={PreviousTrack}>{'◀'}</button>
+          <button className='right' onClick={NextTrack}>{'▶'}</button>
         </S.Main_smaller>)
           : (!extensionMode ? <>
             <div className='extenstion' onClick={e => setExtenstionMode(true)}>
@@ -334,14 +323,10 @@ export default function Player() {
                   {info?.artists && (info?.artists[0]?.name?.length >= 15 ? info?.artists[0]?.name.substr(0, 15) + '...' : info?.artists[0]?.name)}
                 </div>
               </div>
-              <button className='left' onClick={e => {
-                PreviousTrack();
-              }}>{'◀'}</button>
+              <button className='left' onClick={PreviousTrack}>{'◀'}</button>
               <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
                 onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
-              <button className='right' onClick={e => {
-                NextTrack();
-              }}>{'▶'}</button>
+              <button className='right' onClick={NextTrack}>{'▶'}</button>
             </div>
           </> : <S.ExtensionMode_mobile>
             <div className='extenstion' onClick={e => setExtenstionMode(false)}>
@@ -361,13 +346,9 @@ export default function Player() {
                   </Link>
                 </div>
                 <div className='playbutton'>
-                  <button className='left' onClick={e => {
-                    PreviousTrack();
-                  }}>{'◀'}</button>
+                  <button className='left' onClick={PreviousTrack}>{'◀'}</button>
                   <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
-                  <button className='right' onClick={e => {
-                    NextTrack();
-                  }}>{'▶'}</button>
+                  <button className='right' onClick={NextTrack}>{'▶'}</button>
                 </div>
               </div>
             </div>
@@ -447,12 +428,12 @@ function MenuComponent({ albumId, title }) {
 }
 
 function ShowPlaylists() {
-  const [id, setId] = useRecoilState(NowPlayingId);
+  const [id, _] = useRecoilState(NowPlayingId);
   const [input, setInput] = useState(false)
   const [allList, setAllList] = useState([{}]);
 
-  const putPlaylist = async playlist => {
-    await axios.put('/api/playlist/', { playlist: playlist, song_id: id },
+  const putPlaylist = playlist => {
+    axios.put('/api/playlist/', { playlist: playlist, song_id: id },
       { headers: { 'Authorization': localStorage.getItem('user_access') } })
       .then(e => {
         console.log(e.data);
@@ -461,8 +442,8 @@ function ShowPlaylists() {
         console.log(e)
       })
   }
-  const deletePlaylist = async playlist => {
-    await axios.delete('/api/playlist/', {
+  const deletePlaylist = playlist => {
+    axios.delete('/api/playlist/', {
       headers: { 'Authorization': localStorage.getItem('user_access') },
       data: {
         playlist: playlist,
@@ -475,8 +456,10 @@ function ShowPlaylists() {
       console.log(e)
     })
   }
-  const getAllPlaylist = async e => {
-    await axios.get(`/api/playlist?id=${id}`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
+  const getAllPlaylist = () => {
+    axios.get(`/api/playlist?id=${id}`, {
+      headers: { 'Authorization': localStorage.getItem('user_access') }
+    })
       .then(e => {
         setAllList(e.data.res);
       }).catch(e => {
