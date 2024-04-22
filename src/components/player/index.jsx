@@ -115,12 +115,6 @@ export default function Player() {
       }
       setInfo(music_data);
       setDurationT(music_data.duration_ms)
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: music_data.name,
-        artist: music_data.artists[0].name,
-        album: music_data.album.name,
-        artwork: [{ src: music_data.album.images[0].url }]
-      })
       const expired = await CheckExpiredBlobUrl(src); //true 만료됨
       if (id === localStorage.getItem('now_playing_id') && !expired) { //access 키 받아올 때 현재랑 같으면 새로 받지 말기
         audio.current.currentTime = currentT + 0.2
@@ -193,7 +187,7 @@ export default function Player() {
   }
   const CheckExpiredBlobUrl = async url => { //Blob url 유효성 검사
     if (!url) {
-      return;
+      return true;
     }
     return await fetch(url).then(e => {
       audio.current.src = url;
@@ -268,7 +262,15 @@ export default function Player() {
 
   useEffect(e => {
     localStorage.setItem('currentT', currentT);
-  }, [currentT])
+    if (info?.name) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: info?.name,
+        artist: info?.artists[0].name,
+        album: info?.album.name,
+        artwork: [{ src: info?.album.images[0].url }]
+      });
+    }
+  }, [currentT, info])
   return <S.Player style={{
     width: `${(innerWidth >= 1200 && !extensionMode) ? '100px' :
       innerWidth < 1200 ? '98vw' : '400px'}`,
