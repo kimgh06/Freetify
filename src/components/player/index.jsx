@@ -6,6 +6,7 @@ import { useRecoilState } from 'recoil';
 import { AccessToken, AddbuttonIndex, AudioSrc, NowPlayingId, PlayingCurrentTime, Volume } from '@/app/recoilStates';
 import Link from 'next/link';
 import Lyric from '../lyric';
+import { MenuComponent } from './menucomponent';
 
 export default function Player() {
   const audio = useRef(null);
@@ -117,7 +118,7 @@ export default function Player() {
       setDurationT(music_data.duration_ms)
       const expired = await CheckExpiredBlobUrl(src); //true 만료됨
       if (id === localStorage.getItem('now_playing_id') && !expired) { //access 키 받아올 때 현재랑 같으면 새로 받지 말기
-        audio.current.currentTime = currentT + 0.2
+        audio.current.currentTime = currentT + 0.2;
         if (play) {
           audio.current.play();
         }
@@ -364,7 +365,10 @@ export default function Player() {
           onChange={e => {
             setCurrentT(e.target.value / 1000)
             audio.current.currentTime = e.target.value / 1000;
-          }} value={currentT * 1000} min={0} max={durationT} />
+          }}
+          onMouseDown={e => setModify(true)}
+          onMouseUp={e => setModify(false)}
+          value={currentT * 1000} min={0} max={durationT} />
       </div>}
       {!(innerWidth >= 1200 && !extensionMode) &&
         <span>
@@ -411,91 +415,4 @@ export default function Player() {
       onPlay={e => setPlay(true)} />
     {popup === 'popup' && <MenuComponent albumId={info?.album?.id} title={info?.name} />}
   </S.Player>;
-}
-
-function MenuComponent({ albumId, title }) {
-  const [mode, setMode] = useState('');
-  const [_, setPopup] = useRecoilState(AddbuttonIndex);
-  return <>
-    {mode === '' && <S.MenuComponent>
-      <div className='button' onClick={e => {
-        navigator.clipboard.writeText(`https://freetify.vercel.app/album/${albumId}#${title}`)
-        alert(title + ' Copied.')
-        setPopup('')
-      }}>Copy the Url!</div>
-      <div className='button' onClick={e => setMode('playlist')}>Setting Playlists</div>
-    </S.MenuComponent>}
-    {mode === 'playlist' && <ShowPlaylists />}
-  </>
-}
-
-function ShowPlaylists() {
-  const [id, _] = useRecoilState(NowPlayingId);
-  const [input, setInput] = useState(false)
-  const [allList, setAllList] = useState([{}]);
-
-  const putPlaylist = playlist => {
-    axios.put('/api/playlist/', { playlist: playlist, song_id: id },
-      { headers: { 'Authorization': localStorage.getItem('user_access') } })
-      .then(e => {
-        console.log(e.data);
-        getAllPlaylist();
-      }).catch(e => {
-        console.log(e)
-      })
-  }
-  const deletePlaylist = playlist => {
-    axios.delete('/api/playlist/', {
-      headers: { 'Authorization': localStorage.getItem('user_access') },
-      data: {
-        playlist: playlist,
-        song_id: id
-      }
-    }).then(e => {
-      console.log(e.data);
-      getAllPlaylist()
-    }).catch(e => {
-      console.log(e)
-    })
-  }
-  const getAllPlaylist = () => {
-    axios.get(`/api/playlist?id=${id}`, {
-      headers: { 'Authorization': localStorage.getItem('user_access') }
-    })
-      .then(e => {
-        setAllList(e.data.res);
-      }).catch(e => {
-        console.log(e);
-      })
-  }
-  useEffect(e => {
-    getAllPlaylist();
-  }, [])
-  return <div className='playlist_popup'>
-    <div>
-      <span onClick={e => {
-        if (input === false) {
-          setInput('')
-        }
-      }}>{input === false ? '+' : <>
-        <input onChange={e => setInput(e.target.value)} value={input} autoFocus />
-        <button onClick={e => {
-          if (!input) {
-            return;
-          }
-          putPlaylist(input);
-          setInput(false);
-        }}>+</button>
-      </>}</span>
-    </div>
-    {allList?.map((i, n) => <div key={n}>
-      <Link href={`/playlist/${localStorage.getItem('user_nickname')}?playlist=${i['playlist_id']}`}>{i['playlist_id']}</Link>
-      <p onClick={e => {
-        if (!i['exist']) {
-          putPlaylist(i['playlist_id']);
-        } else {
-          deletePlaylist(i['playlist_id'])
-        }
-      }}>{!i['exist'] ? '+' : '-'}</p></div>)}
-  </div>
 }
