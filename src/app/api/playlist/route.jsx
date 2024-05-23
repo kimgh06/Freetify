@@ -45,13 +45,15 @@ async function SearchAll(user_id) {
   });
 }
 
-export async function POST(req, response) { //특정 플레이리스트 목록 조회
-  const { nickname, playlist } = await req.json();
-  const query = `select song_id from playlist where user_id = (select user_id from user_info where nickname = '${nickname}') and playlist_id = '${playlist}' order by play_index`;
+export async function POST(req, response) { //플레이 리스트 이름 변경
+  const Auth = jwt.verify(req.headers.get('Authorization'), secret);
+  const { previous, next } = await req.json();
+  const query = `update playlist set playlist_id = '${next}' where playlist_id = '${previous}'`;
+  console.log(query)
   return await Connection.query(query).then(e => {
-    return NextResponse.json({ res: e[0] });
+    return NextResponse.json({ name: next }, { status: 201 })
   }).catch(e => {
-    return NextResponse.json({ msg: e }, { status: 500 });
+    return NextResponse.json({ error: e }, { status: 500 })
   });
 }
 

@@ -6,6 +6,7 @@ import { RecoilRoot, useRecoilState } from "recoil";
 import axios from "axios";
 import { AccessToken } from "@/app/recoilStates";
 import PlaylistAtom from "@/components/playlistAtom";
+import { redirect } from "next/navigation";
 
 export function PlaylistPage(props) {
   return <RecoilRoot>
@@ -20,8 +21,11 @@ function PlaylistPages(props) {
   const [holding, setHolding] = useState(false);
   const [index, setIndex] = useState(false);
   const [clientY, setClientY] = useState(false);
+  const [editName, setEditName] = useState(props.searchParams['playlist']);
+  const [editMode, setEditMode] = useState(false);
   const getPlaylistAtoms = async e => {
-    await axios.post(`/api/playlist`, { nickname: props.params['id'][0], playlist: props.searchParams['playlist'] })
+    const nickname = props.params['id'][0], playlist = props.searchParams['playlist'];
+    await axios.get(`/api/playlist/${nickname}/${playlist}`)
       .then(async e => {
         let ids = [];
         e.data.res.forEach(e => {
@@ -66,12 +70,28 @@ function PlaylistPages(props) {
         console.log(e)
       })
   }
+  const EditPlaylistName = async (next) => {
+    axios.post('/api/playlist', { previous: props.searchParams['playlist'], next }, {
+      headers: {
+        'Authorization': localStorage.getItem('user_access')
+      }
+    }).then(e => {
+      console.log(e.data);
+      const nickname = props.params['id'][0]
+      window.location.href = `/playlist/${nickname}?playlist=${next}`;
+    }).catch(e => {
+      console.log(e)
+    })
+  }
   useEffect(e => {
     document.title = `${props.searchParams['playlist']} - ${props.params['id'][0]} }`;
     if (holding) {
       const boxs = document.querySelectorAll(`.box`)
       let max = index;
       let tempTrList = [...tracks];
+      if (!tempTrList) {
+        return;
+      }
       for (let i = 0; i < tempTrList.length; i++) {
         const location = boxs[i].getBoundingClientRect().top + window.pageYOffset
         if (clientY > location) {
@@ -129,7 +149,22 @@ function PlaylistPages(props) {
     <Navi />
     <main>
       <h1>
-        {props.searchParams['playlist']} - {props.params['id'][0]}
+        {
+          !editMode ?
+            <>
+              {props.searchParams['playlist']} - {props.params['id'][0]}
+              <button onClick={e => setEditMode(true)}>Change Playlist Name</button>
+            </> :
+            <>
+              <input value={editName} onChange={e => setEditName(e.target.value)} />
+              <button onClick={e => EditPlaylistName(editName)}>
+                Set Playlist
+              </button>
+              <button onClick={e => setEditMode(false)}>
+                Cancel
+              </button>
+            </>
+        }
       </h1>
       {tracks?.length !== 0 && tracks?.map((i, n) => <div className={`box ${n}`} style={holding === i ? {
         visibility: 'hidden'

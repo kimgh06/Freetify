@@ -28,7 +28,7 @@ const getTrackinfos = async ids => {
 }
 
 const getPlaylistAtoms = async (nickname, playlist) => {
-  return await axios.post(`${process.env.NEXT_PUBLIC_AUTH_URL}/api/playlist`, { nickname: nickname, playlist: playlist })
+  return await axios.get(`${process.env.NEXT_PUBLIC_AUTH_URL}/api/playlist/${nickname}/${playlist}`)
     .then(async e => {
       let ids = [];
       e.data.res.forEach(e => {
