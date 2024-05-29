@@ -26,6 +26,7 @@ export default function RootLayout({ children }) {
         <title>Freetify</title>
       </head>
       <link rel='icon' href='/favicon.ico' />
+      <link rel='manifest' href='/manifest.json' />
       <Script src="https://www.googletagmanager.com/gtag/js?id=GTM-5N5SR26M" />
       <Script id="google-analytics">
         {`
