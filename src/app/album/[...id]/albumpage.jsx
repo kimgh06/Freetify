@@ -21,7 +21,7 @@ function InnerContent({ id }) {
   const [totalDuration, setTotalDuration] = useState('0');
   const [access, setAccess] = useRecoilState(AccessToken);
   const [tracks, setTracks] = useState([]);
-  if (typeof window === undefined) {
+  if (typeof window === 'undefined') {
     return;
   }
   const paramId = decodeURIComponent(window.location.href.split('#')[1])
