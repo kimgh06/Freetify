@@ -23,7 +23,8 @@
     "recoil-persist": "^5.1.0",
     "styled-components": "^6.0.7",
     "youtube-search-api": "^1.2.1",
-    "ytdl-core": "^4.11.5"
+    "ytdl-core": "^4.11.5",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "next-pwa": "^5.6.0"
