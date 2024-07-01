@@ -22,7 +22,11 @@ export default function Navi() {
         }
       }).catch(e => {
         console.log(e);
-      })
+      }).finally(async e => {
+        await axios.get('/api/visit').catch(e => {
+          console.log("visit connect wrong")
+        })
+      });
   }
   const user_refresh = async e => {
     await axios.patch('/api/login', {}, { headers: { 'Authorization': localStorage.getItem('user_refresh') } })
