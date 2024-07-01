@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import mysql2 from 'mysql2/promise';
+import mysql2, { format } from 'mysql2/promise';
 
 const Connection = mysql2.createPool({
   host: process.env.NEXT_PUBLIC_SQL_HOST,
@@ -10,10 +10,23 @@ const Connection = mysql2.createPool({
   connectTimeout: 3000, // Connection timeout in milliseconds
 })
 
-export async function GET(req, response) {
-  const query = `insert into visit values('${formatDateToMySQL(new Date())}',1)`;
-  await Connection.query(query).then(e => {
+export async function POST(req, response) {
+  const query = `insert into visit values('${formatDateToMySQL(new Date())}')`;
+  return await Connection.query(query).then(e => {
     return NextResponse.json({ 'msg': 'good' }, { status: 200 });
+  }).catch(async e => {
+    return NextResponse.json({ 'msg': e }, { status: 500 });
+  });
+}
+
+export async function GET(req, response) {
+  let { date } = new URLSearchParams(new URL(req?.url)?.date);
+  if (!date) {
+    date = formatDateToMySQL(new Date());
+  }
+  const query = `select count(*) as today, (select count(*) from visit) as total from visit where whens = '${date}'`;
+  return await Connection.query(query).then(e => {
+    return NextResponse.json({ 'cnt': e[0][0] }, { status: 200 });
   }).catch(async e => {
     return NextResponse.json({ 'msg': e }, { status: 500 });
   });
@@ -25,7 +38,3 @@ function formatDateToMySQL(date) {
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
-
-const jsDate = new Date();
-const mySQLDate = formatDateToMySQL(jsDate);
-console.log(mySQLDate); // YYYY-MM-DD 형식의 문자열 출력

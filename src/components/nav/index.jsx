@@ -11,6 +11,8 @@ export default function Navi() {
   const [activating, setActivating] = useState(false);
   const [id, setId] = useRecoilState(NowPlayingId);
   const [access, setAccess] = useRecoilState(AccessToken);
+  const [todays, setToday] = useState(0);
+  const [totals, setTotal] = useState(0);
   const refresh_token = async e => {
     await axios.patch(`/api/refresh_token`,
       { refreshToken: process.env.NEXT_PUBLIC_REFRESH_TOKEN }).then(e => {
@@ -22,11 +24,20 @@ export default function Navi() {
         }
       }).catch(e => {
         console.log(e);
-      }).finally(async e => {
-        await axios.get('/api/visit').catch(e => {
-          console.log("visit connect wrong")
-        })
-      });
+      })
+  }
+  const visit = async e => {
+    await axios.post('/api/visit').catch(e => {
+      console.log(e)
+    })
+    const { today, total } = await axios.get('/api/visit').then(e => {
+      return e.data.cnt
+    }).catch(e => {
+      console.log(e)
+      return null;
+    })
+    setToday(today);
+    setTotal(total);
   }
   const user_refresh = async e => {
     await axios.patch('/api/login', {}, { headers: { 'Authorization': localStorage.getItem('user_refresh') } })
@@ -53,6 +64,7 @@ export default function Navi() {
     }
   }
   useEffect(e => {
+    visit();
     refreshAll();
     if (access !== '') {
       setId(localStorage.getItem('now_playing_id'));
@@ -87,11 +99,14 @@ export default function Navi() {
             }
             localStorage.clear();
             window.location.href = '/';
-          }}><Link href='#'>Log out</Link></p>
+          }}>
+            <Link href='#'>Log out</Link>
+          </p>
         </> : <p><Link href={'/login'}>Login / Sign up</Link></p>}
         <p><Link href={'https://github.com/kimgh06/Freetify'}>View Sources</Link></p>
+        <p>today:{todays}/total:{totals}</p>
       </div>}
-    </S.Nav >
+    </S.Nav>
     {id && <Player />}
   </>;
 }
