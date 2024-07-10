@@ -1,4 +1,4 @@
-import ytdl from "ytdl-core";
+import ytdl from "@distube/ytdl-core";
 import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
 import axios from "axios";
@@ -33,7 +33,7 @@ export async function GET(req, response) {
   try {
     const query = `insert into song_stat values('${songId}', ${user_id},1,false)`;
     await Connection.query(query).then(e => {
-      console.log('asdf')
+      console.log('working')
     }).catch(async e => {
       if (e?.errno === 1062) {
         const query = `update song_stat set counts = counts+1 where song_id = '${songId}' and user_id = ${user_id || -1}`;
