@@ -27,6 +27,8 @@ export default function RootLayout({ children }) {
       </head>
       <link rel='icon' href='/favicon.ico' />
       <link rel='manifest' href='/manifest.json' />
+      <meta property="description" content="Free Online Music Player for You" />
+      <meta property="og:url" content="https://freetify.vercel.app"></meta>
       <Script src="https://www.googletagmanager.com/gtag/js?id=GTM-5N5SR26M" />
       <Script id="google-analytics">
         {`
