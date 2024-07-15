@@ -2,6 +2,7 @@ import { AddbuttonIndex } from "@/app/recoilStates";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 import * as S from './style';
+import { ShowPlaylists } from "./showplaylist";
 
 export function MenuComponent({ albumId, title }) {
   const [mode, setMode] = useState('');
