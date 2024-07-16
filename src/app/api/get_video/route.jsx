@@ -72,65 +72,65 @@ export async function GET(req, response) {
         newTitle = newTitle.substr(0, newTitle.indexOf('remastered'))
       }
       //make list of cnt
-      // let cntList = [];
-      // for (let i = 0; i < playlist.items.length; i++) {
-      //   const item = playlist.items[i];
-      //   let asdf = item.title
-      //     .replace(/\(/g, "")
-      //     .replace(/\)/g, "")
-      //     .replace(/ft. /g, "feat. ")
-      //     .replace(/-/g, "")
-      //     .replace(/ /g, "")
-      //     .toLowerCase()
-      //   if (asdf.indexOf(newTitle) !== -1 ||
-      //     newTitle.indexOf(asdf) !== -1 ||
-      //     asdf.indexOf(newTitle.replace(/8/g, '&')) !== -1) {
-      //     console.log("found", item.title)
-      //     url = item.id;
-      //     break;
-      //   }
+      let cntList = [];
+      for (let i = 0; i < playlist.items.length; i++) {
+        const item = playlist.items[i];
+        let asdf = item.title
+          .replace(/\(/g, "")
+          .replace(/\)/g, "")
+          .replace(/ft. /g, "feat. ")
+          .replace(/-/g, "")
+          .replace(/ /g, "")
+          .toLowerCase()
+        if (asdf.indexOf(newTitle) !== -1 ||
+          newTitle.indexOf(asdf) !== -1 ||
+          asdf.indexOf(newTitle.replace(/8/g, '&')) !== -1) {
+          console.log("found", item.title)
+          url = item.id;
+          break;
+        }
 
-      //   const itemList = item.title.split('');
-      //   let cnt = 0;
-      //   for (let j = 0; j < itemList.length; j++) {
-      //     for (let k = 0; k < titleList.length; k++) {
-      //       if (titleList[k] === itemList[j]) {
-      //         cnt++;
-      //         break;
-      //       }
-      //     }
-      //   }
-      //   cntList.push(cnt);
-    }
-  }
-  if (!url) {
-    //싱글 앨범일 경우거나 못 찾았거나
-    console.log(title, artist)
-    list = (await youtubesearchapi.GetListByKeyword(`${artist} ${title}`, false, 20)).items;
-    // console.log(list)
-    list = list.filter(e => {
-      let duration
-      if (e?.length?.simpleText) {
-        duration = (parseInt(e.length.simpleText.split(':')[0]) * 60000 + parseInt(e.length.simpleText.split(':')[1] * 1000))
+        // const itemList = item.title.split('');
+        // let cnt = 0;
+        // for (let j = 0; j < itemList.length; j++) {
+        //   for (let k = 0; k < titleList.length; k++) {
+        //     if (titleList[k] === itemList[j]) {
+        //       cnt++;
+        //       break;
+        //     }
+        //   }
+        // }
+        // cntList.push(cnt);
       }
-      return e.type !== 'channel' && (duration ? duration < playingtime + 1000 : '')
-    });
-    console.log("can't found on playlists", list[0].title)
-    url = list[0].id
-  }
-
-  try {
-    if (url) {
-      const stream = ytdl(`https://youtube.com/watch?v=${url}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' })
-      const response = new Response(stream);
-      response.headers.set('content-type', 'audio/mp3')
-      response.headers.set('connection', 'keep-alive');
-      console.log('complete to send datas')
-      return response
     }
-    throw "no datas"
-  } catch (e) {
-    return NextResponse.json({ err: e }, { status: 500 })
+    if (!url) {
+      //싱글 앨범일 경우거나 못 찾았거나
+      console.log(title, artist)
+      list = (await youtubesearchapi.GetListByKeyword(`${artist} ${title}`, false, 20)).items;
+      // console.log(list)
+      list = list.filter(e => {
+        let duration
+        if (e?.length?.simpleText) {
+          duration = (parseInt(e.length.simpleText.split(':')[0]) * 60000 + parseInt(e.length.simpleText.split(':')[1] * 1000))
+        }
+        return e.type !== 'channel' && (duration ? duration < playingtime + 1000 : '')
+      });
+      console.log("can't found on playlists", list[0].title)
+      url = list[0].id
+    }
+
+    try {
+      if (url) {
+        const stream = ytdl(`https://youtube.com/watch?v=${url}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' })
+        const response = new Response(stream);
+        response.headers.set('content-type', 'audio/mp3')
+        response.headers.set('connection', 'keep-alive');
+        console.log('complete to send datas')
+        return response
+      }
+      throw "no datas"
+    } catch (e) {
+      return NextResponse.json({ err: e }, { status: 500 })
+    }
   }
-}
 }
