@@ -45,7 +45,6 @@ export default function Player() {
 
       cached_url[`${id}`] = url;
       localStorage.setItem('cached_url', JSON.stringify(cached_url));
-      console.log(id, "loaded");
     }).catch(e => {
       console.log(e.message, id);
     })
@@ -117,11 +116,8 @@ export default function Player() {
       setInfo(music_data);
       setDurationT(music_data.duration_ms)
       const expired = await CheckExpiredBlobUrl(src); //true 만료됨
-      if (id === localStorage.getItem('now_playing_id') && !expired) { //access 키 받아올 때 현재랑 같으면 새로 받지 말기
+      if (id === localStorage.getItem('now_playing_id') && !expired) { // 토큰이 바뀌었을 떄
         audio.current.currentTime = currentT + 0.2;
-        if (play) {
-          audio.current.play();
-        }
         return;
       }
 
@@ -141,10 +137,10 @@ export default function Player() {
           audio.current.src = new_src;
         });
       }
+      audio.current.play();
+      setPlay(true);
 
-      setPlay(false)
       setSrc(audio.current.src)
-
       localStorage.setItem('now_playing_id', id);
 
       let recentList = JSON.stringify(localStorage.getItem('recent_track_list'))
@@ -192,6 +188,10 @@ export default function Player() {
     }
     return await fetch(url).then(e => {
       audio.current.src = url;
+      audio.current.currentTime = 0;
+      const plays = localStorage.getItem('play') === 'true';
+      if (plays) audio.current.play();
+      setPlay(e => plays)
       return false;
     }).catch(e => {
       localStorage.setItem("cached_url", JSON.stringify({}));
@@ -208,7 +208,6 @@ export default function Player() {
       return;
     }
     getCurrentMusicURL();
-    setPlay(false)
 
     const path = window.location.pathname;
     const tracklist = localStorage.getItem("TrackList").split(',')
@@ -228,9 +227,10 @@ export default function Player() {
       return;
     }
     document.querySelector('.play').focus()
-    if (play) {
+    localStorage.setItem('play', play);
+    if (play && audio.current.paused) {
       let promise = audio.current.play();
-      promise.catch(err => { console.log(err); setPlay(false) });
+      promise.catch(err => { console.log(err); setPlay(e => false) });
       return;
     }
     audio.current.pause();
@@ -238,19 +238,12 @@ export default function Player() {
 
   useEffect(e => {
     if (typeof window !== undefined) {
+      CheckExpiredBlobUrl(src);
       setInnerWidth(window.innerWidth);
       setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
       window.addEventListener('resize', e => {
         setInnerWidth(window.innerWidth);
       })
-      CheckExpiredBlobUrl(src).then(e => {
-        if (!e) {
-          audio.current.currentTime = currentT + 0.2;
-          if (play) {
-            audio.current.play()
-          }
-        }
-      });
     }
   }, []);
 
@@ -410,7 +403,7 @@ export default function Player() {
         NextTrack();
       }
     }}
-      onLoadedData={e => setPlay(true)}
+      onLoadedData={e => localStorage.getItem('play') === 'true' && setPlay(true)}
       onPause={e => !modify && setPlay(false)}
       onPlay={e => setPlay(true)} />
     {popup === 'popup' && <MenuComponent albumId={info?.album?.id} title={info?.name} />}

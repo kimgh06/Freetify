@@ -64,8 +64,6 @@ function PlaylistPages(props) {
         headers: {
           'Authorization': localStorage.getItem('user_access')
         }
-      }).then(e => {
-        console.log(e.data)
       }).catch(e => {
         console.log(e)
       })
