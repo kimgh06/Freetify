@@ -130,7 +130,7 @@ export async function GET(req, response) {
       }
       throw "no datas"
     } catch (e) {
-      return NextResponse.json({ err: e }, { status: 500 })
+      return NextResponse.json({ err: e }, { status: e.status || 500 })
     }
   }
 }
