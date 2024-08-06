@@ -183,7 +183,7 @@ export default function Player() {
     }
   }
   const CheckExpiredBlobUrl = async url => { //Blob url 유효성 검사
-    if (!url) {
+    if (!url && url === 'undefined') {
       return true;
     }
     return await fetch(url).then(e => {
