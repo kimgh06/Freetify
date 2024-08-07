@@ -210,7 +210,7 @@ export default function Player() {
     getCurrentMusicURL();
 
     const path = window.location.pathname;
-    const tracklist = localStorage.getItem("TrackList").split(',')
+    const tracklist = localStorage?.getItem("TrackList")?.split(',') || [];
     if (path === '/search' && tracklist.findIndex(e => e === id) <= 0) { // 검색 창일때 현재 플레이 리스트에서 찾지 못 할 때만 추천 리스트 받아오기
       localStorage.setItem("TrackList", id);
       recommendTracks()
