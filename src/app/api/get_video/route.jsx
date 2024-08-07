@@ -121,7 +121,9 @@ export async function GET(req, response) {
 
     try {
       if (url) {
-        const stream = ytdl(`https://youtube.com/watch?v=${url}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' })
+        const stream = ytdl(`https://youtube.com/watch?v=${url}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' }).on('error', e => {
+          throw e;
+        });
         const response = new Response(stream);
         response.headers.set('content-type', 'audio/mp3')
         response.headers.set('connection', 'keep-alive');
@@ -130,7 +132,6 @@ export async function GET(req, response) {
       }
       throw "no datas"
     } catch (e) {
-      console.log(e)
       return NextResponse.json({ err: e }, { status: e.status || 500 })
     }
   }
