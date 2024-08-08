@@ -121,7 +121,7 @@ export async function GET(req, response) {
 
     try {
       if (url) {
-        const cookies = [[
+        const cookies = [
           {
             "domain": ".youtube.com",
             "expirationDate": 1756442831.220878,
@@ -152,7 +152,7 @@ export async function GET(req, response) {
           },
           {
             "domain": ".youtube.com",
-            "expirationDate": 1754639069.898563,
+            "expirationDate": 1754639380.372062,
             "hostOnly": false,
             "httpOnly": true,
             "name": "__Secure-1PSIDCC",
@@ -161,7 +161,7 @@ export async function GET(req, response) {
             "secure": true,
             "session": false,
             "storeId": "0",
-            "value": "AKEyXzWnUrxU-fZdlX2w72CcIAdOdaO5Kvf84qythUNtNNmT7m0dN9ozypcRGs1M1r5tfM2LCnY",
+            "value": "AKEyXzWUAQSwssWoT_Unc3D5bYH-_1sWicYIuipoNpyXOYWDAKqchj3z6WPRsoM6_asiFWCfaZg",
             "id": 3
           },
           {
@@ -208,7 +208,7 @@ export async function GET(req, response) {
           },
           {
             "domain": ".youtube.com",
-            "expirationDate": 1754639069.898611,
+            "expirationDate": 1754639380.372107,
             "hostOnly": false,
             "httpOnly": true,
             "name": "__Secure-3PSIDCC",
@@ -217,7 +217,7 @@ export async function GET(req, response) {
             "secure": true,
             "session": false,
             "storeId": "0",
-            "value": "AKEyXzUEVdz0LkRNqEIRam3PL22x8iXuzSCZyFwz0S4DHrfm96j-FcbzCu2uNm_mJkBRFKX8Z70",
+            "value": "AKEyXzUTcqf74KICZF9YqjOU6PS52SuECt-2WDFlfeM1Ym3CH_OgAg0BHILPdbTjuQt3rEOpL9o",
             "id": 7
           },
           {
@@ -264,7 +264,7 @@ export async function GET(req, response) {
           },
           {
             "domain": ".youtube.com",
-            "expirationDate": 1737796412.117765,
+            "expirationDate": 1757663371.843933,
             "hostOnly": false,
             "httpOnly": true,
             "name": "LOGIN_INFO",
@@ -273,12 +273,12 @@ export async function GET(req, response) {
             "secure": true,
             "session": false,
             "storeId": "0",
-            "value": "AFmmF2swRQIgUsfiBrV7tfQn7jw1RAy7C_FUxT6xb0_T1d6rPqYFCS0CIQCgySvokpMFYZl0YlxpMA-hOgzMKfVU2UVrA6KCToOqKA:QUQ3MjNmeEF2ZjZYd1hjSDRUZy03dFJySUxQZWRib3MwVnM0T2ZLUDk0dnlDcmhqV3Q2STI3TFJQbG1yQmZYUm94cU12QzdzcEFRWGVoNldDWEQ4RnBDQXZLeWpCVDMwUGpKcExEOVc2QjJKbkU1am5GVm9Tb2ttdHRobVBPZVdaaWw0T2MwLVh2OGVEVWg3bHQzRmRvbFRmTTdtbzdaU01n",
+            "value": "AFmmF2swRQIgRnvM5VuVSuFuetK2JCn2LNtmV6OUpRE8ovxZpG5gMrUCIQDDBwBuFHuKS3VjE4Y9Cm3YVzUkjA2Pds8n83OWRffzvw:QUQ3MjNmejI3bzFSTVJ3b0xWdXlQT1FuVmpiVHlLa2t5cmFhczA2Q3RmUE1kSVBkbV8wb3ZLZ29QLWVfMmFLcXlmOVhoZXNYWF9WaW1kLWtDZGpJbk5iS291NkswS3BlaFctQi1BS2NmaGxzSVA4U0Vwdnk2bFFhNEdYU2V6RERHR1I0NzZOaGVNVEg5dzRNV1BlVXE3ckh5MzlkWDliTEtB",
             "id": 11
           },
           {
             "domain": ".youtube.com",
-            "expirationDate": 1757663064.247536,
+            "expirationDate": 1757663379.130101,
             "hostOnly": false,
             "httpOnly": false,
             "name": "PREF",
@@ -320,7 +320,7 @@ export async function GET(req, response) {
           },
           {
             "domain": ".youtube.com",
-            "expirationDate": 1754639069.898402,
+            "expirationDate": 1754639380.371935,
             "hostOnly": false,
             "httpOnly": false,
             "name": "SIDCC",
@@ -329,7 +329,7 @@ export async function GET(req, response) {
             "secure": false,
             "session": false,
             "storeId": "0",
-            "value": "AKEyXzW8WblZJ7lMh3OLK2ImM5hELiOuXdOzqLssa6KDmmTjvbXWlenndHROVYf8ERa4OPszxIWG",
+            "value": "AKEyXzVYzBLjdUpLT-ejgd8QFLwbIIK-F1FXJf6U-B8qggQe0Ko2WK_jSqzBU4lqE9Cy6xLpfAOh",
             "id": 15
           },
           {
@@ -348,20 +348,6 @@ export async function GET(req, response) {
           },
           {
             "domain": ".youtube.com",
-            "expirationDate": 1723103076,
-            "hostOnly": false,
-            "httpOnly": false,
-            "name": "ST-3opvp5",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": false,
-            "session": false,
-            "storeId": "0",
-            "value": "session_logininfo=AFmmF2swRQIgUsfiBrV7tfQn7jw1RAy7C_FUxT6xb0_T1d6rPqYFCS0CIQCgySvokpMFYZl0YlxpMA-hOgzMKfVU2UVrA6KCToOqKA%3AQUQ3MjNmeEF2ZjZYd1hjSDRUZy03dFJySUxQZWRib3MwVnM0T2ZLUDk0dnlDcmhqV3Q2STI3TFJQbG1yQmZYUm94cU12QzdzcEFRWGVoNldDWEQ4RnBDQXZLeWpCVDMwUGpKcExEOVc2QjJKbkU1am5GVm9Tb2ttdHRobVBPZVdaaWw0T2MwLVh2OGVEVWg3bHQzRmRvbFRmTTdtbzdaU01n",
-            "id": 17
-          },
-          {
-            "domain": ".youtube.com",
             "expirationDate": 1728457372.666471,
             "hostOnly": false,
             "httpOnly": true,
@@ -372,9 +358,9 @@ export async function GET(req, response) {
             "session": false,
             "storeId": "0",
             "value": "CgJLUhIEGgAgaQ%3D%3D",
-            "id": 18
+            "id": 17
           }
-        ]]
+        ]
         const agent = ytdl.createAgent(cookies, {
           headers: {
             referer: 'https://www.youtube.com',
