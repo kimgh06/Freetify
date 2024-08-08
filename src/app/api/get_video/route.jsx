@@ -121,6 +121,11 @@ export async function GET(req, response) {
 
     try {
       if (url) {
+        const agent = ytdl.createAgent([], {
+          headers: {
+            referer: 'https://www.youtube.com',
+          }
+        })
         const stream = ytdl(`https://youtube.com/watch?v=${url}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' }).on('error', e => {
           throw e;
         });
