@@ -126,7 +126,7 @@ export async function GET(req, response) {
             referer: 'https://www.youtube.com',
           }
         })
-        const stream = ytdl(`https://youtube.com/watch?v=${url}`, { filter: 'audioonly', quality: 'highestaudio', format: 'mp3' }).on('error', e => {
+        const stream = ytdl(`https://youtube.com/watch?v=${url}`, { agent: agent, filter: 'audioonly', quality: 'highestaudio', format: 'mp3' }).on('error', e => {
           throw e;
         });
         const response = new Response(stream);
