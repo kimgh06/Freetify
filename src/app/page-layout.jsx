@@ -6,10 +6,12 @@ import * as S from './style';
 import { useEffect, useState } from "react";
 import { RecoilRoot, useRecoilState } from "recoil";
 import { AccessToken } from "./recoilStates";
+import { Analytics } from "@vercel/analytics/react"
 
 export function Home() {
   return <RecoilRoot>
     <InnerComponent />
+    <Analytics />
   </RecoilRoot>;
 }
 
