@@ -361,10 +361,22 @@ export async function GET(req, response) {
             "id": 17
           }
         ]
-        const agent = ytdl.createAgent(cookies, {
-          localAddress: '0.0.0.0'
+        const agent = ytdl.createProxyAgent({
+          uri: 'http://152.26.231.42:9443'
         });
-        const stream = ytdl(`https://youtube.com/watch?v=${url}`, { agent: agent, filter: 'audioonly', quality: 'highestaudio', format: 'mp3' }).on('error', e => {
+        const stream = ytdl(`https://youtube.com/watch?v=${url}`, {
+          agent,
+          requestOptions: {
+            headers: {
+              headersTimeout: 10000,
+              bodyTimeout: 10000,
+              referer: `https://youtube.com`
+            }
+          },
+          filter: 'audioonly',
+          quality: 'highestaudio',
+          format: 'mp3'
+        }).on('error', e => {
           throw e;
         });
         const response = new Response(stream);
