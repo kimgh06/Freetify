@@ -152,7 +152,7 @@ export async function GET(req, response) {
           },
           {
             "domain": ".youtube.com",
-            "expirationDate": 1754639380.372062,
+            "expirationDate": 1754972843.156671,
             "hostOnly": false,
             "httpOnly": true,
             "name": "__Secure-1PSIDCC",
@@ -161,7 +161,7 @@ export async function GET(req, response) {
             "secure": true,
             "session": false,
             "storeId": "0",
-            "value": "AKEyXzWUAQSwssWoT_Unc3D5bYH-_1sWicYIuipoNpyXOYWDAKqchj3z6WPRsoM6_asiFWCfaZg",
+            "value": "AKEyXzWBG7v8h7lgRrlLRmHCNeAiaNTg5nt739mEFa-OLwKGkflEaimqKE3g2fZkDJlmexLKv14",
             "id": 3
           },
           {
@@ -208,7 +208,7 @@ export async function GET(req, response) {
           },
           {
             "domain": ".youtube.com",
-            "expirationDate": 1754639380.372107,
+            "expirationDate": 1754972843.156728,
             "hostOnly": false,
             "httpOnly": true,
             "name": "__Secure-3PSIDCC",
@@ -217,7 +217,7 @@ export async function GET(req, response) {
             "secure": true,
             "session": false,
             "storeId": "0",
-            "value": "AKEyXzUTcqf74KICZF9YqjOU6PS52SuECt-2WDFlfeM1Ym3CH_OgAg0BHILPdbTjuQt3rEOpL9o",
+            "value": "AKEyXzXy9VcJy0aKip5IExcIiEkjCPIvqySc49oppKSS49u_jofHVoqHLKY4xO2yhAdC2-Ehadg",
             "id": 7
           },
           {
@@ -264,7 +264,7 @@ export async function GET(req, response) {
           },
           {
             "domain": ".youtube.com",
-            "expirationDate": 1757663371.843933,
+            "expirationDate": 1757996831.98821,
             "hostOnly": false,
             "httpOnly": true,
             "name": "LOGIN_INFO",
@@ -273,12 +273,12 @@ export async function GET(req, response) {
             "secure": true,
             "session": false,
             "storeId": "0",
-            "value": "AFmmF2swRQIgRnvM5VuVSuFuetK2JCn2LNtmV6OUpRE8ovxZpG5gMrUCIQDDBwBuFHuKS3VjE4Y9Cm3YVzUkjA2Pds8n83OWRffzvw:QUQ3MjNmejI3bzFSTVJ3b0xWdXlQT1FuVmpiVHlLa2t5cmFhczA2Q3RmUE1kSVBkbV8wb3ZLZ29QLWVfMmFLcXlmOVhoZXNYWF9WaW1kLWtDZGpJbk5iS291NkswS3BlaFctQi1BS2NmaGxzSVA4U0Vwdnk2bFFhNEdYU2V6RERHR1I0NzZOaGVNVEg5dzRNV1BlVXE3ckh5MzlkWDliTEtB",
+            "value": "AFmmF2swRAIgeqNdIq6SWwMMWbV2Z5J8XnwrVxY0szp-KTfUjDOVmxMCID18m00h2ymSFYS1JkX7GFkh-rSx1RdakzfMKai8WByh:QUQ3MjNmeHhWdmktNGVwNHNHd0pRWktSR3pmdGV2a09KRHY1bVBTbndZS3ZWODJiUnJ6UVFKMGNuckdtWFZCZzloaG5aRm5VMUx0TzZRTjJLeEV4bmFIU2JlWllidklQZVBTajViQWJ2LW1NcHVRMVNwTGo3LWxfZGdtZGw0Vk8waGlBNUZXT0RDY2NkenlIMHJNV0l0Q1MyNDBUOWVMUmJn",
             "id": 11
           },
           {
             "domain": ".youtube.com",
-            "expirationDate": 1757663379.130101,
+            "expirationDate": 1757996843.276959,
             "hostOnly": false,
             "httpOnly": false,
             "name": "PREF",
@@ -287,7 +287,7 @@ export async function GET(req, response) {
             "secure": true,
             "session": false,
             "storeId": "0",
-            "value": "f6=40000000&f7=4100&tz=Asia.Seoul&f5=30000",
+            "value": "f6=40000000&f7=4100&tz=Asia.Seoul&f5=30000&f4=4000000",
             "id": 12
           },
           {
@@ -320,7 +320,7 @@ export async function GET(req, response) {
           },
           {
             "domain": ".youtube.com",
-            "expirationDate": 1754639380.371935,
+            "expirationDate": 1754972843.156299,
             "hostOnly": false,
             "httpOnly": false,
             "name": "SIDCC",
@@ -329,7 +329,7 @@ export async function GET(req, response) {
             "secure": false,
             "session": false,
             "storeId": "0",
-            "value": "AKEyXzVYzBLjdUpLT-ejgd8QFLwbIIK-F1FXJf6U-B8qggQe0Ko2WK_jSqzBU4lqE9Cy6xLpfAOh",
+            "value": "AKEyXzVO4vVlI3hOgvFTdqUvgtr59NfF_Nmkl9Phi5RuSWnBlqqdLVpKJ6MQ06AxjvYJEDlMXlPM",
             "id": 15
           },
           {
