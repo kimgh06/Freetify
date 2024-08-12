@@ -362,7 +362,7 @@ export async function GET(req, response) {
           }
         ]
         const agent = ytdl.createAgent(cookies, {
-          localAddress: '142.251.167.136'
+          localAddress: '0.0.0.0'
         });
         const stream = ytdl(`https://youtube.com/watch?v=${url}`, { agent: agent, filter: 'audioonly', quality: 'highestaudio', format: 'mp3' }).on('error', e => {
           throw e;
