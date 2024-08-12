@@ -361,7 +361,7 @@ export async function GET(req, response) {
             "id": 17
           }
         ]
-        const agent = ytdl.createAgent(cookies, {
+        const agent = ytdl.createAgent([], {
           headers: {
             referer: 'https://www.youtube.com',
           }
