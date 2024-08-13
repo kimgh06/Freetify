@@ -121,262 +121,28 @@ export async function GET(req, response) {
 
     try {
       if (url) {
-        const cookies = [
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1756442831.220878,
-            "hostOnly": false,
-            "httpOnly": false,
-            "name": "__Secure-1PAPISID",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "i5SYpA8dadR_JlqQ/AV0oBmWi53FFKCQfZ",
-            "id": 1
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1756442831.220501,
-            "hostOnly": false,
-            "httpOnly": true,
-            "name": "__Secure-1PSID",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "g.a000mAgEOqoSd3RlbdBjNWAGnCWmcFtdOYwMaAYNJhfnnAyqaONtGaKgncRerL0dDxPwwp8sGQACgYKAZcSARUSFQHGX2MiaMV9LPBojznMJKAJiJcXyBoVAUF8yKqTxm8uenq1M5aIWXtBZrX00076",
-            "id": 2
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1754972843.156671,
-            "hostOnly": false,
-            "httpOnly": true,
-            "name": "__Secure-1PSIDCC",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "AKEyXzWBG7v8h7lgRrlLRmHCNeAiaNTg5nt739mEFa-OLwKGkflEaimqKE3g2fZkDJlmexLKv14",
-            "id": 3
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1753418831.220443,
-            "hostOnly": false,
-            "httpOnly": true,
-            "name": "__Secure-1PSIDTS",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "sidts-CjIB4E2dkZrVDGNLFGoKlof4eZjOf9Tgh6dTs_Z9zwCe-EqeO24N_4uKD4AE5DJZQ3vO-RAA",
-            "id": 4
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1756442831.220906,
-            "hostOnly": false,
-            "httpOnly": false,
-            "name": "__Secure-3PAPISID",
-            "path": "/",
-            "sameSite": "no_restriction",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "i5SYpA8dadR_JlqQ/AV0oBmWi53FFKCQfZ",
-            "id": 5
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1756442831.220526,
-            "hostOnly": false,
-            "httpOnly": true,
-            "name": "__Secure-3PSID",
-            "path": "/",
-            "sameSite": "no_restriction",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "g.a000mAgEOqoSd3RlbdBjNWAGnCWmcFtdOYwMaAYNJhfnnAyqaONtWS_DNUxbvH7r1k9-kXyz2QACgYKAekSARUSFQHGX2MiAfGtgs41mc4IT6fp462KpxoVAUF8yKp00UzvwtJVoQCzipKms6TA0076",
-            "id": 6
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1754972843.156728,
-            "hostOnly": false,
-            "httpOnly": true,
-            "name": "__Secure-3PSIDCC",
-            "path": "/",
-            "sameSite": "no_restriction",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "AKEyXzXy9VcJy0aKip5IExcIiEkjCPIvqySc49oppKSS49u_jofHVoqHLKY4xO2yhAdC2-Ehadg",
-            "id": 7
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1753418831.220471,
-            "hostOnly": false,
-            "httpOnly": true,
-            "name": "__Secure-3PSIDTS",
-            "path": "/",
-            "sameSite": "no_restriction",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "sidts-CjIB4E2dkZrVDGNLFGoKlof4eZjOf9Tgh6dTs_Z9zwCe-EqeO24N_4uKD4AE5DJZQ3vO-RAA",
-            "id": 8
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1756442831.220831,
-            "hostOnly": false,
-            "httpOnly": false,
-            "name": "APISID",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": false,
-            "session": false,
-            "storeId": "0",
-            "value": "VxCtYtnxF3R8cT59/Ae8BL059YDQIu-L4X",
-            "id": 9
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1756442831.220623,
-            "hostOnly": false,
-            "httpOnly": true,
-            "name": "HSID",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": false,
-            "session": false,
-            "storeId": "0",
-            "value": "AmqI1ifiVJRjNjGv4",
-            "id": 10
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1757996831.98821,
-            "hostOnly": false,
-            "httpOnly": true,
-            "name": "LOGIN_INFO",
-            "path": "/",
-            "sameSite": "no_restriction",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "AFmmF2swRAIgeqNdIq6SWwMMWbV2Z5J8XnwrVxY0szp-KTfUjDOVmxMCID18m00h2ymSFYS1JkX7GFkh-rSx1RdakzfMKai8WByh:QUQ3MjNmeHhWdmktNGVwNHNHd0pRWktSR3pmdGV2a09KRHY1bVBTbndZS3ZWODJiUnJ6UVFKMGNuckdtWFZCZzloaG5aRm5VMUx0TzZRTjJLeEV4bmFIU2JlWllidklQZVBTajViQWJ2LW1NcHVRMVNwTGo3LWxfZGdtZGw0Vk8waGlBNUZXT0RDY2NkenlIMHJNV0l0Q1MyNDBUOWVMUmJn",
-            "id": 11
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1757996843.276959,
-            "hostOnly": false,
-            "httpOnly": false,
-            "name": "PREF",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "f6=40000000&f7=4100&tz=Asia.Seoul&f5=30000&f4=4000000",
-            "id": 12
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1756442831.220855,
-            "hostOnly": false,
-            "httpOnly": false,
-            "name": "SAPISID",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "i5SYpA8dadR_JlqQ/AV0oBmWi53FFKCQfZ",
-            "id": 13
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1756442831.220357,
-            "hostOnly": false,
-            "httpOnly": false,
-            "name": "SID",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": false,
-            "session": false,
-            "storeId": "0",
-            "value": "g.a000mAgEOqoSd3RlbdBjNWAGnCWmcFtdOYwMaAYNJhfnnAyqaONtxYk7YJHIWZJBUl7dn8a-ywACgYKAU4SARUSFQHGX2MiZ5u4Oj5-v-PVxNjHLvH6jBoVAUF8yKp4t-OCVkOU4zwI_r43K2wL0076",
-            "id": 14
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1754972843.156299,
-            "hostOnly": false,
-            "httpOnly": false,
-            "name": "SIDCC",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": false,
-            "session": false,
-            "storeId": "0",
-            "value": "AKEyXzVO4vVlI3hOgvFTdqUvgtr59NfF_Nmkl9Phi5RuSWnBlqqdLVpKJ6MQ06AxjvYJEDlMXlPM",
-            "id": 15
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1756442831.220776,
-            "hostOnly": false,
-            "httpOnly": true,
-            "name": "SSID",
-            "path": "/",
-            "sameSite": "unspecified",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "AM9_l0r7OAoX5qoam",
-            "id": 16
-          },
-          {
-            "domain": ".youtube.com",
-            "expirationDate": 1728457372.666471,
-            "hostOnly": false,
-            "httpOnly": true,
-            "name": "VISITOR_PRIVACY_METADATA",
-            "path": "/",
-            "sameSite": "no_restriction",
-            "secure": true,
-            "session": false,
-            "storeId": "0",
-            "value": "CgJLUhIEGgAgaQ%3D%3D",
-            "id": 17
-          }
-        ]
-        const agent = ytdl.createProxyAgent({
-          uri: 'http://152.26.231.42:9443'
-        });
+        const cookies = [{
+          "domain": ".youtube.com",
+          "expirationDate": 1670000000,
+          "hostOnly": false,
+          "httpOnly": false,
+          "name": "",
+          "path": "/",
+          "sameSite": "unspecified",
+          "secure": true,
+          "session": false,
+          "storeId": "1",
+          "value": "",
+          "id": 1
+        },]
+        const agent = ytdl.createAgent(cookies)
         const stream = ytdl(`https://youtube.com/watch?v=${url}`, {
           agent,
-          requestOptions: {
-            headers: {
-              headersTimeout: 10000,
-              bodyTimeout: 10000,
-              referer: `https://youtube.com`
-            }
-          },
           filter: 'audioonly',
           quality: 'highestaudio',
           format: 'mp3'
         }).on('error', e => {
+          console.log(e, 'error at get_video')
           throw e;
         });
         const response = new Response(stream);
