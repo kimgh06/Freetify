@@ -123,17 +123,17 @@ export async function GET(req, response) {
       if (url) {
         const cookies = [{
           "domain": ".youtube.com",
-          "expirationDate": 1670000000,
+          "expirationDate": 1956442831.220501,
           "hostOnly": false,
-          "httpOnly": false,
-          "name": "",
+          "httpOnly": true,
+          "name": "__Secure-1PSID",
           "path": "/",
           "sameSite": "unspecified",
           "secure": true,
           "session": false,
-          "storeId": "1",
-          "value": "",
-          "id": 1
+          "storeId": "0",
+          "value": "g.a000mAgEOqoSd3RlbdBjNWAGnCWmcFtdOYwMaAYNJhfnnAyqaONtGaKgncRerL0dDxPwwp8sGQACgYKAZcSARUSFQHGX2MiaMV9LPBojznMJKAJiJcXyBoVAUF8yKqTxm8uenq1M5aIWXtBZrX00076",
+          "id": 2
         },]
         const agent = ytdl.createAgent(cookies)
         const stream = ytdl(`https://youtube.com/watch?v=${url}`, {
