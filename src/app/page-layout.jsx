@@ -90,6 +90,11 @@ function InnerComponent() {
   return <>
     <Navi />
     <S.App>
+      {localStorage.getItem('Notice') !== 'false' && <S.Notice>
+        <h1><button onClick={e => localStorage.setItem('Notice', 'false')}>X</button>Notice</h1>
+        <p>I apoloize for the inconvenience that can not load music.</p>
+        I am currently working on fixing the bug of the music player.
+      </S.Notice>}
       <h1>Recommendations</h1>
       {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i?.album.images[2].url} type={i?.type}
         id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {

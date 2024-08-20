@@ -12,3 +12,21 @@ export const App = styled.main`
 export const PaddingBox = styled.div`
   height: 200px;
 `
+export const Notice = styled.div`
+  width: 35vw;
+  min-width: 380px;
+  margin: auto;
+  border-radius: 5px;
+  background-color: white;
+  padding: 10px;
+  button{
+    background-color: red;
+    color: white;
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    font-weight: bolder;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+`
