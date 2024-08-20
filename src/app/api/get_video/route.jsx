@@ -123,23 +123,8 @@ export async function GET(req, response) {
       if (url) {
         const poToken = process.env.NEXT_PUBLIC_PO_TOKEN
         const visitorData = process.env.NEXT_PUBLIC_VISITOR_DATA
-        const cookies = [{
-          "domain": ".youtube.com",
-          "expirationDate": 1956442831.220501,
-          "hostOnly": false,
-          "httpOnly": true,
-          "name": "__Secure-1PSID",
-          "path": "/",
-          "sameSite": "unspecified",
-          "secure": true,
-          "session": false,
-          "storeId": "0",
-          "value": "g.a000mAgEOqoSd3RlbdBjNWAGnCWmcFtdOYwMaAYNJhfnnAyqaONtGaKgncRerL0dDxPwwp8sGQACgYKAZcSARUSFQHGX2MiaMV9LPBojznMJKAJiJcXyBoVAUF8yKqTxm8uenq1M5aIWXtBZrX00076",
-          "id": 2
-        },]
-        const agent = ytdl.createAgent(cookies)
+
         const stream = ytdl(`https://youtube.com/watch?v=${url}`, {
-          agent,
           filter: 'audioonly',
           quality: 'highestaudio',
           format: 'mp3',
