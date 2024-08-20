@@ -123,6 +123,7 @@ export async function GET(req, response) {
       if (url) {
         const poToken = process.env.NEXT_PUBLIC_PO_TOKEN
         const visitorData = process.env.NEXT_PUBLIC_VISITOR_DATA
+        console.log(poToken, visitorData)
 
         const stream = ytdl(`https://youtube.com/watch?v=${url}`, {
           filter: 'audioonly',
