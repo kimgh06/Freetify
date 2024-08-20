@@ -1,4 +1,4 @@
-import ytdl from "@distube/ytdl-core";
+import ytdl from "@ybd-project/ytdl-core";
 import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
 import axios from "axios";

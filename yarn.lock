@@ -1464,6 +1464,18 @@
   resolved "https://registry.npmjs.org/@xtuc/long/-/long-4.2.2.tgz"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
+"@ybd-project/ytdl-core@^5.0.0-test.6":
+  version "5.0.0-test.6"
+  resolved "https://registry.npmjs.org/@ybd-project/ytdl-core/-/ytdl-core-5.0.0-test.6.tgz"
+  integrity sha512-2hpOkgum3Kiy52VhXQFlZfVtWsB0Brr3617BQm3YO71ZVEeqAAdkHX/0hlJ29eW8dkpKGajqlhNQImq4exNwAg==
+  dependencies:
+    http-cookie-agent "^6.0.5"
+    m3u8stream "^0.8.6"
+    miniget "^4.2.3"
+    sax "^1.4.1"
+    tough-cookie "^4.1.4"
+    undici five
+
 acorn-import-attributes@^1.9.5:
   version "1.9.5"
   resolved "https://registry.npmjs.org/acorn-import-attributes/-/acorn-import-attributes-1.9.5.tgz"
