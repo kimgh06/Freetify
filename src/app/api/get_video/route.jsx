@@ -1,4 +1,4 @@
-import ytdl from "@distube/ytdl-core";
+import ytdl from "@ybd-project/ytdl-core";
 import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
 import axios from "axios";
@@ -121,6 +121,8 @@ export async function GET(req, response) {
 
     try {
       if (url) {
+        const poToken = process.env.NEXT_PUBLIC_PO_TOKEN
+        const visitorData = process.env.NEXT_PUBLIC_VISITOR_DATA
         const cookies = [{
           "domain": ".youtube.com",
           "expirationDate": 1956442831.220501,
@@ -140,7 +142,9 @@ export async function GET(req, response) {
           agent,
           filter: 'audioonly',
           quality: 'highestaudio',
-          format: 'mp3'
+          format: 'mp3',
+          poToken,
+          visitorData
         }).on('error', e => {
           console.log(e, 'error at get_video')
           throw e;

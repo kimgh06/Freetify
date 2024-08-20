@@ -1464,10 +1464,10 @@
   resolved "https://registry.npmjs.org/@xtuc/long/-/long-4.2.2.tgz"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@ybd-project/ytdl-core@^5.0.0-test.6":
-  version "5.0.0-test.6"
-  resolved "https://registry.npmjs.org/@ybd-project/ytdl-core/-/ytdl-core-5.0.0-test.6.tgz"
-  integrity sha512-2hpOkgum3Kiy52VhXQFlZfVtWsB0Brr3617BQm3YO71ZVEeqAAdkHX/0hlJ29eW8dkpKGajqlhNQImq4exNwAg==
+"@ybd-project/ytdl-core@^5.0.1-test.3":
+  version "5.0.1-test.3"
+  resolved "https://registry.npmjs.org/@ybd-project/ytdl-core/-/ytdl-core-5.0.1-test.3.tgz"
+  integrity sha512-iaKXKsuyiKbEFtNyJQk1/md+TEt6rxHhYRcAdoNFexp2fi50LKtu3b7XDdl784cZTw2YYVEUJDzCMgbthJK1dg==
   dependencies:
     http-cookie-agent "^6.0.5"
     m3u8stream "^0.8.6"

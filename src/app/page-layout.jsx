@@ -18,6 +18,7 @@ export function Home() {
 function InnerComponent() {
   const [tracks, setTracks] = useState([]);
   const [access, setAccess] = useRecoilState(AccessToken);
+  const [view, setView] = useState(true);
   const getTokens = async e => {
     const queries = new URLSearchParams(location.search);
     await axios.post(`/api/getTokens`, {
@@ -79,6 +80,7 @@ function InnerComponent() {
   useEffect(e => {
     const queries = new URLSearchParams(location.search);
     document.title = 'Recommendations';
+    setView(localStorage.getItem('Notice') !== 'false')
     if (queries.size !== 0) {
       getTokens();
     } else {
@@ -90,7 +92,7 @@ function InnerComponent() {
   return <>
     <Navi />
     <S.App>
-      {localStorage.getItem('Notice') !== 'false' && <S.Notice>
+      {view && <S.Notice>
         <h1><button onClick={e => localStorage.setItem('Notice', 'false')}>X</button>Notice</h1>
         <p>I apoloize for the inconvenience that can not load music.</p>
         I am currently working on fixing the bug of the music player.
