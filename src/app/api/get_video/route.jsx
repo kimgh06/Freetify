@@ -121,7 +121,7 @@ export async function GET(req, response) {
 
     try {
       if (url) {
-        const poToken = process.env.NEXT_PUBLIC_PO_TOKEN
+        const poToken = process.env.NEXT_PUBLIC_POTOKEN
         const visitorData = process.env.NEXT_PUBLIC_VISITOR_DATA
         console.log(poToken, visitorData)
 
