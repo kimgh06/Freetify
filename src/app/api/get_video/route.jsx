@@ -106,7 +106,7 @@ export async function GET(req, response) {
     if (!url) {
       //싱글 앨범일 경우거나 못 찾았거나
       console.log(title, artist)
-      list = (await youtubesearchapi.GetListByKeyword(`official ${artist} ${title} `, false, 20)).items;
+      list = (await youtubesearchapi.GetListByKeyword(`${title} - ${artist} lyrics`, false, 30)).items;
       // console.log(list)
       list = list.filter(e => {
         let duration
