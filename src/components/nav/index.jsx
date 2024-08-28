@@ -3,9 +3,11 @@ import * as S from './style';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Player from '../player';
-import { useRecoilState } from 'recoil';
+import { RecoilRoot, useRecoilState } from 'recoil';
 import { AccessToken, NowPlayingId } from '@/app/recoilStates';
+import dynamic from 'next/dynamic';
+
+const Player = dynamic(() => import('@/components/player'), { ssr: false });
 
 export default function Navi() {
   const [activating, setActivating] = useState(false);
@@ -13,6 +15,7 @@ export default function Navi() {
   const [access, setAccess] = useRecoilState(AccessToken);
   const [todays, setToday] = useState(0);
   const [totals, setTotal] = useState(0);
+
   const refresh_token = async e => {
     await axios.patch(`/api/refresh_token`,
       { refreshToken: process.env.NEXT_PUBLIC_REFRESH_TOKEN }).then(e => {
@@ -55,9 +58,10 @@ export default function Navi() {
         }
       })
   }
-  const refreshAll = e => {
+  const refreshAll = timer => {
     if (new Date().getTime() >= localStorage.getItem('expire') || !localStorage.getItem('access')) {
       refresh_token();
+      clearInterval(timer);
     }
     if (new Date().getTime() >= localStorage.getItem('user_exp') && localStorage.getItem('user_refresh')) {
       user_refresh();
@@ -72,13 +76,13 @@ export default function Navi() {
       setAccess(localStorage.getItem('access'));
     }
     const timer = setInterval(e => {
-      refreshAll();
+      refreshAll(timer);
     }, 2 * 1000);
     if (typeof window !== undefined) {
       setActivating(window.innerWidth >= 1200 ? true : false)
     }
   }, [access]);
-  return <>
+  return <RecoilRoot>
     <S.Nav>
       <div className={'menu ' + activating} onClick={e => setActivating(a => !a)}>
         <div className='bar' />
@@ -108,5 +112,5 @@ export default function Navi() {
       </div>}
     </S.Nav>
     {id && <Player />}
-  </>;
+  </RecoilRoot>;
 }

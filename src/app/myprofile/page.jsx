@@ -15,6 +15,7 @@ export default function App() {
 
 function InnerComponent() {
   const [playlists, setPlaylists] = useState([]);
+  const [username, setUsername] = useState('');
   if (typeof window === 'undefined') {
     return;
   }
@@ -25,17 +26,19 @@ function InnerComponent() {
   const nickname = localStorage.getItem('user_nickname');
 
   const getAllPlaylist = async e => {
-    return await axios.get(`/api/playlist`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
+    let playlists;
+    playlists = await axios.get(`/api/playlist`, { headers: { 'Authorization': localStorage.getItem('user_access') } })
       .then(e => {
-        setPlaylists(e.data.res);
         return e.data.res;
       }).catch(e => {
-        console.log(e);
         return null
       })
+    setPlaylists(playlists);
   }
   useEffect(e => {
     getAllPlaylist();
+    const name = localStorage.getItem('user_nickname');
+    if (name) setUsername(name);
   }, []);
 
   return <>
@@ -51,7 +54,7 @@ function InnerComponent() {
         {playlists.length !== 0 ? playlists?.map((i, n) => <PlaylistAtom
           key={n}
           index={n}
-          artist={localStorage.getItem('user_nickname')}
+          artist={username}
           title={i.playlist_id}
           type='playlist'
           id={i.playlist_id}

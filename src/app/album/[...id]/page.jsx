@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Album } from './albumpage';
+import { InnerContent } from './InnerContent';
 
 
 export async function generateMetadata({ params }, parent) {
@@ -28,7 +28,6 @@ const getTrackinfos = async (ids, access) => {
     });
   }
 }
-
 
 const getAlbumInfos = async id => {
   const url = 'https://api.spotify.com/v1';
@@ -60,6 +59,40 @@ const refresh_token = async e => {
 }
 
 
-export default function App(props) {
-  return <Album {...props} />;
+export default async function App(props) {
+  const id = props.params.id[0];
+  const url = 'https://api.spotify.com/v1';
+  const refresh_token = async e => {
+    return await axios.patch(`${process.env.NEXT_PUBLIC_AUTH_URL}/api/refresh_token`,
+      { refreshToken: process.env.NEXT_PUBLIC_REFRESH_TOKEN }).then(e => {
+        return e.data.access_token;
+      }).catch(e => {
+        console.log(e);
+        return null;
+      })
+  }
+  const getAlbumInfos = async e => {
+    const access = await refresh_token();
+    return await axios.get(`${url}/albums/${id}`, { headers: { Authorization: `Bearer ${access}` } })
+      .then(e => {
+        const albumInfo = e.data;
+        let TrackList = [];
+        let sum = 0;
+        albumInfo.tracks.items.forEach(items => {
+          TrackList.push(items.id);
+          sum += items.duration_ms
+        });
+        let totalDuration = `${Math.floor(sum / 60 / 1000)}m ${((sum % 60000 - (sum % 60000) % 1000) / 1000).toString().padStart(2, '0')}s`;
+        return {
+          albumInfo,
+          tracks: albumInfo.tracks.items,
+          totalDuration,
+          TrackList
+        }
+      }).catch(e => {
+        console.log(e);
+      });
+  }
+  let { albumInfo, tracks, totalDuration, TrackList } = await getAlbumInfos();
+  return <InnerContent albumInfo={albumInfo} tracks={tracks} totalDuration={totalDuration} TrackList={TrackList} />
 }
