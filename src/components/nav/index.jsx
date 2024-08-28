@@ -37,7 +37,7 @@ export default function Navi() {
       return e.data.cnt
     }).catch(e => {
       console.log(e)
-      return null;
+      return 0;
     })
     setToday(today);
     setTotal(total);
@@ -82,7 +82,7 @@ export default function Navi() {
       setActivating(window.innerWidth >= 1200 ? true : false)
     }
   }, [access]);
-  return <RecoilRoot>
+  return <>
     <S.Nav>
       <div className={'menu ' + activating} onClick={e => setActivating(a => !a)}>
         <div className='bar' />
@@ -111,6 +111,5 @@ export default function Navi() {
         <p>today:{todays}/total:{totals}</p>
       </div>}
     </S.Nav>
-    {id && <Player />}
-  </RecoilRoot>;
+    {id && <Player />}</>;
 }
