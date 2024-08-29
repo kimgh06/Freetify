@@ -6,7 +6,7 @@ export async function generateMetadata({ params, searchParams }) {
     return
   }
   const info = await getPlaylistAtoms(params['id'][0], searchParams['playlist']);
-  const description = `${searchParams['playlist']}, playlist, ${info.length} songs`
+  const description = `${searchParams['playlist']}, playlist, ${info['length']} songs`
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_AUTH_URL),
     openGraph: {
@@ -56,6 +56,11 @@ const refresh_token = async e => {
     })
 }
 
-export default function App(props) {
-  return <PlaylistPage {...props} />;
+export default async function App(props) {
+  const { params, searchParams } = props;
+  if (!(params['id'][0] && searchParams['playlist'])) {
+    return
+  }
+  const info = await getPlaylistAtoms(params['id'][0], searchParams['playlist']);
+  return <PlaylistPage {...props} trackss={info} />;
 }

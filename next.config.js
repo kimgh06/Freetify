@@ -18,7 +18,8 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
-  reactStrictMode: false
+  reactStrictMode: false,
+  external: ['styled-components'],
 }
 
 module.exports = withPWA(nextConfig)

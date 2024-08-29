@@ -31,5 +31,8 @@
   },
   "devDependencies": {
     "next-pwa": "^5.6.0"
+  },
+  "peerDependencies": {
+    "styled-components": "6.0.7"
   }
 }

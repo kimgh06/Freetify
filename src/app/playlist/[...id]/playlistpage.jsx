@@ -2,71 +2,31 @@
 import Navi from "@/components/nav";
 import * as S from './style';
 import { useEffect, useState } from "react";
-import { RecoilRoot, useRecoilState } from "recoil";
+import { RecoilRoot } from "recoil";
 import axios from "axios";
-import { AccessToken } from "@/app/recoilStates";
 import PlaylistAtom from "@/components/playlistAtom";
-import { redirect } from "next/navigation";
 
-export function PlaylistPage(props) {
+export function PlaylistPage({ trackss, ...props }) {
   return <RecoilRoot>
-    <PlaylistPages {...props} />
+    <PlaylistPages {...props} trackss={trackss} />
   </RecoilRoot>;
 }
 
-function PlaylistPages(props) {
+function PlaylistPages({ trackss, ...props }) {
   const [tracks, setTracks] = useState([]);
   const [originList, setOriginList] = useState([])
-  const [access, setAccess] = useRecoilState(AccessToken);
   const [holding, setHolding] = useState(false);
   const [index, setIndex] = useState(false);
   const [clientY, setClientY] = useState(false);
   const [editName, setEditName] = useState(props.searchParams['playlist']);
   const [editMode, setEditMode] = useState(false);
-  const getPlaylistAtoms = async e => {
-    const nickname = props.params['id'][0], playlist = props.searchParams['playlist'];
-    await axios.get(`/api/playlist/${nickname}/${playlist}`)
-      .then(async e => {
-        let ids = [];
-        e.data.res.forEach(e => {
-          ids.push(e.song_id)
-        })
-        ids = ids.join(',');
-        let tr = await getTrackinfos(ids);
-        if (!tr) {
-          return;
-        }
-        setTracks(tr);
-        setOriginList(tr)
-        let TrackList = [];
-        tr.forEach(items => {
-          if (TrackList.indexOf(items.id) === -1) {
-            TrackList.push(items.id);
-          }
-        });
-        localStorage.setItem('TrackList', `${TrackList}`);
-      }).catch(e => {
-        console.log(e);
-      })
-  }
-  const getTrackinfos = async ids => {
-    if (ids) {
-      return await axios.get(`https://api.spotify.com/v1/tracks?ids=${ids}`, { headers: { Authorization: `Bearer ${access}` } }).then(e => {
-        return e.data.tracks
-      }).catch(e => {
-        console.log(e);
-      });
-    }
-  }
   const patchItems = async e => {
-    await axios.patch('/api/playlist', { items: localStorage.getItem('TrackList').split(','), playlist_id: props.searchParams['playlist'] },
-      {
-        headers: {
-          'Authorization': localStorage.getItem('user_access')
-        }
-      }).catch(e => {
-        console.log(e)
-      })
+    await axios.patch('/api/playlist',
+      { items: localStorage.getItem('TrackList').split(','), playlist_id: props.searchParams['playlist'] },
+      { headers: { 'Authorization': localStorage.getItem('user_access') } }
+    ).catch(e => {
+      console.log(e)
+    })
   }
   const EditPlaylistName = async (next) => {
     axios.post('/api/playlist', { previous: props.searchParams['playlist'], next }, {
@@ -82,7 +42,6 @@ function PlaylistPages(props) {
     })
   }
   useEffect(e => {
-    document.title = `${props.searchParams['playlist']} - ${props.params['id'][0]} }`;
     if (holding) {
       const boxs = document.querySelectorAll(`.box`)
       let max = index;
@@ -106,10 +65,22 @@ function PlaylistPages(props) {
     if (clientY !== false) {
       return;
     }
-  }, [clientY])
+  }, [clientY]);
+
   useEffect(e => {
     //initialization
-    getPlaylistAtoms()
+    document.title = `${props.searchParams['playlist']} - ${props.params['id'][0]} }`;
+    const tr = trackss;
+    let TrackList = [];
+    tr.forEach(items => {
+      if (TrackList.indexOf(items.id) === -1) {
+        TrackList.push(items.id);
+      }
+    });
+    localStorage.setItem('TrackList', `${TrackList}`);
+    setTracks(tr);
+    setOriginList(tr)
+
     document.addEventListener('mouseup', e => {
       setHolding(false);
     })
@@ -117,13 +88,13 @@ function PlaylistPages(props) {
     document.addEventListener('touchend', e => {
       setHolding(false);
     })
-  }, [access, props])
+  }, []);
+
   useEffect(e => {
     const func = e => {
       holding && e.preventDefault()
       setClientY(e.changedTouches[0].pageY)
     }
-
     document.addEventListener('touchmove', func, { passive: false })
     if (holding || !clientY) {
       return e => document.removeEventListener('touchmove', func);
@@ -142,7 +113,8 @@ function PlaylistPages(props) {
     localStorage.setItem('TrackList', `${news}`);
     patchItems();
     return e => document.removeEventListener('touchmove', func)
-  }, [holding])
+  }, [holding]);
+
   return <S.Playlist>
     <Navi />
     <main>
