@@ -13,29 +13,29 @@ export function PlaylistPage({ trackss, ...props }) {
 }
 
 function PlaylistPages({ trackss, ...props }) {
+  const playlistName = props.searchParams['playlist'];
+  const nickname = props.params['id'][0];
   const [tracks, setTracks] = useState([]);
   const [originList, setOriginList] = useState([])
   const [holding, setHolding] = useState(false);
   const [index, setIndex] = useState(false);
   const [clientY, setClientY] = useState(false);
-  const [editName, setEditName] = useState(props.searchParams['playlist']);
+  const [editName, setEditName] = useState(playlistName);
   const [editMode, setEditMode] = useState(false);
   const patchItems = async e => {
     await axios.patch('/api/playlist',
-      { items: localStorage.getItem('TrackList').split(','), playlist_id: props.searchParams['playlist'] },
+      { items: localStorage.getItem('TrackList').split(','), playlist_id: playlistName },
       { headers: { 'Authorization': localStorage.getItem('user_access') } }
     ).catch(e => {
       console.log(e)
     })
   }
   const EditPlaylistName = async (next) => {
-    axios.post('/api/playlist', { previous: props.searchParams['playlist'], next }, {
+    axios.post('/api/playlist', { previous: playlistName, next }, {
       headers: {
         'Authorization': localStorage.getItem('user_access')
       }
     }).then(e => {
-      console.log(e.data);
-      const nickname = props.params['id'][0]
       window.location.href = `/playlist/${nickname}?playlist=${next}`;
     }).catch(e => {
       console.log(e)
@@ -69,7 +69,7 @@ function PlaylistPages({ trackss, ...props }) {
 
   useEffect(e => {
     //initialization
-    document.title = `${props.searchParams['playlist']} - ${props.params['id'][0]} }`;
+    document.title = `${playlistName} - ${nickname} }`;
     const tr = trackss;
     let TrackList = [];
     tr.forEach(items => {
@@ -122,7 +122,7 @@ function PlaylistPages({ trackss, ...props }) {
         {
           !editMode ?
             <>
-              {props.searchParams['playlist']} - {props.params['id'][0]}
+              {playlistName} - {nickname}
               <button onClick={e => setEditMode(true)}>Change Playlist Name</button>
             </> :
             <>
