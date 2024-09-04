@@ -6,6 +6,15 @@ export async function generateMetadata({ params, searchParams }) {
     return
   }
   const info = await getPlaylistAtoms(params['id'][0], searchParams['playlist']);
+  if (!info) {
+    return {
+      metadataBase: new URL(process.env.NEXT_PUBLIC_AUTH_URL),
+      openGraph: {
+        title: `${searchParams['playlist']}, made by ${params['id'][0]}` || 'playlist',
+        description: 'Access to error to get playlist'
+      }
+    };
+  }
   const description = `${searchParams['playlist']}, playlist, ${info['length']} songs`
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_AUTH_URL),
