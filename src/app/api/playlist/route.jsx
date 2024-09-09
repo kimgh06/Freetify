@@ -115,16 +115,23 @@ export async function PATCH(req, response) {
 }
 
 async function LoopUpdate(items, playlist_id) {
-  let err;
-  for (let i = 0; i < items.length; i++) {
-    await ExcuteUpdate(`update playlist set play_index = ${i} where song_id = '${items[i]}' and playlist_id = '${playlist_id}'`).catch(e => {
-      err = e;
-    })
+  // CASE 문을 사용하여 song_id에 따라 play_index를 업데이트하는 쿼리 생성
+  const updates = items.map((item, i) => `WHEN '${item}' THEN ${i}`).join(' ');
+  const songIds = items.map(item => `'${item}'`).join(', ');
+
+  const query = `
+    UPDATE playlist
+    SET play_index = CASE song_id ${updates} END
+    WHERE song_id IN (${songIds}) AND playlist_id = '${playlist_id}'
+  `;
+
+  try {
+    // 단일 쿼리 실행
+    await ExcuteUpdate(query);
+    return NextResponse.json({ msg: 'succeed' });
+  } catch (err) {
+    return NextResponse.json({ msg: err }, { status: 500 });
   }
-  if (err) {
-    return NextResponse.json({ msg: err }, { status: 500 })
-  }
-  return NextResponse.json({ msg: 'succeed' });
 }
 
 async function ExcuteUpdate(query) {
