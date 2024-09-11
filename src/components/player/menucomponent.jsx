@@ -11,7 +11,7 @@ export function MenuComponent({ albumId, title }) {
     {mode === '' && <S.MenuComponent>
       <div className='button' onClick={e => {
         let url = `https://freetify.vercel.app/album/${albumId}#${title}`
-        url = encodeURI(url)
+        url = encodeURIComponent(url)
         navigator.clipboard.writeText(url);
         alert(title + ' Copied.')
         setPopup('')
