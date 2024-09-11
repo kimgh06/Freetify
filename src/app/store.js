@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { persist } from 'zustand/middleware'
 
 export const Store = create((set) => ({
   NowPlayingId: '',
@@ -6,8 +7,20 @@ export const Store = create((set) => ({
   RefreshToken: '',
   PlayingCurrentTime: 0,
   Volume: 0.7,
-  AddButtonIndex: false
+  AddButtonIndex: false,
+  playlists: []
 }))
+
+
+export const PlaylistsStore = create(
+  persist((set) => ({
+    playlists: [],
+    setPlaylists: (playlists) => set({ playlists })
+  }),
+    { name: 'playlists-store' },
+  )
+)
+
 // export const NowPlayingId = atom({
 //   key: 'NowPlayingId',
 //   default: '',

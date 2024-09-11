@@ -47,7 +47,29 @@ function InnerComponent() {
     }
   }
   const GettingInfos = async e => {
-    let ids = ["3H4ZrsDezaN37zplSpXUWd", "3LDNcikQd7Zui9gJCISTtR", "7fhiGdj0nn0ZCmIAocG8G0"];
+    let ids = ["3H4ZrsDezaN37zplSpXUWd",
+      "3LDNcikQd7Zui9gJCISTtR",
+      "7fhiGdj0nn0ZCmIAocG8G0",
+      "7F02x6EKYIQV3VcTaTm7oN",
+      "4rDbp1vnvEhieiccprPMdI",
+      "5tdKaKLnC4SgtDZ6RlWeal",
+      "5T7ywazdGIydr6JCW6t02j",
+      "4Zc7TCHzuNwL0AFBlyLdyr",
+      "7G7tgVYORlDuVprcYHuFJh",
+      "0lllvs6dDxZcZoc85ReNYV",
+      "5luOvrlnzfvJQdQjrScVj4",
+      "2RWFncSWZEhSRRifqiDNVV",
+      "58XWGx7KNNkKneHdprcprX",
+      "3NYCaxkggl0Hh8vQptSUvV",
+      "3IOQZRcEkplCXg6LofKqE9",
+      "4HiC3ulkTgbEcYYsSuR6PO",
+      "6olS0TmHmsGr0hXtcBsiVM",
+      "5qFxuUIAwJlzO60vqOiL7y",
+      "57P8gH8rjt4OqEoqzut1bL",
+      "5YXvG4PL4Wisyx2ScUxVFF",
+      "0C80GCp0mMuBzLf3EAXqxv",
+      "3Fzlg5r1IjhLk2qRw667od",
+      "39lSeqnyjZJejRuaREfyLL"];
     if (localStorage.getItem('recommendation') !== null) {
       ids = localStorage.getItem('recommendation').split(',');
     }

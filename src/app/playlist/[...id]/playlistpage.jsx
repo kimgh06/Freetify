@@ -88,7 +88,7 @@ function PlaylistPages({ trackss, ...props }) {
     document.addEventListener('touchend', e => {
       setHolding(false);
     })
-  }, []);
+  }, [playlistName, nickname]);
 
   useEffect(e => {
     const func = e => {

@@ -6,6 +6,7 @@ import axios from 'axios';
 import { RecoilRoot, useRecoilState } from 'recoil';
 import { AccessToken, NowPlayingId } from '@/app/recoilStates';
 import dynamic from 'next/dynamic';
+import { PlaylistsStore } from '@/app/store';
 
 const Player = dynamic(() => import('@/components/player'), { ssr: false });
 
@@ -15,6 +16,9 @@ export default function Navi() {
   const [access, setAccess] = useRecoilState(AccessToken);
   const [todays, setToday] = useState(0);
   const [totals, setTotal] = useState(0);
+  // const [playlists, setPlaylists] = useState([]);
+  const { playlists, setPlaylists } = PlaylistsStore();
+  const [username, setUsername] = useState('');
 
   const refresh_token = async e => {
     await axios.patch(`/api/refresh_token`,
@@ -67,9 +71,28 @@ export default function Navi() {
       user_refresh();
     }
   }
+
+  const getAllPlaylist = async () => {
+    try {
+      const response = await axios.get('/api/playlist', {
+        headers: {
+          'Authorization': localStorage.getItem('user_access')
+        }
+      });
+      setPlaylists(response.data.res);
+    } catch (error) {
+      console.error("Error fetching playlists:", error);
+      setPlaylists([]);
+    }
+  };
   useEffect(e => {
     visit();
     refreshAll();
+    getAllPlaylist();
+    const nickname = localStorage.getItem('user_nickname');
+    if (nickname) {
+      setUsername(nickname);
+    }
     if (access !== '') {
       setId(localStorage.getItem('now_playing_id'));
     } else {
@@ -93,10 +116,23 @@ export default function Navi() {
         <p><Link href={'/'}>Recommendations</Link></p>
         <p><Link href={'/search'}>Search</Link></p>
         <p><Link href={'/recent'}>Recent Tracks</Link></p>
-        {!localStorage.getItem('user_nickname') && <p><Link href={'/mytrack'}>My Tracks</Link></p>}
-        {localStorage.getItem('user_nickname') ? <><p>
-          <Link href={'/myprofile'}>{localStorage.getItem('user_nickname')}{localStorage.getItem('user_nickname').slice(-1) !== 's' ? "'s" : "'"} profile&tracks</Link>
-        </p>
+        {!username && <p><Link href={'/mytrack'}>My Tracks</Link></p>}
+        {username ? <>
+          <p>
+            <Link href={'/myprofile'}>{username}{username.slice(-1) !== 's' ? "'s" : "'"} profile&tracks</Link>
+          </p>
+          <ul>
+            My Playlists
+            {playlists.length > 0
+              ? playlists.map((i, n) => (
+                <li key={i.playlist_id}>
+                  <Link href={`/playlist/${username}?playlist=${i.playlist_id}`} key={n}>
+                    {i.playlist_id}
+                  </Link>
+                </li>
+              ))
+              : <li>Loading</li>}
+          </ul>
           <p onClick={e => {
             if (!confirm('Do you want to log out here?')) {
               return;
@@ -107,6 +143,7 @@ export default function Navi() {
             <Link href='#'>Log out</Link>
           </p>
         </> : <p><Link href={'/login'}>Login / Sign up</Link></p>}
+
         <p><Link href={'https://github.com/kimgh06/Freetify'}>View Sources</Link></p>
         <p>today:{todays}/total:{totals}</p>
       </div>}

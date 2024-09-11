@@ -26,6 +26,12 @@ export const Nav = styled.nav`
     p{
       padding: 20px 0 0px 20px;
     }
+    ul{
+      padding: 20px 0 0px 20px;
+      li{
+        padding: 5px 10px;
+      }
+    }
   }
   .menu{
     top: 20px;
