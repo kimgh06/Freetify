@@ -5,6 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
 import PlaylistAtom from "@/components/playlistAtom";
+import { PlaylistsStore } from "../store";
 
 export default function App() {
   return (
@@ -15,7 +16,8 @@ export default function App() {
 }
 
 function InnerComponent() {
-  const [playlists, setPlaylists] = useState([]);
+  // const [playlists, setPlaylists] = useState([]);
+  const { playlists, setPlaylists } = PlaylistsStore();
   const [username, setUsername] = useState(''); // Initial state is an empty string
 
   useEffect(() => {
@@ -36,7 +38,6 @@ function InnerComponent() {
         setPlaylists(response.data.res);
       } catch (error) {
         console.error("Error fetching playlists:", error);
-        setPlaylists([]);
       }
     };
 
