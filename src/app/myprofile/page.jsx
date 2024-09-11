@@ -5,7 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { RecoilRoot } from "recoil";
 import PlaylistAtom from "@/components/playlistAtom";
-import { PlaylistsStore } from "../store";
+import { PlaylistsStore } from "@/app/store";
 
 export default function App() {
   return (
@@ -16,7 +16,6 @@ export default function App() {
 }
 
 function InnerComponent() {
-  // const [playlists, setPlaylists] = useState([]);
   const { playlists, setPlaylists } = PlaylistsStore();
   const [username, setUsername] = useState(''); // Initial state is an empty string
 
