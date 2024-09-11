@@ -16,7 +16,6 @@ export default function Navi() {
   const [access, setAccess] = useRecoilState(AccessToken);
   const [todays, setToday] = useState(0);
   const [totals, setTotal] = useState(0);
-  // const [playlists, setPlaylists] = useState([]);
   const { playlists, setPlaylists } = PlaylistsStore();
   const [username, setUsername] = useState('');
 
@@ -82,7 +81,6 @@ export default function Navi() {
       setPlaylists(response.data.res);
     } catch (error) {
       console.error("Error fetching playlists:", error);
-      setPlaylists([]);
     }
   };
   useEffect(e => {
