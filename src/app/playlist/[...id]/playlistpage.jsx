@@ -105,11 +105,13 @@ function PlaylistPages({ trackss, ...props }) {
     }
     setOriginList(tracks);
     let news = []
-    tracks.forEach(items => {
-      if (news.indexOf(items.id) === -1) {
-        news.push(items.id);
-      }
-    });
+    if (tracks) {
+      tracks.forEach(items => {
+        if (news.indexOf(items.id) === -1) {
+          news.push(items.id);
+        }
+      });
+    }
     localStorage.setItem('TrackList', `${news}`);
     patchItems();
     return e => document.removeEventListener('touchmove', func)
