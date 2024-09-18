@@ -1,14 +1,5 @@
 import { NextResponse } from "next/server";
-import mysql2, { format } from 'mysql2/promise';
-
-const Connection = mysql2.createPool({
-  host: process.env.NEXT_PUBLIC_SQL_HOST,
-  port: '3306',
-  user: process.env.NEXT_PUBLIC_SQL_USR,
-  password: process.env.NEXT_PUBLIC_SQL_PWD,
-  database: process.env.NEXT_PUBLIC_SQL_DATABASE,
-  connectTimeout: 3000, // Connection timeout in milliseconds
-})
+import Connection from "@/app/createConnection";
 
 export async function POST(req, response) {
   const query = `insert into visit values('${formatDateToMySQL(new Date())}')`;
@@ -24,7 +15,17 @@ export async function GET(req, response) {
   if (!date) {
     date = formatDateToMySQL(new Date());
   }
-  const query = `select count(*) as today, (select count(*) from visit) as total from visit where whens = '${date}'`;
+  //push
+  let query = `insert into visit values('${formatDateToMySQL(new Date())}')`;
+  Connection.query(query);
+
+  //get
+  query = `
+  SELECT 
+    SUM(CASE WHEN whens = '${date}' THEN 1 ELSE 0 END) AS today,
+    COUNT(*) AS total
+  FROM visit;
+  `;
   return await Connection.query(query).then(e => {
     return NextResponse.json({ 'cnt': e[0][0] }, { status: 200 });
   }).catch(async e => {

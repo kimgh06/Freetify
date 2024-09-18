@@ -1,15 +1,8 @@
 import { NextResponse } from "next/server";
 import jwt from 'jsonwebtoken'
+import Connection from "@/app/createConnection";
 const secret = process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET;
 
-import mysql2 from 'mysql2/promise';
-const Connection = mysql2.createPool({
-  host: process.env.NEXT_PUBLIC_SQL_HOST,
-  port: '3306',
-  user: process.env.NEXT_PUBLIC_SQL_USR,
-  password: process.env.NEXT_PUBLIC_SQL_PWD,
-  database: process.env.NEXT_PUBLIC_SQL_DATABASE
-})
 
 export async function GET(req, response) { //전체 플레이리스트 조회
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);

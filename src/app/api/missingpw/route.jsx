@@ -1,14 +1,6 @@
 // import { useQuery } from "@/app/useQuery";
 import { NextResponse } from "next/server";
-import mysql2 from 'mysql2/promise';
-
-const Connection = mysql2.createPool({
-  host: process.env.NEXT_PUBLIC_SQL_HOST,
-  port: '3306',
-  user: process.env.NEXT_PUBLIC_SQL_USR,
-  password: process.env.NEXT_PUBLIC_SQL_PWD,
-  database: process.env.NEXT_PUBLIC_SQL_DATABASE
-})
+import Connection from "@/app/createConnection";
 
 export async function PATCH(req, response) {
   const { email, pw } = await req.json();

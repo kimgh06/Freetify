@@ -1,16 +1,7 @@
 import { NextResponse } from "next/server";
 import jwt from 'jsonwebtoken'
 const secret = process.env.NEXT_PUBLIC_AUTH_JWT_ACCESS_SECRET;
-
-import mysql2 from 'mysql2/promise';
-const Connection = mysql2.createPool({
-  host: process.env.NEXT_PUBLIC_SQL_HOST,
-  port: 3306,
-  user: process.env.NEXT_PUBLIC_SQL_USR,
-  password: process.env.NEXT_PUBLIC_SQL_PWD,
-  database: process.env.NEXT_PUBLIC_SQL_DATABASE
-})
-
+import Connection from "@/app/createConnection";
 
 export async function GET(req, { params }) { //특정 플레이리스트 목록 조회
   const [nickname, playlist] = params.id;

@@ -3,16 +3,7 @@ import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
 import axios from "axios";
 import jwt from "jsonwebtoken";
-import mysql2 from 'mysql2/promise';
-
-const Connection = mysql2.createPool({
-  host: process.env.NEXT_PUBLIC_SQL_HOST,
-  port: '3306',
-  user: process.env.NEXT_PUBLIC_SQL_USR,
-  password: process.env.NEXT_PUBLIC_SQL_PWD,
-  database: process.env.NEXT_PUBLIC_SQL_DATABASE,
-  connectTimeout: 3000, // Connection timeout in milliseconds
-})
+import Connection from "@/app/createConnection";
 
 async function getInfo(id, access) {
   return await axios.get(`https://api.spotify.com/v1/tracks/${id}?market=KR`,

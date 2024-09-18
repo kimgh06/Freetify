@@ -33,9 +33,6 @@ export default function Navi() {
       })
   }
   const visit = async e => {
-    await axios.post('/api/visit').catch(e => {
-      console.log(e)
-    })
     const { today, total } = await axios.get('/api/visit').then(e => {
       return e.data.cnt
     }).catch(e => {
