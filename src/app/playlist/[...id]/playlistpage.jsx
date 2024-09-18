@@ -70,8 +70,20 @@ function PlaylistPages({ trackss, ...props }) {
   useEffect(e => {
     //initialization
     document.title = `${playlistName} - ${nickname} }`;
+    document.addEventListener('mouseup', e => {
+      setHolding(false);
+    })
+    document.addEventListener('mousemove', e => setClientY(e.pageY))
+    document.addEventListener('touchend', e => {
+      setHolding(false);
+    })
+
     const tr = trackss;
     let TrackList = [];
+    console.log(tr)
+    if (tr.length === 0) {
+      document.location.reload();
+    }
     tr.forEach(items => {
       if (TrackList.indexOf(items.id) === -1) {
         TrackList.push(items.id);
@@ -80,14 +92,6 @@ function PlaylistPages({ trackss, ...props }) {
     localStorage.setItem('TrackList', `${TrackList}`);
     setTracks(tr);
     setOriginList(tr)
-
-    document.addEventListener('mouseup', e => {
-      setHolding(false);
-    })
-    document.addEventListener('mousemove', e => setClientY(e.pageY))
-    document.addEventListener('touchend', e => {
-      setHolding(false);
-    })
   }, [playlistName, nickname]);
 
   useEffect(e => {
@@ -105,7 +109,7 @@ function PlaylistPages({ trackss, ...props }) {
     }
     setOriginList(tracks);
     let news = []
-    if (tracks) {
+    if (tracks.length) {
       tracks.forEach(items => {
         if (news.indexOf(items.id) === -1) {
           news.push(items.id);
