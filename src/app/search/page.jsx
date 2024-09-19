@@ -3,7 +3,7 @@ import Navi from "@/components/nav";
 import * as S from './style';
 import PlaylistAtom from "@/components/playlistAtom";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AritstProfile from "@/components/artistprofile";
 import { RecoilRoot, useRecoilState } from "recoil";
 import { AccessToken } from "../recoilStates";
@@ -23,6 +23,7 @@ function InnerContent() {
   const [artist, setArtist] = useState([]);
   const [tracks, setTracks] = useState([]);
   const [access, setAccess] = useRecoilState(AccessToken);
+  const searchInput = useRef();
   const navigate = useRouter();
   const searchItems = async q => {
     await axios.get(`${url}/search?q=${q}&type=album,track,artist&limit=5`, { headers: { Authorization: "Bearer " + access } }).then(e => {
@@ -41,6 +42,7 @@ function InnerContent() {
   useEffect(e => {
     document.title = "search";
     const q = new URLSearchParams(window.location.search).get('q');
+    searchInput.current.focus();
     console.log(q)
     if (q) {
       setQ(q);
@@ -54,8 +56,12 @@ function InnerContent() {
         e.preventDefault();
         searchItems(q);
       }}>
-        <input onChange={e => setQ(e.target.value)} value={q} className="search" />
-        <button>검색</button>
+        <input ref={searchInput}
+          onChange={e => setQ(e.target.value)}
+          value={q} className="search"
+          placeholder="Search"
+        />
+        <button>Search</button>
       </form>
       <main className="results">
         <div className="result">

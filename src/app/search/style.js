@@ -15,14 +15,21 @@ export const Search = styled.div`
     position: fixed;
     top: 0;
     width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
     button{
-      height: 25px;
-      width: 50px;
       cursor: pointer;
+      padding: 7px;
+      border-top-right-radius: 15px;
+      border-bottom-right-radius: 15px; 
+      font-weight: bolder;
     }
     input{
+      border-top-left-radius: 15px;
+      border-bottom-left-radius: 15px;
       font-size: 20px;
-      margin-top: 30px;
+      padding: 5px;
     }
   }
   .results{

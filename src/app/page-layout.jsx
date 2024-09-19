@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { RecoilRoot, useRecoilState } from "recoil";
 import { AccessToken } from "./recoilStates";
 import { Analytics } from "@vercel/analytics/react"
+import Link from "next/link";
 
 export function Home() {
   return <RecoilRoot>
@@ -120,6 +121,9 @@ function InnerComponent() {
         <p>Now you can use music player.</p>
         I fixed some bugs and added some features. <br />
       </S.Notice>}
+      <Link className="searchButton" href={`/search`}>
+        <S.searchButton placeholder="Search" />
+      </Link>
       <h1>Recommendations</h1>
       {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} album={i?.album} playingtime={i?.duration_ms} key={n} img={i?.album.images[2].url} type={i?.type}
         id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {
