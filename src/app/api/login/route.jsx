@@ -1,6 +1,4 @@
-// import { useQuery } from "@/app/useQuery";
 import { NextResponse } from "next/server";
-import mysql2 from 'mysql2/promise';
 import jwt from 'jsonwebtoken';
 import Connection from "@/app/createConnection";
 

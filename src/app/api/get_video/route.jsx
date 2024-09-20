@@ -133,6 +133,7 @@ export async function GET(req, response) {
       }
       throw "no datas"
     } catch (e) {
+      console.log(e)
       return NextResponse.json({ err: e }, { status: e.status || 500 })
     }
   }

@@ -56,7 +56,6 @@ function InnerComponent() {
         list.push(response.data.res[i]['song_id']);
       }
       const tracks = await getTrackinfos(list.join(','));
-      console.log(tracks)
       setLikedSong(tracks);
     } catch (error) {
       console.error("Error fetching liked songs:", error);

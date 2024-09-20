@@ -111,14 +111,14 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
   }, [clicked])
   useEffect(e => {
     if (type === 'track') {
-      getLikedSongs();
+      // getLikedSongs();
     }
   }, [])
   useEffect(e => {
     if (!(type === 'track' && (now_playing_id === id || liked === null))) {
       return;
     }
-    getLikedSongs();
+    // getLikedSongs();
   }, [now_playing_id])
   return <RecoilRoot>
     <S.PlayAtom>

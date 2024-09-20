@@ -24,7 +24,7 @@
     "react-dom": "^18.2.0",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
-    "styled-components": "^6.0.7",
+    "styled-components": "6.0.7",
     "youtube-search-api": "^1.2.1",
     "ytdl-core": "^4.11.5",
     "zustand": "^4.5.2"
