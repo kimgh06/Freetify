@@ -8,13 +8,13 @@ import { AccessToken, AddbuttonIndex, NowPlayingId } from '@/app/recoilStates';
 
 const url = 'https://api.spotify.com/v1';
 
-export default function PlaylistAtom({ like, index, img, title, artist, id, type, playingtime, artistId, isInPlay, album, paramId }) {
+export default function PlaylistAtom({ index, img, title, artist, id, type, playingtime, artistId, isInPlay, album, paramId }) {
   const [toggle, setToggle] = useState(isInPlay);
   const [clicked, setClicked] = useRecoilState(AddbuttonIndex);
   const [input, setInput] = useState(false);
   const [allList, setAllList] = useState([{}]);
   const [now_playing_id, setNow_playing_id] = useRecoilState(NowPlayingId);
-  const [liked, setLiked] = useState(like);
+  const [liked, setLiked] = useState(null);
 
   const getLikedSongs = async () => {
     axios.get('/api/likesong?song_id=' + id,
@@ -109,6 +109,17 @@ export default function PlaylistAtom({ like, index, img, title, artist, id, type
     }
     setInput(false)
   }, [clicked])
+  useEffect(e => {
+    if (type === 'track') {
+      getLikedSongs();
+    }
+  }, [])
+  useEffect(e => {
+    if (!(type === 'track' && (now_playing_id === id || liked === null))) {
+      return;
+    }
+    getLikedSongs();
+  }, [now_playing_id])
   return <RecoilRoot>
     <S.PlayAtom>
       {type === 'track' && <S.PlayButton onClick={e => {

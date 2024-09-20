@@ -23,6 +23,16 @@ export async function GET(req) { //좋아하는 곡 가져오기
   }
 }
 
+export async function PATCH(req) {
+  const Auth = jwt.verify(req.headers.get('Authorization'), secret);
+  let query = `select song_id from hearts where user_id = ${Auth['user_id']}`;
+  return await Connection.query(query).then(e => {
+    return NextResponse.json({ res: e[0] });
+  }).catch(e => {
+    return NextResponse.json({ msg: e }, { status: 500 });
+  });
+}
+
 export async function POST(req) { //좋아하는 곡 등록
   const Auth = jwt.verify(req.headers.get('Authorization'), secret);
   const { song_id } = await req.json();

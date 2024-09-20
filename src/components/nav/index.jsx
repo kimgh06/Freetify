@@ -80,6 +80,7 @@ export default function Navi() {
       console.error("Error fetching playlists:", error);
     }
   };
+
   useEffect(e => {
     visit();
     refreshAll();

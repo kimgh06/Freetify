@@ -13,9 +13,6 @@ export const Profile = styled.div`
       margin: auto;
       text-align: center;
     }
+    margin-bottom: 200px;
   }
-`
-
-export const PaddingBox = styled.div`
-  height: 200px;
 `
