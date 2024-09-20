@@ -7,9 +7,9 @@ export const PlayAtom = styled.div`
   display: flex;
   color: black;
   width: 36vw;
-  min-width: 320px;
+  min-width: 360px;
   border: 4px solid lightgray;
-  padding: 5px 15px;
+  padding: 5px 10px;
   color: #ffffff;
   border-radius: 5px;
   justify-content: space-between;
@@ -71,11 +71,6 @@ export const PlayAtom = styled.div`
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    button{
-      cursor: pointer;
-      min-width: 25px;
-      min-height: 25px;
-    }
     .isInPlay{
       margin: 5px 0;
       cursor: pointer;
@@ -144,4 +139,22 @@ export const PlayAtom = styled.div`
       }
     }
   }
+`
+
+export const PlayButton = styled.button`
+  cursor: pointer;
+  font-size:25px;
+  min-width: 40px;
+  min-height: 40px;
+  text-align: center;
+`
+
+export const LikedButton = styled.button`
+  cursor: pointer;
+  font-size:20px;
+  /* min-width: 40px; */
+  /* min-height: 40px; */
+  text-align: center;
+  background-color: rgba(0,0,0,0);
+  border: none;
 `

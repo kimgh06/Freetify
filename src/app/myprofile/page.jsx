@@ -17,7 +17,34 @@ export default function App() {
 
 function InnerComponent() {
   const { playlists, setPlaylists } = PlaylistsStore();
-  const [username, setUsername] = useState(''); // Initial state is an empty string
+  const [username, setUsername] = useState('');
+  const [likedSong, setLikedSong] = useState([]);
+
+  const getAllPlaylist = async () => {
+    try {
+      const response = await axios.get('/api/playlist', {
+        headers: {
+          'Authorization': localStorage.getItem('user_access')
+        }
+      });
+      setPlaylists(response.data.res);
+    } catch (error) {
+      console.error("Error fetching playlists:", error);
+    }
+  };
+
+  const getLikedSongs = async () => {
+    try {
+      const response = await axios.get('/api/likesong', {
+        headers: {
+          'Authorization': localStorage.getItem('user_access')
+        }
+      });
+      setLikedSong(response.data.res);
+    } catch (error) {
+      console.error("Error fetching liked songs:", error);
+    }
+  }
 
   useEffect(() => {
     const nickname = localStorage.getItem('user_nickname');
@@ -26,21 +53,8 @@ function InnerComponent() {
       return;
     }
     setUsername(nickname);
-
-    const getAllPlaylist = async () => {
-      try {
-        const response = await axios.get('/api/playlist', {
-          headers: {
-            'Authorization': localStorage.getItem('user_access')
-          }
-        });
-        setPlaylists(response.data.res);
-      } catch (error) {
-        console.error("Error fetching playlists:", error);
-      }
-    };
-
     getAllPlaylist();
+    getLikedSongs();
   }, []);
 
   return <>
@@ -58,6 +72,19 @@ function InnerComponent() {
               title={i.playlist_id}
               type="playlist"
               id={i.playlist_id}
+            />
+          ))
+          : <h2>Loading</h2>}
+        <h1>Liked Songs</h1>
+        {likedSong.length > 0
+          ? likedSong.map((i, n) => (
+            <PlaylistAtom
+              key={n}
+              index={n}
+              artist={i.artist}
+              title={i.title}
+              type="track"
+              id={i.id}
             />
           ))
           : <h2>Loading</h2>}

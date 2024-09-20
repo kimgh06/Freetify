@@ -4,18 +4,52 @@ import * as S from './style';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { RecoilRoot, useRecoilState } from 'recoil';
-import { AddbuttonIndex, NowPlayingId } from '@/app/recoilStates';
+import { AccessToken, AddbuttonIndex, NowPlayingId } from '@/app/recoilStates';
 
 const url = 'https://api.spotify.com/v1';
 
-export default function PlaylistAtom({ index, img, title, artist, id, type, playingtime, artistId, isInPlay, album, paramId }) {
+export default function PlaylistAtom({ like, index, img, title, artist, id, type, playingtime, artistId, isInPlay, album, paramId }) {
   const [toggle, setToggle] = useState(isInPlay);
   const [clicked, setClicked] = useRecoilState(AddbuttonIndex);
   const [input, setInput] = useState(false);
   const [allList, setAllList] = useState([{}]);
   const [now_playing_id, setNow_playing_id] = useRecoilState(NowPlayingId);
+  const [liked, setLiked] = useState(like);
+
+  const getLikedSongs = async () => {
+    axios.get('/api/likesong?song_id=' + id,
+      { headers: { 'Authorization': localStorage.getItem("user_access") } })
+      .then(e => {
+        setLiked(e.data.res[id]);
+      }).catch(e => {
+        console.log(e)
+      })
+  }
+
+  const registerLikedSong = async () => {
+    axios.post('/api/likesong', { song_id: id },
+      { headers: { 'Authorization': localStorage.getItem("user_access") } })
+      .then(e => {
+        getLikedSongs()
+      }).catch(e => {
+        console.log(e)
+      })
+  }
+
+  const deleteLikedSong = async () => {
+    axios.delete('/api/likesong', {
+      headers: { 'Authorization': localStorage.getItem("user_access") },
+      data: { song_id: id }
+    })
+      .then(e => {
+        getLikedSongs()
+      }).catch(e => {
+        console.log(e)
+      })
+  }
+
   const getMusicAnalsisData = async e => {
-    await axios.get(`${url}/audio-analysis/${id}`, { headers: { Authorization: `Bearer ${localStorage.getItem('access')}` } }).then(e => {
+    await axios.get(`${url}/audio-analysis/${id}`, { headers: { Authorization: access } }).then(e => {
       console.log(e.data);
     }).catch(e => {
       console.log(e);
@@ -77,6 +111,15 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
   }, [clicked])
   return <RecoilRoot>
     <S.PlayAtom>
+      {type === 'track' && <S.PlayButton onClick={e => {
+        setNow_playing_id(id);
+        const path = window.location.pathname;
+        if (path === '/search') {
+          localStorage.setItem('now_index_in_tracks', 0);
+          return;
+        }
+        localStorage.setItem('now_index_in_tracks', index);
+      }}>{now_playing_id === id ? '⏸' : '▶'}</S.PlayButton>}
       <img src={img} alt="" onClick={e => {
         getMusicAnalsisData();
       }} />
@@ -94,15 +137,13 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
         </div>
       </div>
       {type === 'track' && <div className='audio'>
-        <button onClick={e => {
-          setNow_playing_id(id);
-          const path = window.location.pathname;
-          if (path === '/search') {
-            localStorage.setItem('now_index_in_tracks', 0);
-            return;
-          }
-          localStorage.setItem('now_index_in_tracks', index);
-        }}>{now_playing_id === id ? '⏸' : '▶'}</button>
+        {type !== 'playlist' && (liked ? <S.LikedButton onClick={deleteLikedSong}>
+          ♥
+        </S.LikedButton> :
+          <S.LikedButton onClick={registerLikedSong}>
+            ♡
+          </S.LikedButton>
+        )}
         {type === "track" && <div className='isInPlay'>
           <span onClick={e => {
             if (!localStorage.getItem('user_access')) {
