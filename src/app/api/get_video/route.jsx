@@ -1,4 +1,4 @@
-import ytdl from "@ybd-project/ytdl-core";
+import { YtdlCore } from "@ybd-project/ytdl-core";
 import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
 import axios from "axios";
@@ -80,18 +80,6 @@ export async function GET(req, response) {
           url = item.id;
           break;
         }
-
-        // const itemList = item.title.split('');
-        // let cnt = 0;
-        // for (let j = 0; j < itemList.length; j++) {
-        //   for (let k = 0; k < titleList.length; k++) {
-        //     if (titleList[k] === itemList[j]) {
-        //       cnt++;
-        //       break;
-        //     }
-        //   }
-        // }
-        // cntList.push(cnt);
       }
     }
     if (!url) {
@@ -112,15 +100,15 @@ export async function GET(req, response) {
 
     try {
       if (url) {
-        const poToken = process.env.NEXT_PUBLIC_POTOKEN
-        const visitorData = process.env.NEXT_PUBLIC_VISITOR_DATA
-
-        const stream = ytdl(`https://youtube.com/watch?v=${url}`, {
+        const ytdl = new YtdlCore({
+          poToken: process.env.NEXT_PUBLIC_POTOKEN,
+          visitorData: process.env.NEXT_PUBLIC_VISITOR_DATA
+        });
+        const info = await ytdl.getFullInfo(url);
+        const stream = ytdl.downloadFromInfo(info, {
           filter: 'audioonly',
           quality: 'highestaudio',
-          format: 'mp3',
-          poToken,
-          visitorData
+          format: 'mp3'
         }).on('error', e => {
           console.log(e, 'error at get_video')
           throw e;
