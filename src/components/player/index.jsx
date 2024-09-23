@@ -230,7 +230,11 @@ export default function Player() {
     localStorage.setItem('play', play);
     if (play && audio.current.paused) {
       let promise = audio.current.play();
-      promise.catch(err => { console.log(err); setPlay(e => false) });
+      promise.catch(err => {
+        console.log(err);
+        getMusicUrl(id)
+        setPlay(e => false)
+      });
       return;
     }
     audio.current.pause();
