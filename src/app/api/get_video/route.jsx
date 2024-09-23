@@ -102,9 +102,20 @@ export async function GET(req, response) {
       if (url) {
         const poToken = process.env.NEXT_PUBLIC_POTOKEN
         const visitorData = process.env.NEXT_PUBLIC_VISITOR_DATA
+
+        const accessToken = process.env.NEXT_PUBLIC_YT_ACCESS
+        const refreshToken = process.env.NEXT_PUBLIC_YT_REFRESH
+        const expiryDate = process.env.NEXT_PUBLIC_YT_EXPIRE
+
+        const oauth2 = new YtdlCore.OAuth2({
+          accessToken,
+          refreshToken,
+          expiryDate
+        })
         const ytdl = new YtdlCore({
           poToken,
-          visitorData
+          visitorData,
+          oauth2
         });
         const info = await ytdl.getFullInfo(url);
         const stream = ytdl.downloadFromInfo(info, {
