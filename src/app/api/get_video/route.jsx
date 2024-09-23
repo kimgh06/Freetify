@@ -100,9 +100,11 @@ export async function GET(req, response) {
 
     try {
       if (url) {
+        const poToken = process.env.NEXT_PUBLIC_POTOKEN
+        const visitorData = process.env.NEXT_PUBLIC_VISITOR_DATA
         const ytdl = new YtdlCore({
-          poToken: process.env.NEXT_PUBLIC_POTOKEN,
-          visitorData: process.env.NEXT_PUBLIC_VISITOR_DATA
+          poToken,
+          visitorData
         });
         const info = await ytdl.getFullInfo(url);
         const stream = ytdl.downloadFromInfo(info, {
