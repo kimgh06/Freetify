@@ -110,12 +110,14 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
     setInput(false)
   }, [clicked])
   useEffect(e => {
-    if (type === 'track') {
+    const nickname = localStorage.getItem('user_nickname');
+    if (nickname && type === 'track') {
       getLikedSongs();
     }
   }, [])
   useEffect(e => {
-    if (!(type === 'track' && (now_playing_id === id || liked === null))) {
+    const nickname = localStorage.getItem('user_nickname');
+    if (!(nickname && type === 'track' && (now_playing_id === id || liked === null))) {
       return;
     }
     getLikedSongs();
@@ -148,7 +150,7 @@ export default function PlaylistAtom({ index, img, title, artist, id, type, play
         </div>
       </div>
       {type === 'track' && <div className='audio'>
-        {type !== 'playlist' && (liked ? <S.LikedButton onClick={deleteLikedSong}>
+        {localStorage.getItem('user_nickname') && type !== 'playlist' && (liked ? <S.LikedButton onClick={deleteLikedSong}>
           ♥
         </S.LikedButton> :
           <S.LikedButton onClick={registerLikedSong}>

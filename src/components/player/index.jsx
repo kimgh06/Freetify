@@ -230,7 +230,6 @@ export default function Player() {
     localStorage.setItem('play', play);
     if (play && audio.current.paused) {
       let promise = audio.current.play();
-      setPlay(e => false)
       promise.catch(err => {
         console.log(err);
         getMusicUrl(id).then(() => {
@@ -240,7 +239,9 @@ export default function Player() {
           }
           audio.current.src = cached_url[`${id}`];
           setPlay(true);
+          return;
         })
+        setPlay(false)
       });
       return;
     }
