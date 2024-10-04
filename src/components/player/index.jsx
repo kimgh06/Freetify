@@ -74,10 +74,10 @@ export default function Player() {
       rq.onupgradeneeded = (event) => {
         const db = event.target.result;
 
-        if (!db.objectStoreNames.contains("blob")) {
-          db.createObjectStore("blob", { keyPath: "id" });
-          console.log("created object store");
-        }
+        // if (!db.objectStoreNames.contains("blob")) {
+        db.createObjectStore("blob", { keyPath: "id" });
+        console.log("created object store");
+        // }
       };
 
       rq.onsuccess = (e) => {
