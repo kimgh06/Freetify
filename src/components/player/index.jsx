@@ -10,11 +10,6 @@ import { MenuComponent } from './menucomponent';
 
 export default function Player() {
   const audio = useRef(null);
-  const [id, setId] = useRecoilState(NowPlayingId);
-  const [src, setSrc] = useRecoilState(AudioSrc);
-  const [access, setAccess] = useRecoilState(AccessToken);
-  const [currentT, setCurrentT] = useRecoilState(PlayingCurrentTime);
-  const [volume, setVolume] = useRecoilState(Volume);
   const [modify, setModify] = useState(false);
   const [info, setInfo] = useState({});
   const [play, setPlay] = useState(false);
@@ -22,7 +17,37 @@ export default function Player() {
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
 
+  const [id, setId] = useRecoilState(NowPlayingId);
+  const [src, setSrc] = useRecoilState(AudioSrc);
+  const [access, setAccess] = useRecoilState(AccessToken);
+  const [currentT, setCurrentT] = useRecoilState(PlayingCurrentTime);
+  const [volume, setVolume] = useRecoilState(Volume);
   const [popup, setPopup] = useRecoilState(AddbuttonIndex);
+
+  const blob2base64 = blob => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = reject
+    });
+  }
+
+  const base642blob = base64 => {
+    const decompressed = Lzstring.decompressFromBase64(base64);
+    const byteCharacters = atob(decompressed);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: 'audio/mp3' });
+  }
+
   const getMusicUrl = async (id) => {
     if (!id) {
       return;
@@ -34,17 +59,34 @@ export default function Player() {
         'user_access': localStorage.getItem('user_access') || null
       }
     }).then(e => {
-      let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
-      if (cached_url[`${id}`]) {
-        return;
-      }
-      const url = URL.createObjectURL(e.data);
-      const caching = new Audio(url)
-      caching.play()
-        .then(e => caching.pause())
+      // let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
+      // if (cached_url[`${id}`]) {
+      //   return;
+      // }
+      // const new_blob = e.data;
+      // const url = URL.createObjectURL(new_blob);
+      // const caching = new Audio(url)
+      // caching.play()
+      //   .then(e => caching.pause())
+      // cached_url[`${id}`] = url;
 
-      cached_url[`${id}`] = url;
-      localStorage.setItem('cached_url', JSON.stringify(cached_url));
+      const rq = indexedDB.open('caching_blob')
+      rq.onupgradeneeded = (event) => {
+        const db = event.target.result;
+
+        if (!db.objectStoreNames.contains("blob")) {
+          db.createObjectStore("blob", { keyPath: "id" });
+          console.log("created object store");
+        }
+      };
+
+      rq.onsuccess = (e) => {
+        const db = e.target.result;
+        db.transaction('blob', 'readwrite')
+          .objectStore('blob')
+          .add({ id, data: new_blob });
+      }
+      // localStorage.setItem('cached_url', JSON.stringify(cached_url));
     }).catch(e => {
       console.log(e.message, id);
     })
@@ -122,26 +164,51 @@ export default function Player() {
       }
 
       audio.current.src = null;
-      let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
-      let url = cached_url[`${id}`];
-      if (url) {
-        const spl = audio.current.src.split("/")
-        if (spl[spl.length - 1] !== 'null' && localStorage.getItem('now_playing_id') === id) {
-          return;
-        }
-        audio.current.src = url
-      } else {
-        await getMusicUrl(id).then(() => {
-          let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
-          let new_src = cached_url[`${id}`]
-          audio.current.src = new_src;
-        });
-      }
-      audio.current.play();
-      setPlay(true);
+      // let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
+      // let url = cached_url[`${id}`];
+      let url;
 
-      setSrc(audio.current.src)
-      localStorage.setItem('now_playing_id', id);
+      const rq = indexedDB.open('caching_blob')
+      rq.onsuccess = (e) => {
+        const db = e.target.result;
+        let rq = db.transaction('blob', 'readwrite')
+          .objectStore('blob')
+          .get(id)
+        rq.onsuccess = async event => {
+          url = URL.createObjectURL(event.target.result['data']);
+          console.log(url)
+
+          if (url) {
+            const spl = audio.current.src.split("/")
+            if (spl[spl.length - 1] !== 'null' && localStorage.getItem('now_playing_id') === id) {
+              return;
+            }
+            audio.current.src = url
+          } else {
+            await getMusicUrl(id).then(() => {
+              // let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
+              // let new_src = cached_url[`${id}`]
+              const rq = indexedDB.open('caching_blob')
+              rq.onsuccess = (e) => {
+                const db = e.target.result;
+                let rq = db.transaction('blob', 'readwrite')
+                  .objectStore('blob')
+                  .get(id)
+                rq.onsuccess = event => {
+                  url = URL.createObjectURL(event.target.result['data']);
+                  console.log("new url", url)
+                }
+              }
+              audio.current.src = url;
+            });
+          }
+          audio.current.play();
+          setPlay(true);
+
+          setSrc(audio.current.src)
+          localStorage.setItem('now_playing_id', id);
+        }
+      }
 
       let recentList = JSON.stringify(localStorage.getItem('recent_track_list'))
         .replace(/\\/g, '').replace(/"/g, '');
@@ -173,11 +240,23 @@ export default function Player() {
         return;
       }
       localStorage.setItem('now_index_in_tracks', index);
-      url = cached_url[list[index + 1]];
-      if (url) {
-        return;
+      // url = cached_url[list[index + 1]];
+
+      const new_rq = indexedDB.open('caching_blob')
+      new_rq.onsuccess = (e) => {
+        const db = e.target.result;
+        let rq = db.transaction('blob', 'readwrite')
+          .objectStore('blob')
+          .get(list[index + 1])
+        rq.onsuccess = event => {
+          url = URL.createObjectURL(event.target.result['data']);
+          console.log(url)
+          if (url) {
+            return;
+          }
+          getMusicUrl(list[index + 1]);
+        }
       }
-      getMusicUrl(list[index + 1]);
     } catch (e) {
       console.log(e)
     }
@@ -233,11 +312,20 @@ export default function Player() {
       promise.catch(err => {
         console.log(err);
         getMusicUrl(id).then(() => {
-          let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
-          if (cached_url[`${id}`]) {
-            return;
+          let url;
+          const rq = indexedDB.open('caching_blob')
+          rq.onsuccess = (e) => {
+            const db = e.target.result;
+            let rq = db.transaction('blob', 'readwrite')
+              .objectStore('blob')
+              .get(id)
+            rq.onsuccess = event => {
+              url = URL.createObjectURL(event.target.result['data']);
+              console.log(url)
+            }
           }
-          audio.current.src = cached_url[`${id}`];
+
+          audio.current.src = url;
           setPlay(true);
           return;
         })
