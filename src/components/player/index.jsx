@@ -8,6 +8,8 @@ import Link from 'next/link';
 import Lyric from '../lyric';
 import { MenuComponent } from './menucomponent';
 
+let indexedDBVersion = 2
+
 export default function Player() {
   const audio = useRef(null);
   const [modify, setModify] = useState(false);
@@ -63,21 +65,21 @@ export default function Player() {
       // if (cached_url[`${id}`]) {
       //   return;
       // }
-      // const new_blob = e.data;
+      const new_blob = e.data;
       // const url = URL.createObjectURL(new_blob);
       // const caching = new Audio(url)
       // caching.play()
       //   .then(e => caching.pause())
       // cached_url[`${id}`] = url;
 
-      const rq = indexedDB.open('caching_blob')
+      const rq = indexedDB.open('caching_blob', indexedDBVersion);
       rq.onupgradeneeded = (event) => {
         const db = event.target.result;
 
-        // if (!db.objectStoreNames.contains("blob")) {
-        db.createObjectStore("blob", { keyPath: "id" });
-        console.log("created object store");
-        // }
+        if (!db.objectStoreNames.contains("blob")) {
+          db.createObjectStore("blob", { keyPath: "id" });
+          console.log("created object store");
+        }
       };
 
       rq.onsuccess = (e) => {
@@ -157,8 +159,8 @@ export default function Player() {
       }
       setInfo(music_data);
       setDurationT(music_data.duration_ms)
-      const expired = await CheckExpiredBlobUrl(src); //true 만료됨
-      if (id === localStorage.getItem('now_playing_id') && !expired) { // 토큰이 바뀌었을 떄
+      // const expired = await CheckExpiredBlobUrl(src); //true 만료됨
+      if (id === localStorage.getItem('now_playing_id')) { // 토큰이 바뀌었을 떄
         audio.current.currentTime = currentT + 0.2;
         return;
       }
@@ -168,34 +170,52 @@ export default function Player() {
       // let url = cached_url[`${id}`];
       let url;
 
-      const rq = indexedDB.open('caching_blob')
+      const rq = indexedDB.open('caching_blob', indexedDBVersion)
+
+      rq.onupgradeneeded = (event) => {
+        const db = event.target.result;
+
+        if (!db.objectStoreNames.contains("blob")) {
+          db.createObjectStore("blob", { keyPath: "id" });
+          console.log("created object store");
+        }
+      };
       rq.onsuccess = (e) => {
         const db = e.target.result;
         let rq = db.transaction('blob', 'readwrite')
           .objectStore('blob')
           .get(id)
         rq.onsuccess = async event => {
-          url = URL.createObjectURL(event.target.result['data']);
-          console.log(url)
+          const data = event.target.result?.data;
 
-          if (url) {
+          if (data) {
             const spl = audio.current.src.split("/")
             if (spl[spl.length - 1] !== 'null' && localStorage.getItem('now_playing_id') === id) {
               return;
             }
+            url = URL.createObjectURL(data);
             audio.current.src = url
           } else {
             await getMusicUrl(id).then(() => {
               // let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
               // let new_src = cached_url[`${id}`]
-              const rq = indexedDB.open('caching_blob')
+              const rq = indexedDB.open('caching_blob', indexedDBVersion)
+
+              rq.onupgradeneeded = (event) => {
+                const db = event.target.result;
+
+                if (!db.objectStoreNames.contains("blob")) {
+                  db.createObjectStore("blob", { keyPath: "id" });
+                  console.log("created object store");
+                }
+              };
               rq.onsuccess = (e) => {
                 const db = e.target.result;
                 let rq = db.transaction('blob', 'readwrite')
                   .objectStore('blob')
                   .get(id)
                 rq.onsuccess = event => {
-                  url = URL.createObjectURL(event.target.result['data']);
+                  url = URL.createObjectURL(event.target.result?.data);
                   console.log("new url", url)
                 }
               }
@@ -242,16 +262,18 @@ export default function Player() {
       localStorage.setItem('now_index_in_tracks', index);
       // url = cached_url[list[index + 1]];
 
-      const new_rq = indexedDB.open('caching_blob')
+      const new_rq = indexedDB.open('caching_blob', indexedDBVersion)
+
       new_rq.onsuccess = (e) => {
         const db = e.target.result;
         let rq = db.transaction('blob', 'readwrite')
           .objectStore('blob')
           .get(list[index + 1])
         rq.onsuccess = event => {
-          url = URL.createObjectURL(event.target.result['data']);
-          console.log(url)
-          if (url) {
+          const data = event.target.result?.data;
+          if (data) {
+            url = URL.createObjectURL(data);
+            console.log(url)
             return;
           }
           getMusicUrl(list[index + 1]);
@@ -298,8 +320,23 @@ export default function Player() {
 
   useEffect(e => {
     if (!audio.current.src) {
-      audio.current.src = src;
-      return;
+      // audio.current.src = src;
+      // return;
+
+      const rq = indexedDB.open('caching_blob', indexedDBVersion)
+
+      rq.onsuccess = (e) => {
+        const db = e.target.result;
+        let rq = db.transaction('blob', 'readwrite')
+          .objectStore('blob')
+          .get(id)
+        rq.onsuccess = event => {
+          const url = URL.createObjectURL(event.target.result?.data);
+          console.log(url)
+          audio.current.src = url;
+          return;
+        }
+      }
     }
     if (modify) {
       audio.current.pause();
@@ -310,24 +347,50 @@ export default function Player() {
     if (play && audio.current.paused) {
       let promise = audio.current.play();
       promise.catch(err => {
+        let url;
         console.log(err);
+
+        const rq = indexedDB.open('caching_blob', indexedDBVersion)
+
+        rq.onsuccess = (e) => {
+          const db = e.target.result;
+          let rq = db.transaction('blob', 'readwrite')
+            .objectStore('blob')
+            .get(id)
+          rq.onsuccess = event => {
+            url = URL.createObjectURL(event.target.result?.data);
+            audio.current.src = url;
+            setPlay(true);
+            return;
+          }
+        }
+
+        if (!url) {
+          return;
+        }
         getMusicUrl(id).then(() => {
-          let url;
-          const rq = indexedDB.open('caching_blob')
+          const rq = indexedDB.open('caching_blob', indexedDBVersion)
+
+          rq.onupgradeneeded = (event) => {
+            const db = event.target.result;
+
+            if (!db.objectStoreNames.contains("blob")) {
+              db.createObjectStore("blob", { keyPath: "id" });
+              console.log("created object store");
+            }
+          };
           rq.onsuccess = (e) => {
             const db = e.target.result;
             let rq = db.transaction('blob', 'readwrite')
               .objectStore('blob')
               .get(id)
             rq.onsuccess = event => {
-              url = URL.createObjectURL(event.target.result['data']);
-              console.log(url)
+              url = URL.createObjectURL(event.target.result?.data);
+              audio.current.src = url;
+              setPlay(true);
+              return;
             }
           }
-
-          audio.current.src = url;
-          setPlay(true);
-          return;
         })
         setPlay(false)
       });
@@ -338,7 +401,7 @@ export default function Player() {
 
   useEffect(e => {
     if (typeof window !== undefined) {
-      CheckExpiredBlobUrl(src);
+      // CheckExpiredBlobUrl(src);
       setInnerWidth(window.innerWidth);
       setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
       window.addEventListener('resize', e => {
