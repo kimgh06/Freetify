@@ -8,7 +8,7 @@ import Link from 'next/link';
 import Lyric from '../lyric';
 import { MenuComponent } from './menucomponent';
 
-let indexedDBVersion = 2
+let indexedDBVersion = 3;
 
 export default function Player() {
   const audio = useRef(null);
@@ -25,30 +25,6 @@ export default function Player() {
   const [currentT, setCurrentT] = useRecoilState(PlayingCurrentTime);
   const [volume, setVolume] = useRecoilState(Volume);
   const [popup, setPopup] = useRecoilState(AddbuttonIndex);
-
-  const blob2base64 = blob => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(blob);
-      reader.onloadend = () => {
-        resolve(reader.result);
-      };
-      reader.onerror = reject
-    });
-  }
-
-  const base642blob = base64 => {
-    const decompressed = Lzstring.decompressFromBase64(base64);
-    const byteCharacters = atob(decompressed);
-    const byteNumbers = new Array(byteCharacters.length);
-
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-
-    const byteArray = new Uint8Array(byteNumbers);
-    return new Blob([byteArray], { type: 'audio/mp3' });
-  }
 
   const getMusicUrl = async (id) => {
     if (!id) {
@@ -72,6 +48,7 @@ export default function Player() {
       //   .then(e => caching.pause())
       // cached_url[`${id}`] = url;
 
+      // saving blob
       const rq = indexedDB.open('caching_blob', indexedDBVersion);
       rq.onupgradeneeded = (event) => {
         const db = event.target.result;
@@ -88,7 +65,7 @@ export default function Player() {
           .objectStore('blob')
           .add({ id, data: new_blob });
       }
-      // localStorage.setItem('cached_url', JSON.stringify(cached_url));
+      localStorage.setItem('cached_url', JSON.stringify(cached_url));
     }).catch(e => {
       console.log(e.message, id);
     })
@@ -201,14 +178,14 @@ export default function Player() {
               // let new_src = cached_url[`${id}`]
               const rq = indexedDB.open('caching_blob', indexedDBVersion)
 
-              rq.onupgradeneeded = (event) => {
-                const db = event.target.result;
+              // rq.onupgradeneeded = (event) => {
+              //   const db = event.target.result;
 
-                if (!db.objectStoreNames.contains("blob")) {
-                  db.createObjectStore("blob", { keyPath: "id" });
-                  console.log("created object store");
-                }
-              };
+              //   if (!db.objectStoreNames.contains("blob")) {
+              //     db.createObjectStore("blob", { keyPath: "id" });
+              //     console.log("created object store");
+              //   }
+              // };
               rq.onsuccess = (e) => {
                 const db = e.target.result;
                 let rq = db.transaction('blob', 'readwrite')
@@ -216,10 +193,11 @@ export default function Player() {
                   .get(id)
                 rq.onsuccess = event => {
                   url = URL.createObjectURL(event.target.result?.data);
+                  audio.current.src = url;
+                  audio.current.play();
                   console.log("new url", url)
                 }
               }
-              audio.current.src = url;
             });
           }
           audio.current.play();
@@ -263,6 +241,15 @@ export default function Player() {
       // url = cached_url[list[index + 1]];
 
       const new_rq = indexedDB.open('caching_blob', indexedDBVersion)
+
+      // new_rq.onupgradeneeded = (event) => {
+      //   const db = event.target.result;
+
+      //   if (!db.objectStoreNames.contains("blob")) {
+      //     db.createObjectStore("blob", { keyPath: "id" });
+      //     console.log("created object store");
+      //   }
+      // }
 
       new_rq.onsuccess = (e) => {
         const db = e.target.result;
@@ -324,6 +311,15 @@ export default function Player() {
       // return;
 
       const rq = indexedDB.open('caching_blob', indexedDBVersion)
+      rq.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        localStorage.clear();
+
+        if (!db.objectStoreNames.contains("blob")) {
+          db.createObjectStore("blob", { keyPath: "id" });
+          console.log("created object store");
+        }
+      }
 
       rq.onsuccess = (e) => {
         const db = e.target.result;
@@ -331,6 +327,10 @@ export default function Player() {
           .objectStore('blob')
           .get(id)
         rq.onsuccess = event => {
+          if (!event.target.result) {
+            getMusicUrl(id);
+            return;
+          }
           const url = URL.createObjectURL(event.target.result?.data);
           console.log(url)
           audio.current.src = url;
@@ -349,8 +349,16 @@ export default function Player() {
       promise.catch(err => {
         let url;
         console.log(err);
-
         const rq = indexedDB.open('caching_blob', indexedDBVersion)
+
+        // rq.onupgradeneeded = (event) => {
+        //   const db = event.target.result;
+
+        //   if (!db.objectStoreNames.contains("blob")) {
+        //     db.createObjectStore("blob", { keyPath: "id" });
+        //     console.log("created object store");
+        //   }
+        // }
 
         rq.onsuccess = (e) => {
           const db = e.target.result;
@@ -358,6 +366,10 @@ export default function Player() {
             .objectStore('blob')
             .get(id)
           rq.onsuccess = event => {
+            if (!event.target.result) {
+              getMusicUrl(id);
+              return;
+            }
             url = URL.createObjectURL(event.target.result?.data);
             audio.current.src = url;
             setPlay(true);
@@ -371,14 +383,14 @@ export default function Player() {
         getMusicUrl(id).then(() => {
           const rq = indexedDB.open('caching_blob', indexedDBVersion)
 
-          rq.onupgradeneeded = (event) => {
-            const db = event.target.result;
+          // rq.onupgradeneeded = (event) => {
+          //   const db = event.target.result;
 
-            if (!db.objectStoreNames.contains("blob")) {
-              db.createObjectStore("blob", { keyPath: "id" });
-              console.log("created object store");
-            }
-          };
+          //   if (!db.objectStoreNames.contains("blob")) {
+          //     db.createObjectStore("blob", { keyPath: "id" });
+          //     console.log("created object store");
+          //   }
+          // };
           rq.onsuccess = (e) => {
             const db = e.target.result;
             let rq = db.transaction('blob', 'readwrite')
