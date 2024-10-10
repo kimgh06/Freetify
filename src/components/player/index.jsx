@@ -25,11 +25,15 @@ export default function Player() {
   const [currentT, setCurrentT] = useRecoilState(PlayingCurrentTime);
   const [volume, setVolume] = useRecoilState(Volume);
   const [popup, setPopup] = useRecoilState(AddbuttonIndex);
+  const [loadingTime, setLoadingTime] = useState(false); //데이터 요청 시작시 1로 변하고 1초마다 1씩 증가
+  const [loading, setLoading] = useState(false);
 
   const getMusicUrl = async (id) => {
     if (!id) {
       return;
     }
+    setLoading(true);
+    setLoadingTime(2);
     await axios.get(`/api/get_video?songId=${id}`, {
       responseType: 'blob',
       headers: {
@@ -37,19 +41,10 @@ export default function Player() {
         'user_access': localStorage.getItem('user_access') || null
       }
     }).then(e => {
-      // let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
-      // if (cached_url[`${id}`]) {
-      //   return;
-      // }
       const new_blob = e.data;
-      // const url = URL.createObjectURL(new_blob);
-      // const caching = new Audio(url)
-      // caching.play()
-      //   .then(e => caching.pause())
-      // cached_url[`${id}`] = url;
 
       // saving blob
-      const rq = indexedDB.open('caching_blob', indexedDBVersion);
+      const rq = indexedDB.open('caching_blob', indexedDBVersion)
       rq.onupgradeneeded = (event) => {
         const db = event.target.result;
 
@@ -57,20 +52,19 @@ export default function Player() {
           db.createObjectStore("blob", { keyPath: "id" });
           console.log("created object store");
         }
-      };
-
+      }
       rq.onsuccess = (e) => {
         const db = e.target.result;
         db.transaction('blob', 'readwrite')
           .objectStore('blob')
           .add({ id, data: new_blob });
       }
-      localStorage.setItem('cached_url', JSON.stringify(cached_url));
     }).catch(e => {
       console.log(e.message, id);
     })
   }
   const recommendTracks = async e => {
+    if (!localStorage.getItem('recent_track_list')) return;
     const recentTrack = localStorage.getItem('recent_track_list').split(',').slice(-2);
     const recentArtists = localStorage.getItem('recent_artists_list').split(',').slice(-2);
     let tracklist = localStorage.getItem('TrackList').split(',');
@@ -136,35 +130,30 @@ export default function Player() {
       }
       setInfo(music_data);
       setDurationT(music_data.duration_ms)
-      // const expired = await CheckExpiredBlobUrl(src); //true 만료됨
-      if (id === localStorage.getItem('now_playing_id')) { // 토큰이 바뀌었을 떄
-        audio.current.currentTime = currentT + 0.2;
-        return;
-      }
 
       audio.current.src = null;
-      // let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
-      // let url = cached_url[`${id}`];
       let url;
 
-      const rq = indexedDB.open('caching_blob', indexedDBVersion)
-
-      rq.onupgradeneeded = (event) => {
-        const db = event.target.result;
-
-        if (!db.objectStoreNames.contains("blob")) {
-          db.createObjectStore("blob", { keyPath: "id" });
-          console.log("created object store");
-        }
-      };
+      let rq = indexedDB.open('caching_blob', indexedDBVersion)
       rq.onsuccess = (e) => {
         const db = e.target.result;
-        let rq = db.transaction('blob', 'readwrite')
+        const rq = db.transaction('blob', 'readwrite')
           .objectStore('blob')
-          .get(id)
-        rq.onsuccess = async event => {
-          const data = event.target.result?.data;
 
+        let list = localStorage.getItem("TrackList")?.split(',');
+        if (!list) {
+          localStorage.setItem('now_index_in_tracks', 0);
+          return;
+        }
+        const index = list.findIndex(e => e === id);
+        if (!(index >= 0 && index < list.length)) {
+          return;
+        }
+
+        const now = rq.get(id);
+        const next = rq.get(list[index + 1]);
+        now.onsuccess = async event => {
+          const data = event.target.result?.data;
           if (data) {
             const spl = audio.current.src.split("/")
             if (spl[spl.length - 1] !== 'null' && localStorage.getItem('now_playing_id') === id) {
@@ -172,20 +161,20 @@ export default function Player() {
             }
             url = URL.createObjectURL(data);
             audio.current.src = url
+            audio.current.load()
+
+            if (id === localStorage.getItem('now_playing_id')) { // 토큰이 바뀌었을 떄
+              audio.current.currentTime = currentT + 0.2;
+            }
+            play && audio.current.paused && audio.current.play();
+            setPlay(true);
           } else {
             await getMusicUrl(id).then(() => {
-              // let cached_url = JSON.parse(localStorage.getItem('cached_url')) || {};
-              // let new_src = cached_url[`${id}`]
+              setLoadingTime(false);
+              setLoading(false)
+
               const rq = indexedDB.open('caching_blob', indexedDBVersion)
 
-              // rq.onupgradeneeded = (event) => {
-              //   const db = event.target.result;
-
-              //   if (!db.objectStoreNames.contains("blob")) {
-              //     db.createObjectStore("blob", { keyPath: "id" });
-              //     console.log("created object store");
-              //   }
-              // };
               rq.onsuccess = (e) => {
                 const db = e.target.result;
                 let rq = db.transaction('blob', 'readwrite')
@@ -194,8 +183,18 @@ export default function Player() {
                 rq.onsuccess = event => {
                   url = URL.createObjectURL(event.target.result?.data);
                   audio.current.src = url;
-                  audio.current.play();
+                  audio.current.load();
+
+                  if (id === localStorage.getItem('now_playing_id')) { // 토큰이 바뀌었을 떄
+                    audio.current.currentTime = currentT + 0.2;
+                  }
+                  // play && audio.current.paused && as
                   console.log("new url", url)
+                  setSrc(url)
+                  localStorage.setItem('now_playing_id', id);
+
+                  audio.current.play();
+                  setPlay(true);
                 }
               }
             });
@@ -205,6 +204,14 @@ export default function Player() {
 
           setSrc(audio.current.src)
           localStorage.setItem('now_playing_id', id);
+        }
+        next.onsuccess = event => {
+          const data = event.target.result?.data;
+          if (data) {
+            url = URL.createObjectURL(data);
+            return;
+          }
+          getMusicUrl(list[index + 1]);
         }
       }
 
@@ -238,55 +245,18 @@ export default function Player() {
         return;
       }
       localStorage.setItem('now_index_in_tracks', index);
-      // url = cached_url[list[index + 1]];
-
-      const new_rq = indexedDB.open('caching_blob', indexedDBVersion)
-
-      // new_rq.onupgradeneeded = (event) => {
-      //   const db = event.target.result;
-
-      //   if (!db.objectStoreNames.contains("blob")) {
-      //     db.createObjectStore("blob", { keyPath: "id" });
-      //     console.log("created object store");
-      //   }
-      // }
-
-      new_rq.onsuccess = (e) => {
-        const db = e.target.result;
-        let rq = db.transaction('blob', 'readwrite')
-          .objectStore('blob')
-          .get(list[index + 1])
-        rq.onsuccess = event => {
-          const data = event.target.result?.data;
-          if (data) {
-            url = URL.createObjectURL(data);
-            console.log(url)
-            return;
-          }
-          getMusicUrl(list[index + 1]);
-        }
-      }
     } catch (e) {
       console.log(e)
     }
   }
-  const CheckExpiredBlobUrl = async url => { //Blob url 유효성 검사
-    if (!url && url === 'undefined') {
-      return true;
+
+  useEffect(e => {
+    if (loading) {
+      setTimeout(() => {
+        setLoadingTime(a => a + 1);
+      }, 100)
     }
-    return await fetch(url).then(e => {
-      audio.current.src = url;
-      audio.current.currentTime = 0;
-      const plays = localStorage.getItem('play') === 'true';
-      if (plays) audio.current.play();
-      setPlay(e => plays)
-      return false;
-    }).catch(e => {
-      localStorage.setItem("cached_url", JSON.stringify({}));
-      console.log("expired", e.toString())
-      return true;
-    });
-  }
+  }, [loadingTime])
 
   useEffect(e => {
     navigator.mediaSession.setActionHandler("nexttrack", NextTrack)
@@ -295,7 +265,13 @@ export default function Player() {
       setId(localStorage.getItem('now_playing_id'));
       return;
     }
-    getCurrentMusicURL();
+    audio.current.pause()
+    getCurrentMusicURL().then(e => {
+      LoadingURLFromIndexedDB(id).then(e => {
+        play && audio.current.paused && audio.current.play();
+        setPlay(true);
+      })
+    });
 
     const path = window.location.pathname;
     const tracklist = localStorage?.getItem("TrackList")?.split(',') || [];
@@ -307,9 +283,6 @@ export default function Player() {
 
   useEffect(e => {
     if (!audio.current.src) {
-      // audio.current.src = src;
-      // return;
-
       const rq = indexedDB.open('caching_blob', indexedDBVersion)
       rq.onupgradeneeded = (event) => {
         const db = event.target.result;
@@ -328,12 +301,17 @@ export default function Player() {
           .get(id)
         rq.onsuccess = event => {
           if (!event.target.result) {
-            getMusicUrl(id);
+            getMusicUrl(id).then(e => {
+              setLoadingTime(false)
+              setLoading(false)
+            })
             return;
           }
           const url = URL.createObjectURL(event.target.result?.data);
-          console.log(url)
+          console.log("not found so made", url)
           audio.current.src = url;
+          audio.current.load();
+          // audio.current.play();
           return;
         }
       }
@@ -351,15 +329,6 @@ export default function Player() {
         console.log(err);
         const rq = indexedDB.open('caching_blob', indexedDBVersion)
 
-        // rq.onupgradeneeded = (event) => {
-        //   const db = event.target.result;
-
-        //   if (!db.objectStoreNames.contains("blob")) {
-        //     db.createObjectStore("blob", { keyPath: "id" });
-        //     console.log("created object store");
-        //   }
-        // }
-
         rq.onsuccess = (e) => {
           const db = e.target.result;
           let rq = db.transaction('blob', 'readwrite')
@@ -367,12 +336,19 @@ export default function Player() {
             .get(id)
           rq.onsuccess = event => {
             if (!event.target.result) {
-              getMusicUrl(id);
+              console.log('in play not found')
+              getMusicUrl(id).then(e => {
+                setLoadingTime(false)
+                setLoading(false)
+              })
               return;
             }
             url = URL.createObjectURL(event.target.result?.data);
             audio.current.src = url;
-            setPlay(true);
+            audio.current.load();
+            // play && audio.current.paused && audio.current.play();
+
+            // setPlay(true);
             return;
           }
         }
@@ -380,40 +356,41 @@ export default function Player() {
         if (!url) {
           return;
         }
-        getMusicUrl(id).then(() => {
-          const rq = indexedDB.open('caching_blob', indexedDBVersion)
-
-          // rq.onupgradeneeded = (event) => {
-          //   const db = event.target.result;
-
-          //   if (!db.objectStoreNames.contains("blob")) {
-          //     db.createObjectStore("blob", { keyPath: "id" });
-          //     console.log("created object store");
-          //   }
-          // };
-          rq.onsuccess = (e) => {
-            const db = e.target.result;
-            let rq = db.transaction('blob', 'readwrite')
-              .objectStore('blob')
-              .get(id)
-            rq.onsuccess = event => {
-              url = URL.createObjectURL(event.target.result?.data);
-              audio.current.src = url;
-              setPlay(true);
-              return;
-            }
-          }
-        })
-        setPlay(false)
       });
       return;
     }
     audio.current.pause();
   }, [play, modify]);
 
+  const LoadingURLFromIndexedDB = async id => {
+    const rq = indexedDB.open('caching_blob', indexedDBVersion)
+    rq.onupgradeneeded = (event) => {
+      const db = event.target.result;
+
+      if (!db.objectStoreNames.contains("blob")) {
+        db.createObjectStore("blob", { keyPath: "id" });
+        console.log("created object store");
+      }
+    }
+    rq.onsuccess = (e) => {
+      const db = e.target.result;
+      let rq = db.transaction('blob', 'readwrite')
+        .objectStore('blob')
+        .get(id)
+      rq.onsuccess = event => {
+        const data = event.target.result?.data;
+        if (data) {
+          const url = URL.createObjectURL(data);
+          audio.current.src = url;
+          audio.current.load();
+          return;
+        }
+      }
+    }
+  }
+
   useEffect(e => {
     if (typeof window !== undefined) {
-      // CheckExpiredBlobUrl(src);
       setInnerWidth(window.innerWidth);
       setExtenstionMode(e => window.innerWidth >= 1200 ? true : false);
       window.addEventListener('resize', e => {
@@ -526,18 +503,25 @@ export default function Player() {
           </S.ExtensionMode_mobile>)
         }
       </div>
-      {(innerWidth >= 1200 || extensionMode) && <div className='bar_div' style={{ width: innerWidth >= 1200 ? (!extensionMode ? '80px' : '300px') : '' }} >
-        <div className='bar' style={{ width: `${currentT * 1000 / durationT * 100}%` }} />
-        <input className='bar_cursor' type='range'
-          style={{ width: innerWidth >= 1200 ? (extensionMode ? '300px' : '80px') : 'calc(88vw - 20px)' }}
-          onChange={e => {
-            setCurrentT(e.target.value / 1000)
-            audio.current.currentTime = e.target.value / 1000;
-          }}
-          onMouseDown={e => setModify(true)}
-          onMouseUp={e => setModify(false)}
-          value={currentT * 1000} min={0} max={durationT} />
-      </div>}
+      {(innerWidth >= 1200 || extensionMode) &&
+        <div className='bar_div' style={{ width: innerWidth >= 1200 ? (!extensionMode ? '80px' : '300px') : '' }} >
+          <div className='bar' style={{ width: loading ? `${loadingTime * 100 / (loadingTime + 50) * 1}%` : `${currentT * 1000 / durationT * 100}%` }} />
+          <input className='bar_cursor' type='range'
+            style={{ width: innerWidth >= 1200 ? (extensionMode ? '300px' : '80px') : 'calc(88vw - 20px)' }}
+            onChange={e => {
+              if (loading) {
+                return;
+              }
+              if (modify) {
+                audio.current.currentTime = e.target.value / 1000;
+                return;
+              }
+              setCurrentT(e.target.value / 1000)
+            }}
+            onMouseDown={e => setModify(true)}
+            onMouseUp={e => setModify(false)}
+            value={loading ? loadingTime : currentT * 1000} min={0} max={loading ? loadingTime + 50 : durationT} />
+        </div>}
       {!(innerWidth >= 1200 && !extensionMode) &&
         <span>
           {(currentT - currentT % 60) / 60}

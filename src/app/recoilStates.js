@@ -4,6 +4,7 @@ const { persistAtom } = recoilPersist()
 export const NowPlayingId = atom({
   key: 'NowPlayingId',
   default: '',
+  effects_UNSTABLE: [persistAtom]
 });
 export const AudioSrc = atom({
   key: 'AudioSrc',
