@@ -21,6 +21,14 @@ export const PlaylistsStore = create(
   )
 )
 
+export const PlayStore = create(
+  persist((set) => ({
+    play: false,
+    setPlay: (play) => set({ play })
+  }),
+    { name: 'play-store' })
+)
+
 // export const NowPlayingId = atom({
 //   key: 'NowPlayingId',
 //   default: '',

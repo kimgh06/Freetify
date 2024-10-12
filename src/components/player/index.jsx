@@ -7,14 +7,15 @@ import { AccessToken, AddbuttonIndex, AudioSrc, NowPlayingId, PlayingCurrentTime
 import Link from 'next/link';
 import Lyric from '../lyric';
 import { MenuComponent } from './menucomponent';
+import { PlayStore } from '@/app/store';
 
-let indexedDBVersion = 3;
+let indexedDBVersion = 4;
 
 export default function Player() {
   const audio = useRef(null);
   const [modify, setModify] = useState(false);
   const [info, setInfo] = useState({});
-  const [play, setPlay] = useState(false);
+  const { play, setPlay } = PlayStore();
   const [durationT, setDurationT] = useState(`0:00`);
   const [extensionMode, setExtenstionMode] = useState(false);
   const [innerWidth, setInnerWidth] = useState(null);
@@ -32,7 +33,6 @@ export default function Player() {
     if (!id) {
       return;
     }
-    setLoading(true);
     setLoadingTime(2);
     await axios.get(`/api/get_video?songId=${id}`, {
       responseType: 'blob',
@@ -133,6 +133,7 @@ export default function Player() {
 
       audio.current.src = null;
       let url;
+      setPlay(false);
 
       let rq = indexedDB.open('caching_blob', indexedDBVersion)
       rq.onsuccess = (e) => {
@@ -164,10 +165,8 @@ export default function Player() {
             audio.current.load()
 
             if (id === localStorage.getItem('now_playing_id')) { // 토큰이 바뀌었을 떄
-              audio.current.currentTime = currentT + 0.2;
+              audio.current.currentTime = currentT + 0.5;
             }
-            play && audio.current.paused && audio.current.play();
-            setPlay(true);
           } else {
             await getMusicUrl(id).then(() => {
               setLoadingTime(false);
@@ -192,15 +191,10 @@ export default function Player() {
                   console.log("new url", url)
                   setSrc(url)
                   localStorage.setItem('now_playing_id', id);
-
-                  audio.current.play();
-                  setPlay(true);
                 }
               }
             });
           }
-          audio.current.play();
-          setPlay(true);
 
           setSrc(audio.current.src)
           localStorage.setItem('now_playing_id', id);
@@ -262,14 +256,13 @@ export default function Player() {
     navigator.mediaSession.setActionHandler("nexttrack", NextTrack)
     navigator.mediaSession.setActionHandler("previoustrack", PreviousTrack)
     if (!id && src) {
+      setLoading(true);
       setId(localStorage.getItem('now_playing_id'));
       return;
     }
-    audio.current.pause()
     getCurrentMusicURL().then(e => {
       LoadingURLFromIndexedDB(id).then(e => {
-        play && audio.current.paused && audio.current.play();
-        setPlay(true);
+
       })
     });
 
@@ -322,40 +315,11 @@ export default function Player() {
     }
     document.querySelector('.play').focus()
     localStorage.setItem('play', play);
+    console.log(play)
     if (play && audio.current.paused) {
       let promise = audio.current.play();
       promise.catch(err => {
-        let url;
         console.log(err);
-        const rq = indexedDB.open('caching_blob', indexedDBVersion)
-
-        rq.onsuccess = (e) => {
-          const db = e.target.result;
-          let rq = db.transaction('blob', 'readwrite')
-            .objectStore('blob')
-            .get(id)
-          rq.onsuccess = event => {
-            if (!event.target.result) {
-              console.log('in play not found')
-              getMusicUrl(id).then(e => {
-                setLoadingTime(false)
-                setLoading(false)
-              })
-              return;
-            }
-            url = URL.createObjectURL(event.target.result?.data);
-            audio.current.src = url;
-            audio.current.load();
-            // play && audio.current.paused && audio.current.play();
-
-            // setPlay(true);
-            return;
-          }
-        }
-
-        if (!url) {
-          return;
-        }
       });
       return;
     }
@@ -383,6 +347,8 @@ export default function Player() {
           const url = URL.createObjectURL(data);
           audio.current.src = url;
           audio.current.load();
+
+          play && audio.current.paused && setPlay(true);
           return;
         }
       }
@@ -446,14 +412,14 @@ export default function Player() {
             <div className='playbutton'>
               <button className='left' onClick={PreviousTrack}>{'◀'}</button>
               <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
-                onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+                onClick={e => setPlay(!play)}>{play ? '=' : '▶'}</button>
               <button className='right' onClick={NextTrack}>{'▶'}</button>
             </div>
           </div>
           {info && <Lyric isrc={info?.external_ids?.isrc} />}
         </> : <S.Main_smaller>
           <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
-            onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+            onClick={e => setPlay(!play)}>{play ? '=' : '▶'}</button>
           <button className='left' onClick={PreviousTrack}>{'◀'}</button>
           <button className='right' onClick={NextTrack}>{'▶'}</button>
         </S.Main_smaller>)
@@ -473,7 +439,7 @@ export default function Player() {
               </div>
               <button className='left' onClick={PreviousTrack}>{'◀'}</button>
               <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
-                onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+                onClick={e => setPlay(!play)}>{play ? '=' : '▶'}</button>
               <button className='right' onClick={NextTrack}>{'▶'}</button>
             </div>
           </> : <S.ExtensionMode_mobile>
@@ -495,7 +461,8 @@ export default function Player() {
                 </div>
                 <div className='playbutton'>
                   <button className='left' onClick={PreviousTrack}>{'◀'}</button>
-                  <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }} onClick={e => setPlay(a => !a)}>{play ? '=' : '▶'}</button>
+                  <button className='play' autoFocus style={{ transform: `rotate(${play ? - 270 : 0}deg)` }}
+                    onClick={e => setPlay(!play)}>{play ? '=' : '▶'}</button>
                   <button className='right' onClick={NextTrack}>{'▶'}</button>
                 </div>
               </div>
@@ -562,7 +529,7 @@ export default function Player() {
         NextTrack();
       }
     }}
-      onLoadedData={e => localStorage.getItem('play') === 'true' && setPlay(true)}
+      // onLoadedData={e => localStorage.getItem('play') === 'true' && setPlay(true)}
       onPause={e => !modify && setPlay(false)}
       onPlay={e => setPlay(true)} />
     {popup === 'popup' && <MenuComponent albumId={info?.album?.id} title={info?.name} />}
