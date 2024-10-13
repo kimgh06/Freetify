@@ -209,10 +209,8 @@ export default function Player() {
         }
       }
 
-      let recentList = JSON.stringify(localStorage.getItem('recent_track_list'))
-        .replace(/\\/g, '').replace(/"/g, '');
-      let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list'))
-        .replace(/\\/g, '').replace(/"/g, '')
+      let recentList = JSON.stringify(localStorage.getItem('recent_track_list')).replace(/\\/g, '').replace(/"/g, '');
+      let recentArtists = JSON.stringify(localStorage.getItem('recent_artists_list')).replace(/\\/g, '').replace(/"/g, '')
       if (recentList != 'null' && recentArtists != 'null') {
         //최근 트랙
         recentList = recentList.split(',').filter(element => element !== id && element);
@@ -223,7 +221,6 @@ export default function Player() {
         recentArtists = recentArtists.split(',').filter(element => element !== music_data.artists[0].id && element);
         recentArtists.push(music_data.artists[0].id);
         localStorage.setItem('recent_artists_list', recentArtists);
-
       } else {
         localStorage.setItem('recent_track_list', [id]);
         localStorage.setItem('recent_artists_list', [music_data.artists[0].id]);
@@ -314,13 +311,10 @@ export default function Player() {
       return;
     }
     document.querySelector('.play').focus()
-    localStorage.setItem('play', play);
     console.log(play)
     if (play && audio.current.paused) {
       let promise = audio.current.play();
-      promise.catch(err => {
-        console.log(err);
-      });
+      promise.catch(err => { console.log(err); });
       return;
     }
     audio.current.pause();

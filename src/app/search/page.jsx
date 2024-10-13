@@ -68,15 +68,15 @@ function InnerContent() {
           <p>
             Tracks
           </p>
-          {tracks?.length !== 0 && tracks?.map((i, n) => <PlaylistAtom index={n} preview={i?.preview_url} playingtime={i?.duration_ms} key={n} album={i?.album} img={i.album.images[2].url} type={i?.type}
-            id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {
-              let list = [];
-              list = JSON.parse(localStorage.getItem('list'));
-              if (list === null) {
-                list = [];
-              }
-              return list.find(a => a === i?.id)
-            }} />)}
+          {tracks?.length !== 0 && tracks?.map((i, n) =>
+            <PlaylistAtom index={n} preview={i?.preview_url} playingtime={i?.duration_ms} key={n} album={i?.album} img={i.album.images[2].url} type={i?.type}
+              id={i?.id} title={i?.name} artist={i?.artists} artistId={i?.artists[0].id} isInPlay={e => {
+                if (typeof window !== 'undefined') {
+                  const list = JSON.parse(localStorage.getItem('list')) || [];
+                  return list.find(a => a === i?.id)
+                }
+                return false
+              }} />)}
         </div>
         <div className="result">
           <p>
