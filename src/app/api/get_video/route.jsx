@@ -1,9 +1,9 @@
-import { YtdlCore } from "@ybd-project/ytdl-core";
 import { NextResponse } from "next/server";
 import youtubesearchapi from 'youtube-search-api';
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import Connection from "@/app/createConnection";
+import ytdl from "@distube/ytdl-core";
 
 async function getInfo(id, access) {
   return await axios.get(`https://api.spotify.com/v1/tracks/${id}?market=KR`,
@@ -107,18 +107,18 @@ export async function GET(req, response) {
         const refreshToken = process.env.NEXT_PUBLIC_YT_REFRESH
         const expiryDate = process.env.NEXT_PUBLIC_YT_EXPIRE
 
-        const oauth2 = new YtdlCore.OAuth2({
-          accessToken,
-          refreshToken,
-          expiryDate
-        })
-        const ytdl = new YtdlCore({
-          poToken,
-          visitorData,
-          oauth2
-        });
-        const info = await ytdl.getFullInfo(url);
-        const stream = ytdl.downloadFromInfo(info, {
+        // const oauth2 = new YtdlCore.OAuth2({
+        //   accessToken,
+        //   refreshToken,
+        //   expiryDate
+        // })
+        // const ytdl = new YtdlCore({
+        //   poToken,
+        //   visitorData,
+        //   // oauth2
+        // });
+        // const info = await ytdl.getFullInfo(url);
+        const stream = ytdl(url, {
           filter: 'audioonly',
           quality: 'highestaudio',
           format: 'mp3'

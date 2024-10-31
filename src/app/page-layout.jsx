@@ -121,7 +121,7 @@ function InnerComponent() {
         <p>Now you can use music player.</p>
         I fixed some bugs and added some features. <br />
       </S.Notice>}
-      <Link className="searchButton" href={`/search`}>
+      <Link prefetch className="searchButton" href={`/search`}>
         <S.searchButton placeholder="Search" />
       </Link>
       <h1>Recommendations</h1>

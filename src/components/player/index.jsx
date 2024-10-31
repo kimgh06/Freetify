@@ -311,8 +311,7 @@ export default function Player() {
       return;
     }
     document.querySelector('.play').focus()
-    console.log(play)
-    if (play && audio.current.paused) {
+    if (play) {
       let promise = audio.current.play();
       promise.catch(err => { console.log(err); });
       return;
@@ -396,10 +395,10 @@ export default function Player() {
           <div className='main_original'>
             <img src={info?.album?.images[1]?.url} alt='img' />
             <div>
-              <Link href={`/album/${info?.album?.id}#${info?.name}`}>
+              <Link scroll={true} prefetch={true} href={`/album/${info?.album?.id}#${info?.name}`}>
                 <h2>{info?.name}</h2>
               </Link>
-              <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>
+              <Link scroll={true} prefetch={true} href={`/artist/${info?.artists && info?.artists[0]?.id} `}>
                 {info?.artists && info?.artists[0]?.name}
               </Link>
             </div>
@@ -446,10 +445,10 @@ export default function Player() {
               <img src={info?.album?.images[1]?.url} />
               <div className='texts'>
                 <div className='links'>
-                  <Link href={`/album/${info?.album?.id}#${info?.name}`}>
+                  <Link scroll={true} prefetch={true} href={`/album/${info?.album?.id}#${info?.name}`}>
                     <h2>{info?.name}</h2>
                   </Link>
-                  <Link href={`/artist/${info?.artists && info?.artists[0]?.id} `}>
+                  <Link scroll={true} prefetch={true} href={`/artist/${info?.artists && info?.artists[0]?.id} `}>
                     {info?.artists && info?.artists[0]?.name}
                   </Link>
                 </div>
